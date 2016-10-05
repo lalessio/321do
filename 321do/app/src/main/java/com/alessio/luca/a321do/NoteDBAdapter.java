@@ -16,11 +16,11 @@ import java.util.Date;
 
 public class NoteDBAdapter {
     //these are the column names
-    public static final String COL_ID = "_id";
+    public static final String COL_ID = "id";
     public static final String COL_TITLE = "title";
     public static final String COL_DESCRIPTION="description";
     public static final String COL_TAG="tag";
-    public static final String COL_CHECKLIST="checkList";
+//    public static final String COL_CHECKLIST="checkList";
     public static final String COL_DUEDATE="dueDate";
     public static final String COL_IMPORTANCE="importance";
     public static final String COL_DONE="done";
@@ -39,7 +39,7 @@ public class NoteDBAdapter {
     private static final String TAG = "NoteDBAdapter";
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDB;
-    private static final String DATABASE_NAME = "db_notes";
+    private static final String DATABASE_NAME = "321do_db_test_0";
     private static final String TABLE_NAME = "table_notes";
     private static final int DATABASE_VERSION = 1;
     private final Context mCtx;
@@ -50,11 +50,11 @@ public class NoteDBAdapter {
                     COL_TITLE + " TEXT, " + //semplice stringa no problem
                     COL_DESCRIPTION + " TEXT, " + //semplice stringa no problem
                     COL_TAG + " TEXT, " + //semplice stringa no problem (per ora)
-                    COL_CHECKLIST + " TEXT, " + //come salvo arraylist?
+//                    COL_CHECKLIST + " TEXT, " + //come salvo arraylist?
                     COL_DUEDATE + " INTEGER, " + //converto a long al momento del salvataggio (INTEGER non ha problemi a memorizzare long quindi non perdo cifre)
-                    COL_IMPORTANCE + " INTEGER, " + //TODO pensare a come salvare
+                    COL_IMPORTANCE + " TEXT, " + //TODO pensare a come salvare
                     COL_DONE + " INTEGER);"; //booleano visto come 0 o 1
-//TODO leggere e rivedere
+//TODO leggere e rivedere (sembra ok)
     public NoteDBAdapter(Context ctx) {
         this.mCtx = ctx;
     }
@@ -79,45 +79,54 @@ public class NoteDBAdapter {
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
         values.put(COL_TAG, note.getTag());
-//TODO finire
+//        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
+        values.put(COL_IMPORTANCE,note.readImportance());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
-// Inserting Row
+        values.put(COL_DONE,note.isDone()?1:0);
         return mDB.insert(TABLE_NAME, null, values);
     }
 
     //READ
-    public Note fetchNoteById(int id) {
+    //TODO
+    public Note fetchNoteById(int id) { //l'id verrà passata da un getId() quindi conoscendola già
         Cursor cursor = mDB.query(TABLE_NAME, new String[]{COL_ID,
-                        COL_TITLE}, COL_ID + "=?",
+                        COL_TITLE, COL_DESCRIPTION, COL_TAG, /*COL_CHECKLIST,*/ COL_IMPORTANCE, COL_DUEDATE, COL_DONE}, COL_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null
         );
         if (cursor != null)
             cursor.moveToFirst();
+        Log.v(TAG,"retrieved one note");
         return new Note(
                 cursor.getString(INDEX_TITLE)
         );
     }
-    public Cursor fetchAllNotes() {
-        Cursor mCursor = mDB.query(TABLE_NAME, new String[]{COL_ID,
-                        COL_TITLE},
-                null, null, null, null, null
-        );
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
+
+    public Cursor retrieveAllNotes() {
+        Cursor c = mDB.rawQuery("select * from " + TABLE_NAME, null);
+        c.moveToFirst();
+        Log.d(TAG,"all notes retrieved from db correctly");
+        return c;
     }
+
     //UPDATE
-    public void updateNote(Note nota) {
+    //TODO
+    public void updateNote(Note note) {
         ContentValues values = new ContentValues();
-        values.put(COL_TITLE, nota.getTitle());
-        mDB.update(TABLE_NAME, values,
-                COL_ID + "=?", new String[]{String.valueOf(nota.getId())});
+        values.put(COL_TITLE, note.getTitle());
+        values.put(COL_DESCRIPTION, note.getDescription());
+        values.put(COL_TAG, note.getTag());
+//        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
+        values.put(COL_IMPORTANCE,note.readImportance());
+        values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
+        values.put(COL_DONE,note.isDone()?1:0);
+        mDB.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
+
     //DELETE
     public void deleteNoteById(int nId) {
         mDB.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(nId)});
     }
+
     public void deleteAllNotes() {
         mDB.delete(TABLE_NAME, null, null);
     }

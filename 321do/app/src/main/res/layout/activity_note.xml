@@ -15,7 +15,7 @@ tools:context="com.alessio.luca.a321do.NoteActivity">
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:background="@color/white" />
 
 </android.support.design.widget.AppBarLayout>
 
@@ -25,7 +25,8 @@ tools:context="com.alessio.luca.a321do.NoteActivity">
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="bottom|end"
+        android:background="@color/dark_grey"
         app:srcCompat="@android:drawable/ic_menu_add"
         />
 

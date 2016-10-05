@@ -17,7 +17,7 @@ public class Note {
     private String title;
     private String description;
     private String tag;
-    private ArrayList<String> checkList;
+    //private ArrayList<String> checkList; //TODO sistemare checkList
     private GregorianCalendar dueDate;
     private Importance importance;
 
@@ -31,6 +31,7 @@ public class Note {
 
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
+    private static final String TAG = "Note";
     public enum NoteState {COMPLETED,PLANNED,EXPIRED};
     private boolean done; //true se la nota è stata completata, false altrimenti
 
@@ -84,12 +85,12 @@ public class Note {
         this.importance = new Importance(this.importance.mapToPriority(priority), this.importance.mapToUrgency(urgency));
     }
 
-    public ArrayList<String> getCheckList() {
-        return checkList;
-    }
-    public void setCheckList(ArrayList<String> checkList){
-        this.checkList=checkList;
-    }
+//    public ArrayList<String> getCheckList() {
+//        return checkList;
+//    }
+//    public void setCheckList(ArrayList<String> checkList){
+//        this.checkList=checkList;
+//    }
 
     public boolean isDone() {
         return done;
@@ -100,15 +101,19 @@ public class Note {
 
     ////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
 
-    public void addToCheckList(String n)
-    {
-        checkList.add(n);
+//    public void addToCheckList(String n)
+//    {
+//        checkList.add(n);
+//    }
+//    public String removeFromCheckList(int i)
+//    {
+//        return checkList.remove(i);
+//    }
+    public String readImportance(){
+        //TODO non funziona
+        //return this.importance.translate();
+        return "2B";
     }
-    public String removeFromCheckList(int i)
-    {
-        return checkList.remove(i);
-    }
-    public String readImportance(){ return this.importance.translate(); }
     public boolean isDueOver(){
         Calendar now = new GregorianCalendar();
         if(this.dueDate.compareTo(now)>0)
@@ -144,8 +149,12 @@ public class Note {
         this.done = false;
         setStandardTime();
     }
-
-    //TODO variante del costruttore senza parametri che mette come titolo il momento della creazione
+    public Note(){
+        Calendar now = new GregorianCalendar();
+        this.title = now.getTime().toString(); //titolo default momento creazione
+        this.done = false;
+        setStandardTime();
+    }
 
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
 
@@ -155,7 +164,7 @@ public class Note {
         this.title = note.getTitle();
         this.description = note.getDescription();
         this.tag = note.getTag();
-        this.checkList = note.getCheckList();
+//        this.checkList = note.getCheckList();
         this.dueDate = note.getDueDate();
         this.importance = note.getImportance();
         this.done=note.isDone();

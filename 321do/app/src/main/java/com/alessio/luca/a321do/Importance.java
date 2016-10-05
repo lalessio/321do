@@ -26,6 +26,10 @@ public class Importance {
         this.priority = p;
         this.urgency = u;
     }
+    public Importance(int i, char c){
+        this.priority = mapToPriority(i);
+        this.urgency = mapToUrgency(c);
+    }
 
     //set & get
     public Priority getPriority() {
