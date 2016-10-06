@@ -30,6 +30,18 @@ public class Importance {
         this.priority = mapToPriority(i);
         this.urgency = mapToUrgency(c);
     }
+    public Importance(String pu){
+        if(pu.length()==2)
+        {
+            this.priority=mapToPriority(java.lang.Character.getNumericValue(pu.charAt(0)));
+            this.urgency=mapToUrgency(pu.charAt(1));
+        }
+        else
+        {
+            this.priority = Priority.NORMAL;
+            this.urgency = Urgency.NORMAL;
+        }
+    }
 
     //set & get
     public Priority getPriority() {
@@ -97,5 +109,25 @@ public class Importance {
             default: u=Urgency.NORMAL; break;
         }
         return u;
+    }
+    public String[] getAllPriorities(){
+        Priority[] priorities = Priority.values();
+        String[] names = new String[priorities.length];
+
+        for (int i = 0; i < priorities.length; i++) {
+            names[i] = (i+1)+" - "+priorities[i].name();
+        }
+
+        return names;
+    }
+    public String[] getAllUrgencies(){
+        Urgency[] urgencies = Urgency.values();
+        String[] names = new String[urgencies.length];
+
+        for (int i = 0; i < urgencies.length; i++) {
+            names[i] = ((char)(i+65))+" - "+urgencies[i].name();
+        }
+
+        return names;
     }
 }

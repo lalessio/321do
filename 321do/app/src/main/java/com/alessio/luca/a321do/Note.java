@@ -1,5 +1,6 @@
 package com.alessio.luca.a321do;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -111,8 +112,8 @@ public class Note {
 //    }
     public String readImportance(){
         //TODO non funziona
-        //return this.importance.translate();
-        return "2B";
+        return this.importance.translate();
+        //return "2B";
     }
     public boolean isDueOver(){
         Calendar now = new GregorianCalendar();
@@ -141,22 +142,42 @@ public class Note {
         this.dueDate.set(Calendar.HOUR,8);
         this.dueDate.set(Calendar.MINUTE,30);
     }
+    private void newNoteInitialization(){
+        this.done = false;
+        setStandardTime();
+        this.tag="none";
+        this.description = new String();
+        this.importance = new Importance();
+    }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Note(String title) {
         this.title = title;
-        this.done = false;
-        setStandardTime();
+        newNoteInitialization();
     }
+
+    public Note(int id, String title) {
+        this.id = id;
+        this.title = title;
+        newNoteInitialization();
+    }
+
     public Note(){
         Calendar now = new GregorianCalendar();
         this.title = now.getTime().toString(); //titolo default momento creazione
-        this.done = false;
-        setStandardTime();
+        newNoteInitialization();
     }
 
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
+    public Note(int nId, String nTitle, String nDescription, String nTag, GregorianCalendar nDueDate, Importance nImportance){
+        this.id=nId;
+        this.title=nTitle;
+        this.description=nDescription;
+        this.tag=nTag;
+        this.dueDate=nDueDate;
+        this.importance=nImportance;
+    }
 
     public Note(Note note){
         //primo abbozzo costruttore copia
@@ -171,10 +192,10 @@ public class Note {
     }
 
 //    private class Place {
-//        //TODO
+//        //TODO place
 //    }
 //
 //    private class MediaAttachment {
-//        //TODO
+//        //TODO mediaattachment
 //    }
 }

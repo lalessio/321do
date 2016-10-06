@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Luca on 27/09/2016.
@@ -37,12 +39,12 @@ public class NoteDBAdapter {
 
     //used for logging
     private static final String TAG = "NoteDBAdapter";
-    private DatabaseHelper mDBHelper;
-    private SQLiteDatabase mDB;
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase db;
     private static final String DATABASE_NAME = "321do_db_test_0";
     private static final String TABLE_NAME = "table_notes";
     private static final int DATABASE_VERSION = 1;
-    private final Context mCtx;
+    private final Context context;
     //SQL statement used to create the database
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + TABLE_NAME + " ( " +
@@ -54,26 +56,25 @@ public class NoteDBAdapter {
                     COL_DUEDATE + " INTEGER, " + //converto a long al momento del salvataggio (INTEGER non ha problemi a memorizzare long quindi non perdo cifre)
                     COL_IMPORTANCE + " TEXT, " + //TODO pensare a come salvare
                     COL_DONE + " INTEGER);"; //booleano visto come 0 o 1
-//TODO leggere e rivedere (sembra ok)
+
     public NoteDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        this.context = ctx;
     }
+
     //open
     public void open() throws SQLException {
-        mDBHelper = new DatabaseHelper(mCtx);
-        mDB = mDBHelper.getWritableDatabase();
+        dbHelper = new DatabaseHelper(context);
+        db = dbHelper.getWritableDatabase();
     }
+
     //close
     public void close() {
-        if (mDBHelper != null) {
-            mDBHelper.close();
+        if (dbHelper != null) {
+            dbHelper.close();
         }
     }
 
     //CREATE
-//note that the id will be created for you automatically
-
-
     public long createNote(Note note) {
         ContentValues values = new ContentValues();
         values.put(COL_TITLE, note.getTitle());
@@ -83,52 +84,62 @@ public class NoteDBAdapter {
         values.put(COL_IMPORTANCE,note.readImportance());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_DONE,note.isDone()?1:0);
-        return mDB.insert(TABLE_NAME, null, values);
+        return db.insert(TABLE_NAME, null, values);
     }
 
     //READ
-    //TODO
-    public Note fetchNoteById(int id) { //l'id verrà passata da un getId() quindi conoscendola già
-        Cursor cursor = mDB.query(TABLE_NAME, new String[]{COL_ID,
+    public Note retrieveNodeById(int id) {
+        Cursor cursor = db.query(TABLE_NAME, new String[]{COL_ID,
                         COL_TITLE, COL_DESCRIPTION, COL_TAG, /*COL_CHECKLIST,*/ COL_IMPORTANCE, COL_DUEDATE, COL_DONE}, COL_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null
         );
+
         if (cursor != null)
             cursor.moveToFirst();
-        Log.v(TAG,"retrieved one note");
-        return new Note(
-                cursor.getString(INDEX_TITLE)
-        );
+
+        //Log.v(TAG,"retrieved one note");
+        int nId = cursor.getInt(INDEX_ID);
+        String nTitle = cursor.getString(INDEX_TITLE);
+        String nDescription = cursor.getString(INDEX_DESCRIPTION);
+        String nTag = cursor.getString(INDEX_TAG);
+        GregorianCalendar nDueDate = new GregorianCalendar();
+        nDueDate.setTimeInMillis(cursor.getLong(INDEX_DUEDATE));
+        Importance nImportance = new Importance(cursor.getString(INDEX_IMPORTANCE));
+
+        return new Note(nId,nTitle,nDescription,nTag,nDueDate,nImportance);
     }
 
     public Cursor retrieveAllNotes() {
-        Cursor c = mDB.rawQuery("select * from " + TABLE_NAME, null);
+        Cursor c = db.rawQuery("select " + COL_ID + ", " + COL_TITLE + ", " + COL_IMPORTANCE + " from " + TABLE_NAME, null);
+        //prendo solo id e titolo perchè sono questi i campi che mi servono per la visualizzazione e l'eventuale collegamento ad altre operazioni
         c.moveToFirst();
         Log.d(TAG,"all notes retrieved from db correctly");
         return c;
     }
 
     //UPDATE
-    //TODO
-    public void updateNote(Note note) {
+    //TODO estendere a tutti campi
+    public void updateNote(int id, String newText, int priority, char urgency) {
         ContentValues values = new ContentValues();
-        values.put(COL_TITLE, note.getTitle());
-        values.put(COL_DESCRIPTION, note.getDescription());
-        values.put(COL_TAG, note.getTag());
-//        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
-        values.put(COL_IMPORTANCE,note.readImportance());
-        values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
-        values.put(COL_DONE,note.isDone()?1:0);
-        mDB.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
+        values.put(COL_TITLE, newText);
+//        values.put(COL_DESCRIPTION, note.getDescription());
+//        values.put(COL_TAG, note.getTag());
+////        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
+        String importance = new String();
+        importance=importance+priority+urgency;
+        values.put(COL_IMPORTANCE, importance);
+//        values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
+//        values.put(COL_DONE,note.isDone()?1:0);
+        db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(id)});
     }
 
     //DELETE
     public void deleteNoteById(int nId) {
-        mDB.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(nId)});
+        db.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(nId)});
     }
 
     public void deleteAllNotes() {
-        mDB.delete(TABLE_NAME, null, null);
+        db.delete(TABLE_NAME, null, null);
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {

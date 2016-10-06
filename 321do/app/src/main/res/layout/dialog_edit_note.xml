@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="300dp"
+    android:id="@+id/edit_note_layout"
+    android:layout_height="fill_parent">
+<!-- TODO progettare gui modifica nota-->
+    <TextView
+        android:text="Change Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/textView1" />
+
+    <EditText
+        android:id="@+id/editText_title"
+        android:layout_width="fill_parent"
+        android:layout_height="53dp"
+        android:layout_margin="4dp"
+        android:background="@color/light_grey"
+        android:gravity="start"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:text="Change Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="53dp"
+        android:layout_margin="4dp"
+        android:background="@color/light_grey"
+        android:gravity="start"
+        android:textColor="@color/black"
+        android:id="@+id/editText_description" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="Set Priority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_priority"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="Set Urgency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_urgency"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="50"
+            android:text="Cancel"
+            android:textColor="@color/white"
+            android:id="@+id/button_cancel"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="50"
+            android:text="Confirm"
+            android:textColor="@color/white"
+            android:id="@+id/button_confirm" />
+
+    </LinearLayout>
+
+</LinearLayout>

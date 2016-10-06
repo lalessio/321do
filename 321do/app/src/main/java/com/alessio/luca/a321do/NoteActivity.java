@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,14 +19,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+//TODO per venerdì 14: note con tutti i tipi di dato interni pensati, CRUD ecc.
+
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
+    private ArrayList<Integer> arrayIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //TODO
@@ -43,6 +48,7 @@ public class NoteActivity extends AppCompatActivity {
         noteDBAdapter = new NoteDBAdapter(this);
         noteDBAdapter.open();
         listView = (ListView)findViewById(R.id.note_list_view);
+        arrayIds = new ArrayList<Integer>();
         updateListView();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,21 +68,17 @@ public class NoteActivity extends AppCompatActivity {
                 modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//edit reminder
-                        //TODO come mi ricavo la position?
                         if (position == 0) {
-                            //int nId = getIdFromPosition(masterListPosition);
-                            //Note nota= noteDBAdapter.fetchNoteById(nId);
-                            //showNewNoteMenu(nota);
-                            Toast.makeText(NoteActivity.this, "edit " + position, Toast.LENGTH_SHORT).show();
+                            Note note = noteDBAdapter.retrieveNodeById(arrayIds.get(masterListPosition));
+                            showEditNoteMenu(note);
                         } else {
-                            //noteDBAdapter.deleteNoteById(getIdFromPosition(masterListPosition));
-                            //mCursorAdapter.changeCursor(noteDBAdapter.fetchAllNotes());
-                            Toast.makeText(NoteActivity.this, "delete " + position, Toast.LENGTH_SHORT).show();
+                            noteDBAdapter.deleteNoteById(arrayIds.get(masterListPosition));
+                            updateListView();
                         }
                         dialog.dismiss();
                     }
                 });
+
             }
 
         });
@@ -86,7 +88,6 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showNewNoteMenu();
-                //Toast.makeText(NoteActivity.this, "pressed FAB", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -125,6 +126,8 @@ public class NoteActivity extends AppCompatActivity {
 //        });
 //
     }
+
+
 //
 //    private int getIdFromPosition(int nC) {
 //        return (int)mCursorAdapter.getItemId(nC);
@@ -151,23 +154,23 @@ public class NoteActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.setTitle("Add a new Note");
         dialog.setContentView(R.layout.dialog_new_note);
-        final EditText editCustom = (EditText) dialog.findViewById(R.id.editText_title);
-        LinearLayout rootLayout = (LinearLayout) dialog.findViewById(R.id.new_note_layout);
+        final EditText editText = (EditText) dialog.findViewById(R.id.editText_title);
+        LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.new_note_layout);
         final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
-        final Button buttonCancel = (Button) dialog.findViewById(R.id.button_cancel);
+        final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
         dialog.show();
 
         //collego comando ai pulsanti
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                noteDBAdapter.createNote(new Note(editCustom.getText().toString()));
+                noteDBAdapter.createNote(new Note(editText.getText().toString()));
                 updateListView();
                 dialog.dismiss();
             }
         });
 
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -175,6 +178,67 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
 
+    private void showEditNoteMenu(final Note note) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Edit Note");
+        dialog.setContentView(R.layout.dialog_edit_note);
+        final int[] priority = {note.getImportance().translate().charAt(0)-1};
+        final char[] urgency = {note.getImportance().translate().charAt(1)};
+
+        final EditText editText = (EditText) dialog.findViewById(R.id.editText_title);
+        editText.setText(note.getTitle());
+        LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.edit_note_layout);
+        final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
+        final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
+        final Spinner prioritySpinner = (Spinner) dialog.findViewById(R.id.spinner_priority);
+        Spinner urgencySpinner = (Spinner) dialog.findViewById(R.id.spinner_urgency);
+
+        dialog.show();
+
+        //collego comando ai pulsanti
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noteDBAdapter.updateNote(note.getId(),editText.getText().toString(),priority[0],urgency[0]);
+                updateListView();
+                dialog.dismiss();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        final ArrayAdapter<String> priorities = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,new Importance().getAllPriorities());
+        prioritySpinner.setAdapter(priorities);
+
+        prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+            public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
+                String selected = (String)adapter.getItemAtPosition(pos).toString();
+                priority[0] = java.lang.Character.getNumericValue(selected.charAt(0));
+            }
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
+        ArrayAdapter<String> urgencies = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,new Importance().getAllUrgencies());
+        urgencySpinner.setAdapter(urgencies);
+        urgencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> adapter, View view,int pos, long id) {
+                String selected = (String)adapter.getItemAtPosition(pos);
+                urgency[0] = selected.charAt(0);
+            }
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });
+        //prioritySpinner.setSelection(priority[0]);
+        Toast.makeText(this,"questa nota ha importance"+note.getImportance().translate(),Toast.LENGTH_SHORT).show();
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -183,16 +247,17 @@ public class NoteActivity extends AppCompatActivity {
         return true;
     }
 
-    public void updateListView()
+    public void updateListView() //TODO implementare riordino (cosi non funziona se cambio l'ordine)
     {
         Cursor cursor = noteDBAdapter.retrieveAllNotes();
         ArrayList<String> arrayAllTitles = new ArrayList<String>();
+        arrayIds.clear();
         while (cursor.isAfterLast()==false)
         {
-            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title")));
+            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title"))+" p = "+cursor.getString(cursor.getColumnIndex("importance")));
+            arrayIds.add(cursor.getInt(cursor.getColumnIndex("id")));
             cursor.moveToNext();
         }
-
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,arrayAllTitles);
         listView.setAdapter(arrayAdapter);
     }
