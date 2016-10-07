@@ -1,6 +1,9 @@
 package com.alessio.luca.a321do;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -16,6 +19,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 //TODO per venerdì 14: note con tutti i tipi di dato interni pensati, CRUD ecc.
 
@@ -181,9 +187,13 @@ public class NoteActivity extends AppCompatActivity {
 
         final EditText editText1 = (EditText) dialog.findViewById(R.id.editText_title);
         editText1.setText(note.getTitle());
-        EditText editText2 = (EditText) dialog.findViewById(R.id.editText_description);
-        editText2.setText(note.getImportance().translate());
+        final EditText editText2 = (EditText) dialog.findViewById(R.id.editText_description);
+        editText2.setText(note.getDescription());
+        final EditText editTextDate = (EditText) dialog.findViewById(R.id.editText_date);
+        editTextDate.setText(note.readDueDate());
+
         LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.edit_note_layout);
+        final Button dateButton = (Button) dialog.findViewById(R.id.button_date);
         final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
         final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
         final Spinner prioritySpinner = (Spinner) dialog.findViewById(R.id.spinner_priority);
@@ -192,13 +202,22 @@ public class NoteActivity extends AppCompatActivity {
         dialog.show();
 
         //collego comando ai pulsanti
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(),"choose date");
+                note.setDueDate(newFragment.getDateSelected());
+            }
+        });
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Note newNote = new Note(note);
                 newNote.setTitle(editText1.getText().toString());
                 newNote.setImportance(priority[0],urgency[0]);
-                Log.d("D/Note","sto per modificare nota con id "+newNote.getId());
+                newNote.setDescription(editText2.getText().toString());
                 noteDBAdapter.updateNote(newNote);
                 updateListView();
                 dialog.dismiss();
@@ -211,18 +230,15 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
+        //collego comandi agli spinner e imposto valori di default uguali a quelli già presenti nel db
         final ArrayAdapter<String> priorities = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,new Importance().getAllPriorities());
         prioritySpinner.setAdapter(priorities);
-
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-
             public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
                 String selected = (String)adapter.getItemAtPosition(pos).toString();
                 priority[0] = java.lang.Character.getNumericValue(selected.charAt(0));
             }
-            public void onNothingSelected(AdapterView<?> arg0) {
-            }
+            public void onNothingSelected(AdapterView<?> arg0) {}
         });
 
         ArrayAdapter<String> urgencies = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,new Importance().getAllUrgencies());
@@ -232,12 +248,28 @@ public class NoteActivity extends AppCompatActivity {
                 String selected = (String)adapter.getItemAtPosition(pos);
                 urgency[0] = selected.charAt(0);
             }
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
+            public void onNothingSelected(AdapterView<?> arg0) {}
         });
         prioritySpinner.setSelection(priority[0]-1);
         urgencySpinner.setSelection(java.lang.Character.getNumericValue(urgency[0])-10); //A = 12 in ASCII, la selezione va da 0 a 2 quindi converto la lettera in un valore accettabile dallo spinner
+    }
+
+    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+        private Calendar dateSelected = new GregorianCalendar();
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            return new DatePickerDialog(getActivity(), this, 2080, month, day);
+        }
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            dateSelected.set(view.getYear(),view.getMonth(),view.getDayOfMonth());
+        }
+        public Calendar getDateSelected() {//da chiamare solo dopo che onDateSet è avvenuto altrimenti esplode tutto
+            return dateSelected;
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -254,7 +286,11 @@ public class NoteActivity extends AppCompatActivity {
         arrayIds.clear();
         while (cursor.isAfterLast()==false)
         {
-            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title")));
+            //TODO eliminare istruzioni debug
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(cursor.getLong(cursor.getColumnIndex("dueDate")));
+            String data = new String (cal.get(cal.YEAR)+" "+cal.get(cal.MONTH)+" "+cal.get(cal.DAY_OF_MONTH)+"");
+            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title"))+data);
             arrayIds.add(cursor.getInt(cursor.getColumnIndex("id")));
             cursor.moveToNext();
         }

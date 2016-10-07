@@ -1,11 +1,7 @@
 package com.alessio.luca.a321do;
 
-import android.provider.ContactsContract;
-import android.util.Log;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.ArrayList;
 
 /**
  * Created by Luca on 03/10/2016.
@@ -19,7 +15,7 @@ public class Note {
     private String description;
     private String tag;
     //private ArrayList<String> checkList; //TODO sistemare checkList
-    private GregorianCalendar dueDate;
+    private Calendar dueDate;
     private Importance importance;
 
 //////////////////////////////////////////TODO/////////////////////////////////////////////////////
@@ -69,10 +65,10 @@ public class Note {
         this.description = description;
     }
 
-    public GregorianCalendar getDueDate() {
+    public Calendar getDueDate() {
         return dueDate;
     }
-    public void setDueDate(GregorianCalendar dueDate) {
+    public void setDueDate(Calendar dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -146,7 +142,10 @@ public class Note {
         this.importance = new Importance();
     }
     public String print() {
-        return getId()+" / "+getTitle()+" / "+getDescription()+" / "+getTag()/*+" / "+getDueDate().toString()*/+" / "+getImportance().translate();
+        return getId()+" / "+getTitle()+" / "+getDescription()+" / "+getTag()+" / "+readDueDate()+" / "+getImportance().translate();
+    }
+    public String readDueDate(){
+        return new String(getDueDate().get(Calendar.YEAR)+"/"+(getDueDate().get(Calendar.MONTH)+1)+"/"+getDueDate().get(Calendar.DAY_OF_MONTH));
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,7 +168,7 @@ public class Note {
     }
 
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
-    public Note(int nId, String nTitle, String nDescription, String nTag, GregorianCalendar nDueDate, Importance nImportance){
+    public Note(int nId, String nTitle, String nDescription, String nTag, Calendar nDueDate, Importance nImportance){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;

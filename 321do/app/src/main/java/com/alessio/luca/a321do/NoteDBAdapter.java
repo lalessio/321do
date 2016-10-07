@@ -7,10 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -115,12 +113,11 @@ public class NoteDBAdapter {
         if (cursor != null)
             cursor.moveToFirst();
 
-        //Log.v(TAG,"retrieved one note");
         int nId = cursor.getInt(INDEX_ID);
         String nTitle = cursor.getString(cursor.getColumnIndex(COL_TITLE));
         String nDescription = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
         String nTag = cursor.getString(cursor.getColumnIndex(COL_TAG));
-        GregorianCalendar nDueDate = new GregorianCalendar();
+        Calendar nDueDate = new GregorianCalendar();
         nDueDate.setTimeInMillis(cursor.getLong(INDEX_DUEDATE));
         Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
         Note note = new Note(nId,nTitle,nDescription,nTag,nDueDate,nImportance);
@@ -141,13 +138,12 @@ public class NoteDBAdapter {
     public void updateNote(Note note) {
         ContentValues values = new ContentValues();
         values.put(COL_TITLE, note.getTitle());
-        values.put(COL_DESCRIPTION, "placeholder");
-//        values.put(COL_TAG, note.getTag());
+        values.put(COL_DESCRIPTION, note.getDescription());
+//        values.put(COL_TAG, note.getTag()); //TODO memorizzazione tag
 ////        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
         values.put(COL_IMPORTANCE, note.getImportance().translate());
-        Log.d(TAG,"modificato priorità = "+note.getImportance().translate());
-//        values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
-//        values.put(COL_DONE,note.isDone()?1:0);
+        values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
+//        values.put(COL_DONE,note.isDone()?1:0); //TODO memorizzazione bool
         db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
 
