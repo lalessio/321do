@@ -69,7 +69,8 @@ public class NoteActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position == 0) {
-                            Note note = noteDBAdapter.retrieveNodeById(arrayIds.get(masterListPosition));
+                            Note note = noteDBAdapter.retrieveNoteById(arrayIds.get(masterListPosition));
+                            Log.d("D/Note","edit nota"+note.print());
                             showEditNoteMenu(note);
                         } else {
                             noteDBAdapter.deleteNoteById(arrayIds.get(masterListPosition));
@@ -127,13 +128,6 @@ public class NoteActivity extends AppCompatActivity {
 //
     }
 
-
-//
-//    private int getIdFromPosition(int nC) {
-//        return (int)mCursorAdapter.getItemId(nC);
-//    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -182,11 +176,13 @@ public class NoteActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.setTitle("Edit Note");
         dialog.setContentView(R.layout.dialog_edit_note);
-        final int[] priority = {note.getImportance().translate().charAt(0)-1};
+        final int[] priority = {java.lang.Character.getNumericValue(note.getImportance().translate().charAt(0))};
         final char[] urgency = {note.getImportance().translate().charAt(1)};
 
-        final EditText editText = (EditText) dialog.findViewById(R.id.editText_title);
-        editText.setText(note.getTitle());
+        final EditText editText1 = (EditText) dialog.findViewById(R.id.editText_title);
+        editText1.setText(note.getTitle());
+        EditText editText2 = (EditText) dialog.findViewById(R.id.editText_description);
+        editText2.setText(note.getImportance().translate());
         LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.edit_note_layout);
         final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
         final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
@@ -199,7 +195,11 @@ public class NoteActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                noteDBAdapter.updateNote(note.getId(),editText.getText().toString(),priority[0],urgency[0]);
+                Note newNote = new Note(note);
+                newNote.setTitle(editText1.getText().toString());
+                newNote.setImportance(priority[0],urgency[0]);
+                Log.d("D/Note","sto per modificare nota con id "+newNote.getId());
+                noteDBAdapter.updateNote(newNote);
                 updateListView();
                 dialog.dismiss();
             }
@@ -236,8 +236,8 @@ public class NoteActivity extends AppCompatActivity {
 
             }
         });
-        //prioritySpinner.setSelection(priority[0]);
-        Toast.makeText(this,"questa nota ha importance"+note.getImportance().translate(),Toast.LENGTH_SHORT).show();
+        prioritySpinner.setSelection(priority[0]-1);
+        urgencySpinner.setSelection(java.lang.Character.getNumericValue(urgency[0])-10); //A = 12 in ASCII, la selezione va da 0 a 2 quindi converto la lettera in un valore accettabile dallo spinner
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -254,7 +254,7 @@ public class NoteActivity extends AppCompatActivity {
         arrayIds.clear();
         while (cursor.isAfterLast()==false)
         {
-            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title"))+" p = "+cursor.getString(cursor.getColumnIndex("importance")));
+            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title")));
             arrayIds.add(cursor.getInt(cursor.getColumnIndex("id")));
             cursor.moveToNext();
         }

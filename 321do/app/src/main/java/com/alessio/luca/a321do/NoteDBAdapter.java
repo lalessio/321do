@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -41,7 +42,7 @@ public class NoteDBAdapter {
     private static final String TAG = "NoteDBAdapter";
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
-    private static final String DATABASE_NAME = "321do_db_test_0";
+    private static final String DATABASE_NAME = "321do_db_test_3";
     private static final String TABLE_NAME = "table_notes";
     private static final int DATABASE_VERSION = 1;
     private final Context context;
@@ -75,23 +76,40 @@ public class NoteDBAdapter {
     }
 
     //CREATE
-    public long createNote(Note note) {
+    public Note createNote(Note note) {
+        //prima salvo tutti i valori
         ContentValues values = new ContentValues();
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
         values.put(COL_TAG, note.getTag());
 //        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
-        values.put(COL_IMPORTANCE,note.readImportance());
+        values.put(COL_IMPORTANCE,note.getImportance().translate());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_DONE,note.isDone()?1:0);
-        return db.insert(TABLE_NAME, null, values);
+        db.insert(TABLE_NAME, null, values);
+        //poi restituisco un nuovo oggetto identico a quello passato ma con id aggiornato
+        Note newNote = new Note(note);
+        Cursor cursor = db.rawQuery("SELECT MAX(id) FROM "+TABLE_NAME,null);
+        cursor.moveToFirst();
+        newNote.setId(cursor.getInt(INDEX_ID));
+        Log.d(TAG,"ho salvato nota: "+newNote.print());
+        return newNote;
     }
 
     //READ
-    public Note retrieveNodeById(int id) {
-        Cursor cursor = db.query(TABLE_NAME, new String[]{COL_ID,
-                        COL_TITLE, COL_DESCRIPTION, COL_TAG, /*COL_CHECKLIST,*/ COL_IMPORTANCE, COL_DUEDATE, COL_DONE}, COL_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null
+    public Note retrieveNoteById(int id) {
+        Cursor cursor = db.query(TABLE_NAME,
+                new String[]{COL_ID,
+                        COL_TITLE,
+                        COL_DESCRIPTION,
+                        COL_TAG,
+                        /*COL_CHECKLIST,*/
+                        COL_IMPORTANCE,
+                        COL_DUEDATE,
+                        COL_DONE},
+                COL_ID + "=?",
+                new String[]{String.valueOf(id)},
+                null, null, null, null
         );
 
         if (cursor != null)
@@ -99,18 +117,19 @@ public class NoteDBAdapter {
 
         //Log.v(TAG,"retrieved one note");
         int nId = cursor.getInt(INDEX_ID);
-        String nTitle = cursor.getString(INDEX_TITLE);
-        String nDescription = cursor.getString(INDEX_DESCRIPTION);
-        String nTag = cursor.getString(INDEX_TAG);
+        String nTitle = cursor.getString(cursor.getColumnIndex(COL_TITLE));
+        String nDescription = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
+        String nTag = cursor.getString(cursor.getColumnIndex(COL_TAG));
         GregorianCalendar nDueDate = new GregorianCalendar();
         nDueDate.setTimeInMillis(cursor.getLong(INDEX_DUEDATE));
-        Importance nImportance = new Importance(cursor.getString(INDEX_IMPORTANCE));
-
-        return new Note(nId,nTitle,nDescription,nTag,nDueDate,nImportance);
+        Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
+        Note note = new Note(nId,nTitle,nDescription,nTag,nDueDate,nImportance);
+        Log.d(TAG,"retrieved note: "+note.print());
+        return note;
     }
 
     public Cursor retrieveAllNotes() {
-        Cursor c = db.rawQuery("select " + COL_ID + ", " + COL_TITLE + ", " + COL_IMPORTANCE + " from " + TABLE_NAME, null);
+        Cursor c = db.rawQuery("select * from " + TABLE_NAME, null);
         //prendo solo id e titolo perchè sono questi i campi che mi servono per la visualizzazione e l'eventuale collegamento ad altre operazioni
         c.moveToFirst();
         Log.d(TAG,"all notes retrieved from db correctly");
@@ -119,18 +138,17 @@ public class NoteDBAdapter {
 
     //UPDATE
     //TODO estendere a tutti campi
-    public void updateNote(int id, String newText, int priority, char urgency) {
+    public void updateNote(Note note) {
         ContentValues values = new ContentValues();
-        values.put(COL_TITLE, newText);
-//        values.put(COL_DESCRIPTION, note.getDescription());
+        values.put(COL_TITLE, note.getTitle());
+        values.put(COL_DESCRIPTION, "placeholder");
 //        values.put(COL_TAG, note.getTag());
 ////        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
-        String importance = new String();
-        importance=importance+priority+urgency;
-        values.put(COL_IMPORTANCE, importance);
+        values.put(COL_IMPORTANCE, note.getImportance().translate());
+        Log.d(TAG,"modificato priorità = "+note.getImportance().translate());
 //        values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
 //        values.put(COL_DONE,note.isDone()?1:0);
-        db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(id)});
+        db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
 
     //DELETE

@@ -110,11 +110,7 @@ public class Note {
 //    {
 //        return checkList.remove(i);
 //    }
-    public String readImportance(){
-        //TODO non funziona
-        return this.importance.translate();
-        //return "2B";
-    }
+
     public boolean isDueOver(){
         Calendar now = new GregorianCalendar();
         if(this.dueDate.compareTo(now)>0)
@@ -148,6 +144,9 @@ public class Note {
         this.tag="none";
         this.description = new String();
         this.importance = new Importance();
+    }
+    public String print() {
+        return getId()+" / "+getTitle()+" / "+getDescription()+" / "+getTag()/*+" / "+getDueDate().toString()*/+" / "+getImportance().translate();
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
