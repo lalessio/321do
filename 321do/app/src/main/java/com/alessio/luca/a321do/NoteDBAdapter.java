@@ -15,6 +15,11 @@ import java.util.GregorianCalendar;
  * Created by Luca on 27/09/2016.
  */
 
+//TODO 1 SORTING
+    // TODO 2 COMPLETED
+        // TODO 3 TAG
+            // TODO 4 CHECKLIST
+
 public class NoteDBAdapter {
     //these are the column names
     public static final String COL_ID = "id";
@@ -36,11 +41,13 @@ public class NoteDBAdapter {
     public static final int INDEX_IMPORTANCE = INDEX_ID + 6;
     public static final int INDEX_DONE = INDEX_ID + 7;
 
+    public enum SortingOrder {NONE,DUEDATE,IMPORTANCE};
+
     //used for logging
     private static final String TAG = "NoteDBAdapter";
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
-    private static final String DATABASE_NAME = "321do_db_test_3";
+    private static final String DATABASE_NAME = "321do_db_test_4";
     private static final String TABLE_NAME = "table_notes";
     private static final int DATABASE_VERSION = 1;
     private final Context context;
@@ -125,9 +132,20 @@ public class NoteDBAdapter {
         return note;
     }
 
-    public Cursor retrieveAllNotes() {
-        Cursor c = db.rawQuery("select * from " + TABLE_NAME, null);
-        //prendo solo id e titolo perchè sono questi i campi che mi servono per la visualizzazione e l'eventuale collegamento ad altre operazioni
+    public Cursor retrieveAllNotes(SortingOrder sortBy) {
+        String sorting = new String();
+        switch (sortBy) {
+            case DUEDATE:
+                sorting = " order by "+COL_DUEDATE;
+                break;
+            case IMPORTANCE:
+                sorting = " order by "+COL_IMPORTANCE;
+                break;
+            default: //che sarebbe il case NONE
+                sorting = " order by "+COL_ID;
+                break;
+        }
+        Cursor c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();
         Log.d(TAG,"all notes retrieved from db correctly");
         return c;

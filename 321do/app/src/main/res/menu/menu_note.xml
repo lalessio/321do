@@ -3,16 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.reminders.app.RemindersActivity">
     <item android:id="@+id/action_new"
-        android:title="add Note"
+        android:title="Add Note"
         android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_sort"
+        android:title="Sort Notes"
+        android:orderInCategory="200"
         app:showAsAction="never" />
     <!-- TODO settings -->
     <item android:id="@+id/action_settings"
-        android:title="settings"
-        android:orderInCategory="200"
+        android:title="Settings"
+        android:orderInCategory="300"
         app:showAsAction="never" />
     <item android:id="@+id/action_exit"
-        android:title="close app"
-        android:orderInCategory="300"
+        android:title="Exit"
+        android:orderInCategory="400"
         app:showAsAction="never" />
 </menu>

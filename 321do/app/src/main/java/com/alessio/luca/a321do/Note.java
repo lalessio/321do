@@ -2,6 +2,7 @@ package com.alessio.luca.a321do;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Created by Luca on 03/10/2016.
@@ -142,10 +143,10 @@ public class Note {
         this.importance = new Importance();
     }
     public String print() {
-        return getId()+" / "+getTitle()+" / "+getDescription()+" / "+getTag()+" / "+readDueDate()+" / "+getImportance().translate();
+        return getId()+" / "+getTitle()+" / "+getDescription()+" / "+getTag()+" / "+printDueDate()+" / "+getImportance().translate();
     }
-    public String readDueDate(){
-        return new String(getDueDate().get(Calendar.YEAR)+"/"+(getDueDate().get(Calendar.MONTH)+1)+"/"+getDueDate().get(Calendar.DAY_OF_MONTH));
+    public String printDueDate(){
+        return new String(getDueDate().get(Calendar.DAY_OF_MONTH)+" "+(getDueDate().getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.getDefault()))+" "+getDueDate().get(Calendar.YEAR)+" at "+getDueDate().get(Calendar.HOUR_OF_DAY)+":"+getDueDate().get(Calendar.MINUTE));
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

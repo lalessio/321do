@@ -23,10 +23,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -55,7 +59,7 @@ public class NoteActivity extends AppCompatActivity {
         noteDBAdapter.open();
         listView = (ListView)findViewById(R.id.note_list_view);
         arrayIds = new ArrayList<Integer>();
-        updateListView();
+        updateListView(NoteDBAdapter.SortingOrder.NONE);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,7 +84,7 @@ public class NoteActivity extends AppCompatActivity {
                             showEditNoteMenu(note);
                         } else {
                             noteDBAdapter.deleteNoteById(arrayIds.get(masterListPosition));
-                            updateListView();
+                            updateListView(NoteDBAdapter.SortingOrder.NONE);
                         }
                         dialog.dismiss();
                     }
@@ -138,15 +142,65 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new:
-//                Toast.makeText(NoteActivity.this, "nuova nota? non ancora mi spiace!", Toast.LENGTH_SHORT).show();
                 showNewNoteMenu();
                 return true;
             case R.id.action_exit:
                 finish();
                 return true;
+            case R.id.action_settings:
+                Toast.makeText(NoteActivity.this, "settings TODO", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_sort:
+                showSortMenu();
+                return true;
             default:
                 return false;
         }
+    }
+
+    private void showSortMenu() {
+//        final Dialog dialog = new Dialog(this);
+//        dialog.setTitle("Order Notes by:");
+//        dialog.setContentView(R.layout.sort_note);
+//        RadioButton rb1 = (RadioButton) dialog.findViewById(R.id.radioButton1);
+//        RadioButton rb2 = (RadioButton) dialog.findViewById(R.id.radioButton2);
+//        RadioButton rb3 = (RadioButton) dialog.findViewById(R.id.radioButton3);
+//        RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGroup);
+//        dialog.show();
+//
+//        radioGroup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(NoteActivity.this, "TODO this"+ v.getId(), Toast.LENGTH_SHORT).show();
+//                dialog.dismiss();
+//            }
+//        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
+        ListView modeListView = new ListView(NoteActivity.this);
+        String[] modes = new String[] { "Creation", "Due date", "Importance" };
+        ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
+        modeListView.setAdapter(modeAdapter);
+        builder.setView(modeListView);
+        final Dialog dialog = builder.create();
+        dialog.setTitle("Order Notes by:");
+        dialog.show();
+        modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        updateListView(NoteDBAdapter.SortingOrder.NONE);
+                        break;
+                    case 1:
+                        updateListView(NoteDBAdapter.SortingOrder.DUEDATE);
+                        break;
+                    case 2:
+                        updateListView(NoteDBAdapter.SortingOrder.IMPORTANCE);
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
     }
 
     private void showNewNoteMenu(){
@@ -165,7 +219,7 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 noteDBAdapter.createNote(new Note(editText.getText().toString()));
-                updateListView();
+                updateListView(NoteDBAdapter.SortingOrder.NONE);
                 dialog.dismiss();
             }
         });
@@ -190,7 +244,7 @@ public class NoteActivity extends AppCompatActivity {
         final EditText editText2 = (EditText) dialog.findViewById(R.id.editText_description);
         editText2.setText(note.getDescription());
         final EditText editTextDate = (EditText) dialog.findViewById(R.id.editText_date);
-        editTextDate.setText(note.readDueDate());
+        editTextDate.setText(note.printDueDate());
 
         LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.edit_note_layout);
         final Button dateButton = (Button) dialog.findViewById(R.id.button_date);
@@ -201,13 +255,27 @@ public class NoteActivity extends AppCompatActivity {
 
         dialog.show();
 
+        final Dialog dateTimeDialog = new Dialog(this);
+        dateTimeDialog.setTitle("Set Date/Time");
+        dateTimeDialog.setContentView(R.layout.date_time_layout);
+
+        final DatePicker datePicker = (DatePicker) dateTimeDialog.findViewById(R.id.datePicker);
+        final TimePicker timePicker = (TimePicker) dateTimeDialog.findViewById(R.id.timePicker);
+        Button buttonDateTime = (Button) dateTimeDialog.findViewById(R.id.buttonDateTime);
+        Button buttonDismissDateTime = (Button) dateTimeDialog.findViewById(R.id.buttonDismissDateTime);
+        datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
+        timePicker.setIs24HourView(true);
+        timePicker.setCurrentHour(note.getDueDate().get(Calendar.HOUR_OF_DAY));
+        timePicker.setCurrentMinute(note.getDueDate().get(Calendar.MINUTE));
+
         //collego comando ai pulsanti
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerFragment newFragment = new DatePickerFragment();
-                newFragment.show(getFragmentManager(),"choose date");
-                note.setDueDate(newFragment.getDateSelected());
+                dateTimeDialog.show();
+//                DatePickerFragment newFragment = new DatePickerFragment();
+//                newFragment.show(getFragmentManager(),"choose date");
+//                note.setDueDate(newFragment.getDateSelected());
             }
         });
 
@@ -219,7 +287,7 @@ public class NoteActivity extends AppCompatActivity {
                 newNote.setImportance(priority[0],urgency[0]);
                 newNote.setDescription(editText2.getText().toString());
                 noteDBAdapter.updateNote(newNote);
-                updateListView();
+                updateListView(NoteDBAdapter.SortingOrder.NONE);
                 dialog.dismiss();
             }
         });
@@ -252,6 +320,32 @@ public class NoteActivity extends AppCompatActivity {
         });
         prioritySpinner.setSelection(priority[0]-1);
         urgencySpinner.setSelection(java.lang.Character.getNumericValue(urgency[0])-10); //A = 12 in ASCII, la selezione va da 0 a 2 quindi converto la lettera in un valore accettabile dallo spinner
+
+        buttonDateTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c=note.getDueDate();
+                c.set(Calendar.YEAR,datePicker.getYear());
+                c.set(Calendar.MONTH,datePicker.getMonth());
+                c.set(Calendar.DAY_OF_MONTH,datePicker.getDayOfMonth());
+                c.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+                c.set(Calendar.MINUTE,timePicker.getCurrentMinute());
+                note.setDueDate(c);
+                editTextDate.setText(note.printDueDate());
+                dateTimeDialog.dismiss();
+                datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
+            }
+        });
+
+        buttonDismissDateTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateTimeDialog.dismiss();
+                datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
+                timePicker.setCurrentHour(note.getDueDate().get(Calendar.HOUR_OF_DAY));
+                timePicker.setCurrentMinute(note.getDueDate().get(Calendar.MINUTE));
+            }
+        });
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -262,7 +356,7 @@ public class NoteActivity extends AppCompatActivity {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            return new DatePickerDialog(getActivity(), this, 2080, month, day);
+            return new DatePickerDialog(getActivity(), this, year, month, day);
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
             dateSelected.set(view.getYear(),view.getMonth(),view.getDayOfMonth());
@@ -279,18 +373,14 @@ public class NoteActivity extends AppCompatActivity {
         return true;
     }
 
-    public void updateListView() //TODO implementare riordino (cosi non funziona se cambio l'ordine)
+    public void updateListView(NoteDBAdapter.SortingOrder sortBy) //TODO implementare riordino (cosi non funziona se cambio l'ordine)
     {
-        Cursor cursor = noteDBAdapter.retrieveAllNotes();
+        Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         ArrayList<String> arrayAllTitles = new ArrayList<String>();
         arrayIds.clear();
         while (cursor.isAfterLast()==false)
         {
-            //TODO eliminare istruzioni debug
-            Calendar cal = new GregorianCalendar();
-            cal.setTimeInMillis(cursor.getLong(cursor.getColumnIndex("dueDate")));
-            String data = new String (cal.get(cal.YEAR)+" "+cal.get(cal.MONTH)+" "+cal.get(cal.DAY_OF_MONTH)+"");
-            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title"))+data);
+            arrayAllTitles.add(cursor.getString(cursor.getColumnIndex("title")));
             arrayIds.add(cursor.getInt(cursor.getColumnIndex("id")));
             cursor.moveToNext();
         }
