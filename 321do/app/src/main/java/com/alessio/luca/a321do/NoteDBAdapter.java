@@ -41,7 +41,8 @@ public class NoteDBAdapter {
     public static final int INDEX_IMPORTANCE = INDEX_ID + 6;
     public static final int INDEX_DONE = INDEX_ID + 7;
 
-    public enum SortingOrder {NONE,DUEDATE,IMPORTANCE};
+    //enumerazione dedicata all'ordinamento della view
+    public enum SortingOrder {NONE,DUEDATE,IMPORTANCE,CATEGORY};
 
     //used for logging
     private static final String TAG = "NoteDBAdapter";
@@ -60,7 +61,7 @@ public class NoteDBAdapter {
                     COL_TAG + " TEXT, " + //semplice stringa no problem (per ora)
 //                    COL_CHECKLIST + " TEXT, " + //come salvo arraylist?
                     COL_DUEDATE + " INTEGER, " + //converto a long al momento del salvataggio (INTEGER non ha problemi a memorizzare long quindi non perdo cifre)
-                    COL_IMPORTANCE + " TEXT, " + //TODO pensare a come salvare
+                    COL_IMPORTANCE + " TEXT, " +
                     COL_DONE + " INTEGER);"; //booleano visto come 0 o 1
 
     public NoteDBAdapter(Context ctx) {
@@ -127,6 +128,7 @@ public class NoteDBAdapter {
         Calendar nDueDate = new GregorianCalendar();
         nDueDate.setTimeInMillis(cursor.getLong(INDEX_DUEDATE));
         Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
+        //boolean nDone = cursor.getInt(cursor.getColumnIndex(COL_DONE))? 1:0; NON VA
         Note note = new Note(nId,nTitle,nDescription,nTag,nDueDate,nImportance);
         Log.d(TAG,"retrieved note: "+note.print());
         return note;
@@ -140,6 +142,9 @@ public class NoteDBAdapter {
                 break;
             case IMPORTANCE:
                 sorting = " order by "+COL_IMPORTANCE;
+                break;
+            case CATEGORY:
+                sorting = " order by "+COL_TAG+", "+COL_ID;
                 break;
             default: //che sarebbe il case NONE
                 sorting = " order by "+COL_ID;
@@ -157,17 +162,25 @@ public class NoteDBAdapter {
         ContentValues values = new ContentValues();
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
-//        values.put(COL_TAG, note.getTag()); //TODO memorizzazione tag
-////        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
+        values.put(COL_TAG, note.getTag());
+//        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
         values.put(COL_IMPORTANCE, note.getImportance().translate());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
-//        values.put(COL_DONE,note.isDone()?1:0); //TODO memorizzazione bool
+        //values.put(COL_DONE,note.isDone()?1:0); //TODO memorizzazione bool
         db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
 
+    public boolean tickNote(Note note){ //se una nota era da completare la completo e se era completata la "scompleto"
+        ContentValues values = new ContentValues();
+        values.put(COL_DONE,!note.isDone());
+        db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
+        note.setDone(!note.isDone()); //forse questa istruzione non ha side effect ma per ora non importa
+        return note.isDone();
+    }
+
     //DELETE
-    public void deleteNoteById(int nId) {
-        db.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(nId)});
+    public void deleteNote(Note note) {
+        db.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
 
     public void deleteAllNotes() {

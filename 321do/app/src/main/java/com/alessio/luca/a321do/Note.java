@@ -138,8 +138,8 @@ public class Note {
     private void newNoteInitialization(){
         this.done = false;
         setStandardTime();
-        this.tag="none";
         this.description = new String();
+        this.tag= new String();
         this.importance = new Importance();
     }
     public String print() {
