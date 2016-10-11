@@ -1,9 +1,6 @@
 package com.alessio.luca.a321do;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.TimePickerDialog;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -15,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,14 +19,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -81,8 +73,8 @@ public class NoteActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         switch (position){
                             case 0:
-                                Note note = noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId());
-                                showEditNoteMenu(note);
+                                //Toast.makeText(NoteActivity.this,"edit "+retrievedNotes.get(masterListPosition).getId()+"",Toast.LENGTH_SHORT).show();
+                                showEditNoteMenu(noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
                                 break;
                             case 1:
                                 noteDBAdapter.deleteNote(retrievedNotes.get(masterListPosition));
@@ -93,13 +85,10 @@ public class NoteActivity extends AppCompatActivity {
                                 updateListView(NoteDBAdapter.SortingOrder.NONE);
                                 break;
                         }
-
                         dialog.dismiss();
                     }
                 });
-
             }
-
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -177,7 +166,7 @@ public class NoteActivity extends AppCompatActivity {
     private void showSortMenu() {
         AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
         ListView modeListView = new ListView(NoteActivity.this);
-        String[] modes = new String[] { "Creation", "Due date", "Importance", "Category" };
+        String[] modes = new String[] { "Creation date (default)", "Due date", "Importance", "Tag" };
         ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
         modeListView.setAdapter(modeAdapter);
         builder.setView(modeListView);
@@ -365,7 +354,7 @@ public class NoteActivity extends AppCompatActivity {
             temp.setDescription(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DESCRIPTION)));
             temp.setTag(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_TAG)));
             Calendar t = new GregorianCalendar();
-            t.setTimeInMillis(cursor.getLong(NoteDBAdapter.INDEX_DUEDATE));
+            t.setTimeInMillis(Long.valueOf(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DUEDATE))));
             temp.setDueDate(t);
             temp.setImportance(new Importance(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_IMPORTANCE))));
             if(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_DONE))==0)
@@ -375,18 +364,15 @@ public class NoteActivity extends AppCompatActivity {
             retrievedNotes.add(temp);
             cursor.moveToNext();
         }
-
-        ArrayList<String> arrayAllTitles = new ArrayList<String>();
-
-        for (Note n: retrievedNotes)
-        {
-            arrayAllTitles.add(n.getTitle());
-        }
-
-        //ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,arrayAllTitles);
-        //listView.setAdapter(arrayAdapter);
-
-        NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.id.row_text,retrievedNotes);
+//        ArrayList<String> arrayAllTitles = new ArrayList<String>();
+//        for (Note n: retrievedNotes)
+//        {
+//            arrayAllTitles.add(n.getTitle());
+//        }
+//        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,arrayAllTitles);
+//        listView.setAdapter(arrayAdapter);
+        Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
+        NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row_done,notes);
         listView.setAdapter(noteListAdapter);
     }
 }

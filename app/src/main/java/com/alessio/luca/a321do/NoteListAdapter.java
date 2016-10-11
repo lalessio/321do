@@ -1,79 +1,92 @@
 package com.alessio.luca.a321do;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.SpannableString;
+import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 /**
- * Created by Luca on 10/10/2016.
+ * Created by Luca on 11/10/2016.
  */
 
 public class NoteListAdapter extends ArrayAdapter {
-    private ArrayList<Note> notes;
+    Context context;
+    int layoutResourceId;
+    Note[] data = null;
 
-    private class ViewHolder {
-        TextView text;
-        public ViewHolder(TextView text) {
-            this.text = text;
-        }
-        public TextView getText() {
-            return text;
-        }
-        public void setText(TextView text) {
-            this.text = text;
-        }
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
+    public NoteListAdapter(Context context, int layoutResourceId, Note[] data) {
+        super(context, layoutResourceId, data);
+        this.layoutResourceId = layoutResourceId;
+        this.context = context;
+        this.data = data;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return notes.get(position).isDone()?2:1;
-    }
-
-    public NoteListAdapter(Context context, int resource, ArrayList<Note> notes) {
-        super(context, resource, notes);
-        this.notes = notes;
+        Note.NoteState state = data[position].getNoteState();
+        switch (state){
+            case COMPLETED:
+                return 1;
+            case PLANNED:
+                return 2;
+            case EXPIRED:
+                return 3;
+            default:
+                return 2;
+        }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        ViewHolder viewHolder = null;
-        Note listViewItem = notes.get(position);
+        View row = convertView;
+        NoteViewHolder holder = null;
+        Note note = data[position];
+        SpannableString content = new SpannableString(note.getTitle());
         int listViewItemType = getItemViewType(position);
 
+        if(row == null)
+        {
+            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
 
-        if (convertView == null) {
-
-            if (listViewItemType == 2) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.note_row_done, null);
-            }  else {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.note_row_undone, null);
+            switch (listViewItemType){
+                case 1:
+                    row=inflater.inflate(R.layout.note_row_done,null);
+                    content.setSpan(new StrikethroughSpan(), 0, content.length(), 0);
+                    break;
+                case 2:
+                    row=inflater.inflate(R.layout.note_row_planned,null);
+                    break;
+                case 3:
+                    row=inflater.inflate(R.layout.note_row_expired,null);
+                    break;
+                default:
+                    row=inflater.inflate(R.layout.note_row_planned,null);
+                    break;
             }
 
-            TextView textView = (TextView) convertView.findViewById(R.id.row_text);
-            viewHolder = new ViewHolder(textView);
+            holder = new NoteViewHolder();
+            holder.textView = (TextView)row.findViewById(R.id.row_text);
 
-            convertView.setTag(viewHolder);
-
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            row.setTag(holder);
         }
+        else
+        {
+            holder = (NoteViewHolder)row.getTag();
+        }
+        holder.textView.setText(content);
+        return row;
+    }
 
-        viewHolder.getText().setText(listViewItem.getTitle());
-        if(listViewItemType==2)
-            viewHolder.getText().setPaintFlags(viewHolder.getText().getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-        return convertView;
+    static class NoteViewHolder //TODO da rendere più conforme ai principi di buona programmazione (get, set, costruttori...)
+    {
+        TextView textView;
     }
 }

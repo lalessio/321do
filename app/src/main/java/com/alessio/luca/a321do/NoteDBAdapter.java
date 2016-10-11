@@ -15,10 +15,10 @@ import java.util.GregorianCalendar;
  * Created by Luca on 27/09/2016.
  */
 
-//TODO 1 SORTING
-    // TODO 2 COMPLETED
-        // TODO 3 TAG
-            // TODO 4 CHECKLIST
+// TODO 4 CHECKLIST
+    // TODO 5 STRINGS
+        // TODO 6 NOTIFICHE
+            // TODO 7 MEDIA + PLACE
 
 public class NoteDBAdapter {
     //these are the column names
@@ -45,7 +45,7 @@ public class NoteDBAdapter {
     public enum SortingOrder {NONE,DUEDATE,IMPORTANCE,CATEGORY};
 
     //used for logging
-    private static final String TAG = "NoteDBAdapter";
+    private static final String DEBUG_TAG = "NoteDBAdapter";
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
     private static final String DATABASE_NAME = "321do_db_test_4";
@@ -98,7 +98,7 @@ public class NoteDBAdapter {
         Cursor cursor = db.rawQuery("SELECT MAX(id) FROM "+TABLE_NAME,null);
         cursor.moveToFirst();
         newNote.setId(cursor.getInt(INDEX_ID));
-        Log.d(TAG,"ho salvato nota: "+newNote.print());
+        Log.d(DEBUG_TAG,"ho salvato nota: "+newNote.print());
         return newNote;
     }
 
@@ -128,36 +128,34 @@ public class NoteDBAdapter {
         Calendar nDueDate = new GregorianCalendar();
         nDueDate.setTimeInMillis(cursor.getLong(INDEX_DUEDATE));
         Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
-        //boolean nDone = cursor.getInt(cursor.getColumnIndex(COL_DONE))? 1:0; NON VA
         Note note = new Note(nId,nTitle,nDescription,nTag,nDueDate,nImportance);
-        Log.d(TAG,"retrieved note: "+note.print());
+        Log.d(DEBUG_TAG,"retrieved note: "+note.print());
         return note;
     }
 
     public Cursor retrieveAllNotes(SortingOrder sortBy) {
-        String sorting = new String();
+        String sorting = " order by "+COL_DONE;
         switch (sortBy) {
             case DUEDATE:
-                sorting = " order by "+COL_DUEDATE;
+                sorting = sorting+", "+COL_DUEDATE;
                 break;
             case IMPORTANCE:
-                sorting = " order by "+COL_IMPORTANCE;
+                sorting = sorting+", "+COL_IMPORTANCE;
                 break;
             case CATEGORY:
-                sorting = " order by "+COL_TAG+", "+COL_ID;
+                sorting = sorting+", "+COL_TAG+", "+COL_ID;
                 break;
-            default: //che sarebbe il case NONE
-                sorting = " order by "+COL_ID;
+            default: //che sarebbe il case NONE e quindi CREATIONDATE
+                sorting = sorting+", "+COL_ID;
                 break;
         }
         Cursor c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();
-        Log.d(TAG,"all notes retrieved from db correctly");
+        Log.d(DEBUG_TAG,"all notes retrieved from db correctly");
         return c;
     }
 
     //UPDATE
-    //TODO estendere a tutti campi
     public void updateNote(Note note) {
         ContentValues values = new ContentValues();
         values.put(COL_TITLE, note.getTitle());
@@ -166,7 +164,7 @@ public class NoteDBAdapter {
 //        values.put(COL_CHECKLIST, note.getCheckList().toString()); //TODO correggere
         values.put(COL_IMPORTANCE, note.getImportance().translate());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
-        //values.put(COL_DONE,note.isDone()?1:0); //TODO memorizzazione bool
+        // l'aggiornamento del campo done è gestito da tickNote()
         db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
 
@@ -194,13 +192,13 @@ public class NoteDBAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.w(TAG, DATABASE_CREATE);
+            Log.w(DEBUG_TAG, DATABASE_CREATE);
             db.execSQL(DATABASE_CREATE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+            Log.w(DEBUG_TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);

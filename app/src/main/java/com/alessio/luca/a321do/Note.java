@@ -1,5 +1,7 @@
 package com.alessio.luca.a321do;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -29,7 +31,7 @@ public class Note {
 
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
-    private static final String TAG = "Note";
+    private static final String DEBUG_TAG = "Note";
     public enum NoteState {COMPLETED,PLANNED,EXPIRED};
     private boolean done; //true se la nota è stata completata, false altrimenti
 
@@ -97,34 +99,25 @@ public class Note {
         this.done = done;
     }
 
-    ////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
-
-//    public void addToCheckList(String n)
-//    {
-//        checkList.add(n);
-//    }
-//    public String removeFromCheckList(int i)
-//    {
-//        return checkList.remove(i);
-//    }
+////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
 
     public boolean isDueOver(){
-        Calendar now = new GregorianCalendar();
-        if(this.dueDate.compareTo(now)>0)
-            return false;
-        else
-            return true;
-    }
+    Calendar now = Calendar.getInstance();
+    if(getDueDate().getTimeInMillis()>now.getTimeInMillis())
+        return false;
+    else
+        return true;
+}
     public NoteState getNoteState(){
         NoteState noteState;
         if(isDone())
             noteState=NoteState.COMPLETED;
         else
         {
-            if(!isDueOver())
-                noteState=NoteState.PLANNED;
-            else
+            if(isDueOver())
                 noteState=NoteState.EXPIRED;
+            else
+                noteState=NoteState.PLANNED;
         }
         return noteState;
     }
@@ -142,11 +135,41 @@ public class Note {
         this.tag= new String();
         this.importance = new Importance();
     }
+//    public void addToCheckList(String n)
+//    {
+//        checkList.add(n);
+//    }
+//    public String removeFromCheckList(int i)
+//    {
+//        return checkList.remove(i);
+//    }
+
+///////////////////////////////////////METODI DEBUG////////////////////////////////////////////////
+
     public String print() {
         return getId()+" / "+getTitle()+" / "+getDescription()+" / "+getTag()+" / "+printDueDate()+" / "+getImportance().translate();
     }
     public String printDueDate(){
         return new String(getDueDate().get(Calendar.DAY_OF_MONTH)+" "+(getDueDate().getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.getDefault()))+" "+getDueDate().get(Calendar.YEAR)+" at "+getDueDate().get(Calendar.HOUR_OF_DAY)+":"+getDueDate().get(Calendar.MINUTE));
+    }
+    public String readNoteState(){
+        String s = new String();
+        NoteState ns = getNoteState();
+        switch (ns){
+            case COMPLETED:
+                s = "completed";
+                break;
+            case PLANNED:
+                s = "planned";
+                break;
+            case EXPIRED:
+                s = "expired";
+                break;
+            default:
+                s = "non riconosciuto";
+                break;
+        }
+        return s;
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
