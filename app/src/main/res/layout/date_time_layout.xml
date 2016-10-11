@@ -22,14 +22,14 @@
         android:layout_height="match_parent">
 
         <Button
-            android:text="Cancel"
+            android:text="@string/cancelButtonText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/buttonDismissDateTime"
             android:layout_weight="1" />
 
         <Button
-            android:text="Done"
+            android:text="@string/confirmButtonText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/buttonDateTime"

@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="50"
-            android:text="Cancel"
+            android:text="@string/cancelButtonText"
             android:textColor="@color/white"
             android:id="@+id/button_cancel"/>
 
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="50"
-            android:text="Confirm"
+            android:text="@string/confirmButtonText"
             android:textColor="@color/white"
             android:id="@+id/button_confirm" />
 

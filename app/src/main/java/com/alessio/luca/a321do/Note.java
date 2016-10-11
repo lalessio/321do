@@ -31,7 +31,6 @@ public class Note {
 
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
-    private static final String DEBUG_TAG = "Note";
     public enum NoteState {COMPLETED,PLANNED,EXPIRED};
     private boolean done; //true se la nota è stata completata, false altrimenti
 

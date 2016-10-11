@@ -1,4 +1,32 @@
 <resources>
     <string name="app_name">321DO!</string>
     <string name="action_settings">Settings</string>
+    <string name="noteOptionEdit">Edit Note</string>
+    <string name="noteOptionDelete">Delete Note</string>
+    <string name="noteOptionTick">Tick</string>
+    <string name="sortOptionCreation">Creation date (default)</string>
+    <string name="sortOptionDueDate">Due date</string>
+    <string name="sortOptionImportance">Importance</string>
+    <string name="sortOptionTag">Tag</string>
+    <string name="sortOptionTitle">Order Notes by:</string>
+    <string name="newNoteTitle">Add a new Note</string>
+    <string name="editNoteTitle">Edit Note</string>
+    <string name="editNoteDateTimeEditTitle">Set Date/Time</string>
+    <string name="cancelButtonText">Cancel</string>
+    <string name="confirmButtonText">Done</string>
+    <string name="editTitleTitle">Change Title</string>
+    <string name="editTitleHint">Change Title</string>
+    <string name="editDescriptionTitle">Change Description</string>
+    <string name="editDescriptionHint">Add a more accurate description of your note here!</string>
+    <string name="editTagTitle">Assign a Tag</string>
+    <string name="editTagHint">None</string>
+    <string name="editDateTimeHint">No date/time set</string>
+    <string name="editDateTimeButtonText">Set Date/Time</string>
+    <string name="editPriorityTitle">Set Priority</string>
+    <string name="editUrgencyTitle">Set Urgency</string>
+    <string name="errorNoteText">If you are reading this there are some problems</string>
+    <string name="newNoteMenuString">Add Note</string>
+    <string name="sortNoteMenuString">Sort Notes</string>
+    <string name="settingsMenuString">Settings</string>
+    <string name="exitMenuString">Exit</string>
 </resources>

@@ -1,6 +1,10 @@
 package com.alessio.luca.a321do;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -60,7 +64,7 @@ public class NoteActivity extends AppCompatActivity {
                 //creo finestra
                 AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
                 ListView modeListView = new ListView(NoteActivity.this);
-                String[] modes = new String[] { "Edit Note", "Delete Note", "Tick" };
+                String[] modes = new String[] { getString(R.string.noteOptionEdit), getString(R.string.noteOptionDelete), getString(R.string.noteOptionTick) };
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
                 modeListView.setAdapter(modeAdapter);
                 builder.setView(modeListView);
@@ -73,7 +77,6 @@ public class NoteActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         switch (position){
                             case 0:
-                                //Toast.makeText(NoteActivity.this,"edit "+retrievedNotes.get(masterListPosition).getId()+"",Toast.LENGTH_SHORT).show();
                                 showEditNoteMenu(noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
                                 break;
                             case 1:
@@ -95,7 +98,8 @@ public class NoteActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNewNoteMenu();
+                //showNewNoteMenu();
+                testNotification(view);
             }
         });
 
@@ -166,12 +170,15 @@ public class NoteActivity extends AppCompatActivity {
     private void showSortMenu() {
         AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
         ListView modeListView = new ListView(NoteActivity.this);
-        String[] modes = new String[] { "Creation date (default)", "Due date", "Importance", "Tag" };
+        String[] modes = new String[] { getString(R.string.sortOptionCreation),
+                                        getString(R.string.sortOptionDueDate),
+                                        getString(R.string.sortOptionImportance),
+                                        getString(R.string.sortOptionTag) };
         ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
         modeListView.setAdapter(modeAdapter);
         builder.setView(modeListView);
         final Dialog dialog = builder.create();
-        dialog.setTitle("Order Notes by:");
+        dialog.setTitle(R.string.sortOptionTitle);
         dialog.show();
         modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -198,7 +205,7 @@ public class NoteActivity extends AppCompatActivity {
     private void showNewNoteMenu(){
         //creo la finestrella e la popolo
         final Dialog dialog = new Dialog(this);
-        dialog.setTitle("Add a new Note");
+        dialog.setTitle(R.string.newNoteTitle);
         dialog.setContentView(R.layout.dialog_new_note);
         final EditText editText = (EditText) dialog.findViewById(R.id.editText_title);
         LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.new_note_layout);
@@ -226,7 +233,7 @@ public class NoteActivity extends AppCompatActivity {
 
     private void showEditNoteMenu(final Note note) {
         final Dialog dialog = new Dialog(this);
-        dialog.setTitle("Edit Note");
+        dialog.setTitle(R.string.editNoteTitle);
         dialog.setContentView(R.layout.dialog_edit_note);
 
         final EditText editTextTitle = (EditText) dialog.findViewById(R.id.editText_title);
@@ -250,7 +257,7 @@ public class NoteActivity extends AppCompatActivity {
 
         //inizializzazione sotto dialog date time
         final Dialog dateTimeDialog = new Dialog(this);
-        dateTimeDialog.setTitle("Set Date/Time");
+        dateTimeDialog.setTitle(R.string.editNoteDateTimeEditTitle);
         dateTimeDialog.setContentView(R.layout.date_time_layout);
 
         final DatePicker datePicker = (DatePicker) dateTimeDialog.findViewById(R.id.datePicker);
@@ -341,8 +348,7 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
 
-    public void updateListView(NoteDBAdapter.SortingOrder sortBy)
-    {
+    public void updateListView(NoteDBAdapter.SortingOrder sortBy) {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         retrievedNotes.clear();
 
@@ -374,5 +380,33 @@ public class NoteActivity extends AppCompatActivity {
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
         NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row_done,notes);
         listView.setAdapter(noteListAdapter);
+    }
+
+    public void testNotification(View view) {
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//
+//        Notification notification = new Notification();
+//        Intent notificationIntent = new Intent(this.getApplicationContext(),NotificationReceiverActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0,notificationIntent, 0);
+//        notification.contentIntent = pendingIntent;
+//
+//        Notification.Builder builder = new Notification.Builder(this);
+//
+//        builder.setAutoCancel(true);
+//        builder.setTicker("this is ticker text");
+//        builder.setContentTitle("App Notification");
+//        builder.setContentText("Something");
+//        builder.setSmallIcon(R.drawable.slime);
+//        builder.setContentIntent(pendingIntent);
+//        builder.setOngoing(true);
+//        builder.setSubText("This is subtext...");
+//        builder.addAction(R.drawable.slime,"qualcosa",pendingIntent);
+//        builder.build();
+//
+//        notification = builder.getNotification();
+//        notificationManager.notify(0, notification);
+
+        Intent intent = new Intent(this,NotificationReceiverActivity.class);
+        startActivity(intent);
     }
 }

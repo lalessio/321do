@@ -7,17 +7,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/radioGroup">
         <RadioButton
-            android:text="Creation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton1" />
         <RadioButton
-            android:text="Due date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton2" />
         <RadioButton
-            android:text="Importance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton3" />
