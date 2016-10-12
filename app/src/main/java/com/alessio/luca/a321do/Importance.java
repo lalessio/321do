@@ -59,7 +59,7 @@ public class Importance {
 
     //altri metodi
     public String translate() {
-        String temp = new String();
+        String temp;
         switch (getPriority()) {
             case IMPORTANT:
                 temp = "1";

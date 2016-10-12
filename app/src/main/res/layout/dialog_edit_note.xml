@@ -102,40 +102,34 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="match_parent">
 
             <TextView
                 android:text="@string/editPriorityTitle"
                 android:id="@+id/textView3"
-                android:layout_weight="1"
                 style="@style/genericTextView" />
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner_priority"
-                android:layout_weight="1" />
+                android:id="@+id/spinner_priority" />
 
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:text="@string/editUrgencyTitle"
                 android:id="@+id/textView4"
-                android:layout_weight="1"
                 style="@style/genericTextView" />
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner_urgency"
-                android:layout_weight="1" />
+                android:id="@+id/spinner_urgency"/>
 
         </LinearLayout>
 

@@ -6,22 +6,25 @@
     android:background="@color/white">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:background="?android:attr/activatedBackgroundIndicator">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:text="@string/errorNoteText"
-            android:textColor="@color/blue"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/row_text"
+            android:textColor="@color/green"
             android:textSize="18sp"
-            android:gravity="center_vertical"
-            android:padding="10dp"
-            android:ellipsize="end"
-            android:maxLines="1"/>
+            android:id="@+id/rowText" />
+
+        <TextView
+            android:text="@string/errorNoteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rowSubText"
+            android:textStyle="italic" />
+
     </LinearLayout>
 </LinearLayout>

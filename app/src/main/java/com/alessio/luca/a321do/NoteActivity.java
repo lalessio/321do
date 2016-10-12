@@ -1,17 +1,12 @@
 package com.alessio.luca.a321do;
 
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -37,6 +31,7 @@ public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
     private ArrayList<Note> retrievedNotes;
+    private NoteDBAdapter.SortingOrder currentOrder;
 
     //alla creazione imposto la lista che visualizza le note richieste (al momento solo questo)
     @Override
@@ -44,10 +39,12 @@ public class NoteActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setIcon(R.mipmap.ic_launcher);
+
+        //TODO capire se la action bar serve
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.setHomeButtonEnabled(true);
+        //actionBar.setDisplayShowHomeEnabled(true);
+        //actionBar.setIcon(R.mipmap.ic_launcher);
 
         listView = (ListView) findViewById(R.id.note_list_view);
         listView.setDivider(null);
@@ -55,8 +52,9 @@ public class NoteActivity extends AppCompatActivity {
         noteDBAdapter = new NoteDBAdapter(this);
         noteDBAdapter.open();
         listView = (ListView)findViewById(R.id.note_list_view);
-        retrievedNotes = new ArrayList<Note>();
-        updateListView(NoteDBAdapter.SortingOrder.NONE);
+        retrievedNotes = new ArrayList<>();
+        currentOrder = NoteDBAdapter.SortingOrder.NONE;
+        updateListView(currentOrder);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,11 +79,11 @@ public class NoteActivity extends AppCompatActivity {
                                 break;
                             case 1:
                                 noteDBAdapter.deleteNote(retrievedNotes.get(masterListPosition));
-                                updateListView(NoteDBAdapter.SortingOrder.NONE);
+                                updateListView(currentOrder);
                                 break;
                             case 2:
                                 noteDBAdapter.tickNote(retrievedNotes.get(masterListPosition));
-                                updateListView(NoteDBAdapter.SortingOrder.NONE);
+                                updateListView(currentOrder);
                                 break;
                         }
                         dialog.dismiss();
@@ -100,6 +98,7 @@ public class NoteActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //showNewNoteMenu();
                 testNotification(view);
+                //TODO sperimentazione notifiche
             }
         });
 
@@ -185,18 +184,19 @@ public class NoteActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        updateListView(NoteDBAdapter.SortingOrder.NONE);
+                        currentOrder = NoteDBAdapter.SortingOrder.NONE;
                         break;
                     case 1:
-                        updateListView(NoteDBAdapter.SortingOrder.DUEDATE);
+                        currentOrder = NoteDBAdapter.SortingOrder.DUEDATE;
                         break;
                     case 2:
-                        updateListView(NoteDBAdapter.SortingOrder.IMPORTANCE);
+                        currentOrder = NoteDBAdapter.SortingOrder.IMPORTANCE;
                         break;
                     case 3:
-                        updateListView(NoteDBAdapter.SortingOrder.CATEGORY);
+                        currentOrder = NoteDBAdapter.SortingOrder.CATEGORY;
                         break;
                 }
+                updateListView(currentOrder);
                 dialog.dismiss();
             }
         });
@@ -208,7 +208,7 @@ public class NoteActivity extends AppCompatActivity {
         dialog.setTitle(R.string.newNoteTitle);
         dialog.setContentView(R.layout.dialog_new_note);
         final EditText editText = (EditText) dialog.findViewById(R.id.editText_title);
-        LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.new_note_layout);
+        //LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.new_note_layout);
         final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
         final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
         dialog.show();
@@ -218,7 +218,7 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 noteDBAdapter.createNote(new Note(editText.getText().toString()));
-                updateListView(NoteDBAdapter.SortingOrder.NONE);
+                updateListView(currentOrder);
                 dialog.dismiss();
             }
         });
@@ -287,7 +287,7 @@ public class NoteActivity extends AppCompatActivity {
                 newNote.setTag(editTextTag.getText().toString());
                 //l'orario è gestito altrove
                 noteDBAdapter.updateNote(newNote);
-                updateListView(NoteDBAdapter.SortingOrder.NONE);
+                updateListView(currentOrder);
                 dialog.dismiss();
             }
         });
@@ -352,7 +352,7 @@ public class NoteActivity extends AppCompatActivity {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         retrievedNotes.clear();
 
-        while (cursor.isAfterLast()==false)
+        while (!cursor.isAfterLast())
         {
             Note temp = new Note();
             temp.setId(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_ID)));
@@ -378,7 +378,7 @@ public class NoteActivity extends AppCompatActivity {
 //        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,arrayAllTitles);
 //        listView.setAdapter(arrayAdapter);
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
-        NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row_done,notes);
+        NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row,notes,sortBy);
         listView.setAdapter(noteListAdapter);
     }
 

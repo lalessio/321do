@@ -1,7 +1,5 @@
 package com.alessio.luca.a321do;
 
-import android.util.Log;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -31,7 +29,8 @@ public class Note {
 
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
-    public enum NoteState {COMPLETED,PLANNED,EXPIRED};
+    public enum NoteState {COMPLETED,PLANNED,EXPIRED}
+
     private boolean done; //true se la nota è stata completata, false altrimenti
 
 //////////////////////////////////////////GET&SET//////////////////////////////////////////////////
@@ -102,10 +101,7 @@ public class Note {
 
     public boolean isDueOver(){
     Calendar now = Calendar.getInstance();
-    if(getDueDate().getTimeInMillis()>now.getTimeInMillis())
-        return false;
-    else
-        return true;
+        return getDueDate().getTimeInMillis() <= now.getTimeInMillis();
 }
     public NoteState getNoteState(){
         NoteState noteState;
@@ -146,13 +142,22 @@ public class Note {
 ///////////////////////////////////////METODI DEBUG////////////////////////////////////////////////
 
     public String print() {
-        return getId()+" / "+getTitle()+" / "+getDescription()+" / "+getTag()+" / "+printDueDate()+" / "+getImportance().translate();
+        return getId()+" / "
+                +getTitle()+" / "
+                +getDescription()+" / "
+                +getTag()+" / "
+                +printDueDate()+" / "
+                +getImportance().translate();
     }
     public String printDueDate(){
-        return new String(getDueDate().get(Calendar.DAY_OF_MONTH)+" "+(getDueDate().getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.getDefault()))+" "+getDueDate().get(Calendar.YEAR)+" at "+getDueDate().get(Calendar.HOUR_OF_DAY)+":"+getDueDate().get(Calendar.MINUTE));
+        return getDueDate().get(Calendar.DAY_OF_MONTH) + " "
+                + (getDueDate().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())) + " "
+                + getDueDate().get(Calendar.YEAR) + "   "
+                + getDueDate().get(Calendar.HOUR_OF_DAY) + ":"
+                + getDueDate().get(Calendar.MINUTE);
     }
     public String readNoteState(){
-        String s = new String();
+        String s;
         NoteState ns = getNoteState();
         switch (ns){
             case COMPLETED:
@@ -177,19 +182,16 @@ public class Note {
         this.title = title;
         newNoteInitialization();
     }
-
     public Note(int id, String title) {
         this.id = id;
         this.title = title;
         newNoteInitialization();
     }
-
     public Note(){
         Calendar now = new GregorianCalendar();
         this.title = now.getTime().toString(); //titolo default momento creazione
         newNoteInitialization();
     }
-
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
     public Note(int nId, String nTitle, String nDescription, String nTag, Calendar nDueDate, Importance nImportance){
         this.id=nId;
@@ -199,7 +201,6 @@ public class Note {
         this.dueDate=nDueDate;
         this.importance=nImportance;
     }
-
     public Note(Note note){
         //primo abbozzo costruttore copia
         this.id = note.getId();

@@ -4,7 +4,7 @@
     <string name="noteOptionEdit">Edit Note</string>
     <string name="noteOptionDelete">Delete Note</string>
     <string name="noteOptionTick">Tick</string>
-    <string name="sortOptionCreation">Creation date (default)</string>
+    <string name="sortOptionCreation">Creation (default)</string>
     <string name="sortOptionDueDate">Due date</string>
     <string name="sortOptionImportance">Importance</string>
     <string name="sortOptionTag">Tag</string>

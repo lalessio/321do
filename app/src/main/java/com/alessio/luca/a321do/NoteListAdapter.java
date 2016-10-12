@@ -2,6 +2,7 @@ package com.alessio.luca.a321do;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
@@ -14,16 +15,18 @@ import android.widget.TextView;
  * Created by Luca on 11/10/2016.
  */
 
-public class NoteListAdapter extends ArrayAdapter {
-    Context context;
-    int layoutResourceId;
-    Note[] data = null;
+class NoteListAdapter extends ArrayAdapter {
+    private Context context;
+    private int layoutResourceId;
+    private Note[] data = null;
+    private NoteDBAdapter.SortingOrder sortingRequested;
 
-    public NoteListAdapter(Context context, int layoutResourceId, Note[] data) {
+    NoteListAdapter(Context context, int layoutResourceId, Note[] data, NoteDBAdapter.SortingOrder sortingRequested) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
+        this.sortingRequested = sortingRequested;
     }
 
     @Override
@@ -53,38 +56,62 @@ public class NoteListAdapter extends ArrayAdapter {
         {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
+            row = inflater.inflate(R.layout.note_row,null);
+            TextView noteText = (TextView) row.findViewById(R.id.rowText);
 
+            //coloro la nota in base al suo stato
             switch (listViewItemType){
                 case 1:
-                    row=inflater.inflate(R.layout.note_row_done,null);
                     content.setSpan(new StrikethroughSpan(), 0, content.length(), 0);
+                    noteText.setTextColor(ContextCompat.getColor(context,R.color.green));
                     break;
                 case 2:
-                    row=inflater.inflate(R.layout.note_row_planned,null);
+                    noteText.setTextColor(ContextCompat.getColor(context,R.color.blue));
                     break;
                 case 3:
-                    row=inflater.inflate(R.layout.note_row_expired,null);
+                    noteText.setTextColor(ContextCompat.getColor(context,R.color.red));
                     break;
                 default:
-                    row=inflater.inflate(R.layout.note_row_planned,null);
+                    noteText.setTextColor(ContextCompat.getColor(context,R.color.blue));
                     break;
             }
 
+            //mi occupo di popolare la sottovoce della nota se necessario
+            TextView subNoteText = (TextView) row.findViewById(R.id.rowSubText);
+            switch (sortingRequested){
+                case DUEDATE:
+                    subNoteText.setText(note.printDueDate());
+                    break;
+                case IMPORTANCE:
+                    subNoteText.setText(note.getImportance().translate());
+                    break;
+                case CATEGORY:
+                    subNoteText.setText(note.getTag());
+                    break;
+                default:
+                    subNoteText.setText(note.getDescription());
+                    break;
+            }
             holder = new NoteViewHolder();
-            holder.textView = (TextView)row.findViewById(R.id.row_text);
-
+            holder.setTextView((TextView) row.findViewById(R.id.rowText));
             row.setTag(holder);
         }
         else
         {
             holder = (NoteViewHolder)row.getTag();
         }
-        holder.textView.setText(content);
+        holder.getTextView().setText(content);
         return row;
     }
 
-    static class NoteViewHolder //TODO da rendere più conforme ai principi di buona programmazione (get, set, costruttori...)
+    private static class NoteViewHolder
     {
         TextView textView;
+        TextView getTextView() {
+            return textView;
+        }
+        void setTextView(TextView textView) {
+            this.textView = textView;
+        }
     }
 }

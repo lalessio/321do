@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
  */
 
 // TODO 4 CHECKLIST
-    // TODO 5 STRINGS
+
         // TODO 6 NOTIFICHE
             // TODO 7 MEDIA + PLACE
 
@@ -118,7 +118,7 @@ public class NoteDBAdapter {
                 null, null, null, null
         );
 
-        if (cursor != null)
+        if(cursor != null)
             cursor.moveToFirst();
 
         int nId = cursor.getInt(INDEX_ID);
@@ -132,7 +132,6 @@ public class NoteDBAdapter {
         Log.d(DEBUG_TAG,"retrieved note: "+note.print());
         return note;
     }
-
     public Cursor retrieveAllNotes(SortingOrder sortBy) {
         String sorting = " order by "+COL_DONE;
         switch (sortBy) {
@@ -167,7 +166,6 @@ public class NoteDBAdapter {
         // l'aggiornamento del campo done è gestito da tickNote()
         db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
-
     public boolean tickNote(Note note){ //se una nota era da completare la completo e se era completata la "scompleto"
         ContentValues values = new ContentValues();
         values.put(COL_DONE,!note.isDone());
@@ -180,7 +178,6 @@ public class NoteDBAdapter {
     public void deleteNote(Note note) {
         db.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
-
     public void deleteAllNotes() {
         db.delete(TABLE_NAME, null, null);
     }
