@@ -48,7 +48,7 @@ public class NoteDBAdapter {
     private static final String DEBUG_TAG = "NoteDBAdapter";
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
-    private static final String DATABASE_NAME = "321do_db_test_4";
+    private static final String DATABASE_NAME = "321do_db_test_7";
     private static final String TABLE_NAME = "table_notes";
     private static final int DATABASE_VERSION = 1;
     private final Context context;

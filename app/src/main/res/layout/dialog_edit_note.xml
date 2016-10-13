@@ -1,159 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="300dp"
-    android:id="@+id/edit_note_layout"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
     android:layout_height="fill_parent">
-<!-- TODO progettare gui modifica nota-->
-
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="@string/editTitleTitle"
-            android:id="@+id/textView1"
-            style="@style/genericTextView"
-            android:layout_width="match_parent" />
-
-        <EditText
-            android:id="@+id/editText_title"
-            android:layout_width="match_parent"
-            android:layout_height="53dp"
-            android:layout_margin="4dp"
-            android:background="@color/light_grey"
-            android:gravity="start"
-            android:textColor="@color/black"
-            android:hint="@string/editTitleHint"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="@string/editDescriptionTitle"
-            android:id="@+id/textView2"
-            style="@style/genericTextView"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="53dp"
-            android:layout_margin="4dp"
-            android:background="@color/light_grey"
-            android:gravity="start"
-            android:textColor="@color/black"
-            android:id="@+id/editText_description"
-            android:hint="@string/editDescriptionHint" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="@string/editTagTitle"
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:background="@color/light_grey"
-            android:id="@+id/editText_tag"
-            android:hint="@string/editTagHint"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:hint="@string/editDateTimeHint"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:id="@+id/editText_date" />
-
-        <Button
-            android:text="@string/editDateTimeButtonText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_date" />
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="vertical" android:layout_width="300dp"
+        android:id="@+id/edit_note_layout"
+        android:layout_height="fill_parent"
+        android:weightSum="1">
+    <!-- TODO progettare gui modifica nota-->
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
 
             <TextView
-                android:text="@string/editPriorityTitle"
-                android:id="@+id/textView3"
-                style="@style/genericTextView" />
+                android:text="@string/editTitleTitle"
+                android:id="@+id/textView1"
+                style="@style/genericTextView"
+                android:layout_width="match_parent" />
 
-            <Spinner
+            <EditText
+                android:id="@+id/editText_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_priority" />
+                android:layout_height="match_parent"
+                android:background="@color/light_grey"
+                android:textColor="@color/black"
+                android:layout_margin="4dp"
+                android:hint="@string/editTitleHint"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:text="@string/editDescriptionTitle"
+                android:id="@+id/textView2"
+                style="@style/genericTextView"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@color/light_grey"
+                android:textColor="@color/black"
+                android:id="@+id/editText_description"
+                android:hint="@string/editDescriptionHint" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:text="@string/editTagTitle"
+                android:id="@+id/textView5"
+                android:layout_margin="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:layout_margin="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@color/light_grey"
+                android:id="@+id/editText_tag"
+                android:hint="@string/editTagHint"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/editDateTimeHint"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:id="@+id/editText_date" />
+
+            <Button
+                android:text="@string/editDateTimeButtonText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_date" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/editPriorityTitle"
+                    android:id="@+id/textView3"
+                    style="@style/genericTextView" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_priority" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/editUrgencyTitle"
+                    android:id="@+id/textView4"
+                    style="@style/genericTextView" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_urgency"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:text="@string/editUrgencyTitle"
-                android:id="@+id/textView4"
-                style="@style/genericTextView" />
-
-            <Spinner
-                android:layout_width="match_parent"
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner_urgency"/>
+                android:layout_margin="4dp"
+                android:text="@string/cancelButtonText"
+                android:id="@+id/button_cancel"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/confirmButtonText"
+                android:layout_margin="4dp"
+                android:id="@+id/button_confirm" />
 
         </LinearLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="50"
-            android:text="@string/cancelButtonText"
-            android:id="@+id/button_cancel"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="50"
-            android:text="@string/confirmButtonText"
-            android:id="@+id/button_confirm" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

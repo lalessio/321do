@@ -29,4 +29,6 @@
     <string name="sortNoteMenuString">Sort Notes</string>
     <string name="settingsMenuString">Settings</string>
     <string name="exitMenuString">Exit</string>
+    <string name="multipleDeleteTitle">Delete All</string>
+    <string name="multipleTickTitle">Tick All</string>
 </resources>

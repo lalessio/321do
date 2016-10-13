@@ -58,7 +58,7 @@ public class Importance {
     }
 
     //altri metodi
-    public String translate() {
+    public String translate() { //TODO overrider di toString()?
         String temp;
         switch (getPriority()) {
             case IMPORTANT:

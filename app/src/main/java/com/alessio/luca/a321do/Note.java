@@ -155,7 +155,7 @@ public class Note {
                 + getDueDate().get(Calendar.YEAR) + "   "
                 + getDueDate().get(Calendar.HOUR_OF_DAY) + ":"
                 + getDueDate().get(Calendar.MINUTE);
-    }
+    } //TODO sistemare stampa minuti (stampa solo una cifra per ora)
     public String readNoteState(){
         String s;
         NoteState ns = getNoteState();

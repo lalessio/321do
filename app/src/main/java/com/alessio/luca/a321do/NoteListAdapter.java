@@ -89,7 +89,7 @@ class NoteListAdapter extends ArrayAdapter {
                     subNoteText.setText(note.getTag());
                     break;
                 default:
-                    subNoteText.setText(note.getDescription());
+                    subNoteText.setText(note.getDescription()); //TODO accorciare testo se troppo lungo (e se usa caporiga)
                     break;
             }
             holder = new NoteViewHolder();

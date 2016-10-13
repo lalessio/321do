@@ -18,7 +18,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".NotificationReceiverActivity" />
-        <activity android:name=".WhateverActivity"></activity>
     </application>
 
 </manifest>

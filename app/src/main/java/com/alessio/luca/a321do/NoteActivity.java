@@ -1,16 +1,21 @@
 package com.alessio.luca.a321do;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -96,46 +101,49 @@ public class NoteActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //showNewNoteMenu();
-                testNotification(view);
-                //TODO sperimentazione notifiche
+                showNewNoteMenu();
             }
         });
 
+        //TODO cancellazione multipla
 //        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 //        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 //            @Override
-//            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean
-//                    checked) { }
+//            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+//            }
+//
 //            @Override
 //            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//                MenuInflater inflater = mode.getMenuInflater();
-//                inflater.inflate(R.menu.cam_menu, menu);
-//                return true;
+//                return false;
 //            }
+//
 //            @Override
 //            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
 //                return false;
 //            }
+//
 //            @Override
 //            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 //                switch (item.getItemId()) {
-//                    case R.id.menu_item_delete_reminder:
-//                        for (int nC = mCursorAdapter.getCount() - 1; nC >= 0; nC--) {
+//                    case R.id.multipleDelete:
+//                        for (int nC = new NoteListAdapter(NoteActivity.this,R.layout.note_row,retrievedNotes.toArray(new Note[retrievedNotes.size()]),currentOrder).getCount() - 1; nC >= 0; nC--) {
 //                            if (listView.isItemChecked(nC)) {
-//                                noteDBAdapter.deleteNoteById(getIdFromPosition(nC));
+//                                noteDBAdapter.deleteNote(retrievedNotes.get(nC));
 //                            }
 //                        }
 //                        mode.finish();
-//                        mCursorAdapter.changeCursor(noteDBAdapter.fetchAllNotes());
+//                        updateListView(currentOrder);
 //                        return true;
 //                }
 //                return false;
 //            }
-//            @Override
-//            public void onDestroyActionMode(ActionMode mode) { }
-//        });
 //
+//            @Override
+//            public void onDestroyActionMode(ActionMode mode) {
+//
+//            }
+//        });
+
     }
 
     //gestisco il menù
@@ -348,6 +356,7 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
 
+
     public void updateListView(NoteDBAdapter.SortingOrder sortBy) {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         retrievedNotes.clear();
@@ -406,7 +415,24 @@ public class NoteActivity extends AppCompatActivity {
 //        notification = builder.getNotification();
 //        notificationManager.notify(0, notification);
 
-        Intent intent = new Intent(this,NotificationReceiverActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this,NotificationReceiverActivity.class);
+        //startActivity(intent);
+        Intent intent = new Intent(this, NotificationReceiverActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+
+        // Build notification
+        // Actions are just fake
+        Notification noti = new Notification.Builder(this)
+                .setContentTitle("Vbb")
+                .setContentText("Contenuto")
+                .setTicker("Nuova notifica!")
+                .setSmallIcon(R.drawable.slime)
+                .setAutoCancel(true)
+                .setContentIntent(pIntent).build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // hide the notification after its selected
+        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(0, noti);
     }
 }
