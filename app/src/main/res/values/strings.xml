@@ -31,4 +31,5 @@
     <string name="exitMenuString">Exit</string>
     <string name="multipleDeleteTitle">Delete All</string>
     <string name="multipleTickTitle">Tick All</string>
+    <string name="alarmTitle">Activate Alarm</string>
 </resources>

@@ -77,12 +77,17 @@
 
         </LinearLayout>
 
+        <!--<Switch-->
+            <!--android:text="@string/alarmTitle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/switchAlarm" />-->
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp">
-
+            >
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -97,8 +102,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_date" />
-
         </LinearLayout>
+
+
+
 
 
         <LinearLayout
