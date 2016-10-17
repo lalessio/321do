@@ -3,6 +3,7 @@ package com.alessio.luca.a321do;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -13,8 +14,9 @@ public class NotificationReceiverActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("lalala","esegue sta classe davvero");
         setContentView(R.layout.result);
-        Toast.makeText(this,"aaaaaaaaa",Toast.LENGTH_SHORT).show();
+        TextView t = (TextView) findViewById(R.id.textViewResult);
+        Note note = (Note) getIntent().getExtras().get("NotePayload");
+        t.setText(note.print());
     }
 }

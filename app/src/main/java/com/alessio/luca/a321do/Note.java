@@ -37,7 +37,7 @@ public class Note implements Serializable {
     public enum NoteState {COMPLETED,PLANNED,EXPIRED}
     private static String LIST_SEPARATOR = "__,__";
     private boolean done; //true se la nota è stata completata, false altrimenti
-    private boolean alarm;
+    private boolean alarm; //true se è stato impostata la notifica, false altrimenti
 
 //////////////////////////////////////////GET&SET//////////////////////////////////////////////////
 
@@ -115,7 +115,7 @@ public class Note implements Serializable {
         this.alarm = alarm;
     }
 
-    ////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
+////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
 
     public boolean isDueOver(){
     Calendar now = Calendar.getInstance();
@@ -148,8 +148,8 @@ public class Note implements Serializable {
         this.description = new String();
         this.tag= new String();
         this.importance = new Importance();
+        this.alarm = false;
     }
-
 
 ///////////////////////////////////////METODI DEBUG////////////////////////////////////////////////
 
@@ -159,7 +159,9 @@ public class Note implements Serializable {
                 +getDescription()+" / "
                 +getTag()+" / "
                 +printDueDate()+" / "
-                +getImportance().translate();
+                +getImportance().translate()
+                +" / done = "+isDone()
+                +" / alarm = "+isAlarmOn();
     }
     public String printDueDate(){
         return getDueDate().get(Calendar.DAY_OF_MONTH) + " "
@@ -239,6 +241,7 @@ public class Note implements Serializable {
         this.dueDate = note.getDueDate();
         this.importance = note.getImportance();
         this.done=note.isDone();
+        this.alarm=note.isAlarmOn();
     }
 
 //    private class Place {

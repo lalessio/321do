@@ -22,11 +22,13 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -42,6 +44,7 @@ public class NoteActivity extends AppCompatActivity {
     private NoteDBAdapter noteDBAdapter;
     private ArrayList<Note> retrievedNotes;
     private NoteDBAdapter.SortingOrder currentOrder;
+    
 
     //alla creazione imposto la lista che visualizza le note richieste (al momento solo questo)
     @Override
@@ -60,7 +63,7 @@ public class NoteActivity extends AppCompatActivity {
         listView.setDivider(null);
 
         noteDBAdapter = new NoteDBAdapter(this);
-        noteDBAdapter.open();
+        //noteDBAdapter.open();
         listView = (ListView)findViewById(R.id.note_list_view);
         retrievedNotes = new ArrayList<>();
         currentOrder = NoteDBAdapter.SortingOrder.NONE;
@@ -169,6 +172,7 @@ public class NoteActivity extends AppCompatActivity {
                 return true;
             case R.id.action_settings:
                 Toast.makeText(NoteActivity.this, "settings TODO", Toast.LENGTH_SHORT).show();
+                //noteDBAdapter.selfDestruct();
                 return true;
             case R.id.action_sort:
                 showSortMenu();
@@ -263,6 +267,7 @@ public class NoteActivity extends AppCompatActivity {
         //final ToggleButton alarmButton = (ToggleButton) dialog.findViewById(R.id.button_alarm);
         final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
         final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
+        Switch alarmSwitch = (Switch) dialog.findViewById(R.id.switch_alarm);
         final Spinner prioritySpinner = (Spinner) dialog.findViewById(R.id.spinner_priority);
         Spinner urgencySpinner = (Spinner) dialog.findViewById(R.id.spinner_urgency);
         final int[] priority = {java.lang.Character.getNumericValue(note.getImportance().translate().charAt(0))};
@@ -305,12 +310,34 @@ public class NoteActivity extends AppCompatActivity {
                 noteDBAdapter.updateNote(newNote);
                 updateListView(currentOrder);
                 dialog.dismiss();
+                //planNotification(note);
             }
         });
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+
+        alarmSwitch.setChecked(note.isAlarmOn());
+        alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                note.setAlarm(isChecked);
+                if(isChecked)
+                {
+                    planNotification(note);
+                    Log.d("321notifica","notifica creata");
+                }
+                else
+                {
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    Intent intentAlarm = new Intent(NoteActivity.this, AlarmReceiver.class);
+                    PendingIntent pendingUpdateIntent = PendingIntent.getBroadcast(NoteActivity.this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.cancel(pendingUpdateIntent);
+                    Log.d("321notifica","notifica eliminata");
+                }
             }
         });
 
@@ -367,6 +394,7 @@ public class NoteActivity extends AppCompatActivity {
 
     public void updateListView(NoteDBAdapter.SortingOrder sortBy) {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
+        cursor.moveToFirst();
         retrievedNotes.clear();
 
         while (!cursor.isAfterLast())
@@ -387,20 +415,15 @@ public class NoteActivity extends AppCompatActivity {
             retrievedNotes.add(temp);
             cursor.moveToNext();
         }
-//        ArrayList<String> arrayAllTitles = new ArrayList<String>();
-//        for (Note n: retrievedNotes)
-//        {
-//            arrayAllTitles.add(n.getTitle());
-//        }
-//        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,arrayAllTitles);
-//        listView.setAdapter(arrayAdapter);
+
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
         NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row,notes,sortBy);
         listView.setAdapter(noteListAdapter);
     }
 
     public void planNotification(Note note) {
-        long when = note.getDueDate().getTimeInMillis();
+        //long when = note.getDueDate().getTimeInMillis();
+        long when = System.currentTimeMillis()+10000;
         Intent intentAlarm = new Intent(this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("NotePayload",note);

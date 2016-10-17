@@ -1,9 +1,11 @@
 package com.alessio.luca.a321do;
 
+import java.io.Serializable;
+
 /**
  * Created by Luca on 04/10/2016.
  */
-public class Importance {
+public class Importance implements Serializable{
 
     //definizione enum valori importanza (nomi provvisori)
     public enum Priority {IMPORTANT,NORMAL,SECONDARY};

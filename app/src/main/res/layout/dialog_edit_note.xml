@@ -97,6 +97,12 @@
                 android:textColor="@color/black"
                 android:id="@+id/editText_date" />
 
+            <Switch
+                android:text="Switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_alarm" />
+
             <Button
                 android:text="@string/editDateTimeButtonText"
                 android:layout_width="match_parent"
