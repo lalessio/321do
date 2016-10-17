@@ -154,6 +154,12 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateListView(currentOrder);
+    }
+
     //gestisco il menù
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -215,7 +221,6 @@ public class NoteActivity extends AppCompatActivity {
                 }
                 updateListView(currentOrder);
                 dialog.dismiss();
-                Log.d("vbb","nota creata e dialog chiuso");
             }
         });
     }
@@ -264,7 +269,6 @@ public class NoteActivity extends AppCompatActivity {
         editTextTag.setText(note.getTag());
 
         final Button dateButton = (Button) dialog.findViewById(R.id.button_date);
-        //final ToggleButton alarmButton = (ToggleButton) dialog.findViewById(R.id.button_alarm);
         final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
         final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
         Switch alarmSwitch = (Switch) dialog.findViewById(R.id.switch_alarm);
@@ -309,17 +313,21 @@ public class NoteActivity extends AppCompatActivity {
                 //l'orario è gestito altrove
                 noteDBAdapter.updateNote(newNote);
                 updateListView(currentOrder);
+                if(newNote.isAlarmOn())
+                    planNotification(newNote);
                 dialog.dismiss();
-                //planNotification(note);
+                Toast.makeText(NoteActivity.this,"Changes applied",Toast.LENGTH_SHORT).show();
             }
         });
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(NoteActivity.this,"Changes NOT SAVED",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
 
+        //gestisco lo switch del promemoria
         alarmSwitch.setChecked(note.isAlarmOn());
         alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -327,8 +335,17 @@ public class NoteActivity extends AppCompatActivity {
                 note.setAlarm(isChecked);
                 if(isChecked)
                 {
-                    planNotification(note);
-                    Log.d("321notifica","notifica creata");
+                    switch (note.getNoteState()){
+                        case COMPLETED:
+                            Toast.makeText(NoteActivity.this, "Note completed, no need for reminder", Toast.LENGTH_SHORT).show();
+                            break;
+                        case PLANNED:
+                            Log.d("321notifica","notifica creata");
+                            break;
+                        case EXPIRED:
+                            Toast.makeText(NoteActivity.this, "Date/Time already passed", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
                 else
                 {
@@ -422,8 +439,8 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void planNotification(Note note) {
-        //long when = note.getDueDate().getTimeInMillis();
-        long when = System.currentTimeMillis()+10000;
+        long when = note.getDueDate().getTimeInMillis();
+        //long when = System.currentTimeMillis()+3000;
         Intent intentAlarm = new Intent(this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("NotePayload",note);

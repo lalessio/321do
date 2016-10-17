@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="l'utente ha cliccato sulla notifica, in questa schermata verranno mostrate le informazioni sulla nota e saranno possibili le operazioni di Tick, Snooze e Dismiss. Per ora c'è questa schermata placeholder, domani abbellirò un po' il tutto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/textView" />
 
     <TextView
         android:id="@+id/textViewResult"
@@ -9,5 +17,11 @@
         android:layout_height="wrap_content"
         android:text="This is the result activity opened from the notification" >
     </TextView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tick"
+        android:id="@+id/buttonResult"/>
 
 </LinearLayout>

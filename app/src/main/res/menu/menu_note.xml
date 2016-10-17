@@ -12,7 +12,7 @@
         app:showAsAction="never" />
     <!-- TODO settings -->
     <item android:id="@+id/action_settings"
-        android:title="Autodistruzione"
+        android:title="@string/settingsMenuString"
         android:orderInCategory="300"
         app:showAsAction="never" />
     <item android:id="@+id/action_exit"

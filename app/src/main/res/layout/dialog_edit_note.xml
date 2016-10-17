@@ -77,41 +77,33 @@
 
         </LinearLayout>
 
-        <!--<Switch-->
-            <!--android:text="@string/alarmTitle"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/switchAlarm" />-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:hint="@string/editDateTimeHint"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:id="@+id/editText_date" />
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:hint="@string/editDateTimeHint"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:id="@+id/editText_date" />
 
-            <Switch
-                android:text="Switch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/switch_alarm" />
+                <Button
+                    android:text="@string/editDateTimeButtonText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_date" />
 
-            <Button
-                android:text="@string/editDateTimeButtonText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_date" />
+                <Switch
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/switchAlarmTitle"
+                    android:id="@+id/switch_alarm" />
         </LinearLayout>
-
-
-
 
 
         <LinearLayout

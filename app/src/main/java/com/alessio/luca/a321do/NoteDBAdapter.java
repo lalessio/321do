@@ -34,30 +34,16 @@ public class NoteDBAdapter {
     public enum SortingOrder {NONE,DUEDATE,IMPORTANCE,CATEGORY};
 
     public static final String DEBUG_TAG = "321NoteDBAdapter";
-    public static final String DATABASE_NAME = "321dodbtest.db";
+    public static final String DATABASE_NAME = "321dodbtest_2.db";
     public static final String TABLE_NAME = "notes";
     public static final int DATABASE_VERSION = 1;
 
-    //private final Context context;
     private DatabaseHelper dbHelper;
 
     public NoteDBAdapter(Context ctx) {
         //this.context = ctx;
         dbHelper = new DatabaseHelper(ctx);
     }
-
-//    //open
-//    public void open() throws SQLException {
-//        dbHelper = new DatabaseHelper(context);
-//        db = dbHelper.getWritableDatabase();
-//    }
-//
-//    //close
-//    public void close() {
-//        if (dbHelper != null) {
-//            dbHelper.close();
-//        }
-//    }
 
     //CREATE
     public Note createNote(Note note) {
