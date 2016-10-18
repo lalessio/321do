@@ -55,7 +55,7 @@ public class NotificationReceiverActivity extends Activity {
                 break;
 
             case AlarmReceiver.SNOOZE_NOTE:
-                long amount = 5000;
+                long amount = 10000;
                 snoozeNotification(note,amount);
                 finish();
                 break;

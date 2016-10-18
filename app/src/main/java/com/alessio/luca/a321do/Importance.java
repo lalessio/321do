@@ -59,8 +59,8 @@ public class Importance implements Serializable{
         this.urgency = urgency;
     }
 
-    //altri metodi
-    public String translate() { //TODO overrider di toString()?
+    @Override
+    public String toString() {
         String temp;
         switch (getPriority()) {
             case IMPORTANT:

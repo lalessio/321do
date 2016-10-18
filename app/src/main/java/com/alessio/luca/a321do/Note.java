@@ -21,7 +21,7 @@ public class Note implements Serializable {
     private String title;
     private String description;
     private String tag;
-    private List<String> checkList; //TODO sistemare checkList
+    private ArrayList<String> checkList; //TODO sistemare checkList
     private Calendar dueDate;
     private Importance importance;
 
@@ -148,6 +148,8 @@ public class Note implements Serializable {
         this.description = new String();
         this.tag= new String();
         this.importance = new Importance();
+        this.checkList = new ArrayList<String>();
+        checkList.add("se faccio così crasha");
         this.alarm = false;
     }
 
@@ -159,7 +161,8 @@ public class Note implements Serializable {
                 +getDescription()+" / "
                 +getTag()+" / "
                 +printDueDate()+" / "
-                +getImportance().translate()
+                +getImportance().toString()+" / "
+//                +getCheckList().toString()+" / "
                 +" / done = "+isDone()
                 +" / alarm = "+isAlarmOn();
     }
@@ -190,19 +193,22 @@ public class Note implements Serializable {
         return s;
     }
     public static String convertListToString(List<String> stringList) {
-        StringBuffer stringBuffer = new StringBuffer();
+        if (stringList==null) {
+            return "";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
         for (String str : stringList) {
-            stringBuffer.append(str).append(LIST_SEPARATOR);
+            stringBuilder.append(str).append(LIST_SEPARATOR);
         }
 
         // Remove last separator
-        int lastIndex = stringBuffer.lastIndexOf(LIST_SEPARATOR);
-        stringBuffer.delete(lastIndex, lastIndex + LIST_SEPARATOR.length() + 1);
+        int lastIndex = stringBuilder.lastIndexOf(LIST_SEPARATOR);
+        stringBuilder.delete(lastIndex, lastIndex + LIST_SEPARATOR.length() + 1);
 
-        return stringBuffer.toString();
+        return stringBuilder.toString();
     }
-    public static List<String> convertStringToList(String str) {
-        return Arrays.asList(str.split(LIST_SEPARATOR));
+    public static ArrayList<String> convertStringToList(String str) {
+        return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR)));
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,12 +228,12 @@ public class Note implements Serializable {
         newNoteInitialization();
     }
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
-    public Note(int nId, String nTitle, String nDescription, String nTag, /*List<String> nCheckList,*/ Calendar nDueDate, Importance nImportance){
+    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;
         this.tag=nTag;
-//        this.checkList=nCheckList;
+        this.checkList=nCheckList;
         this.dueDate=nDueDate;
         this.importance=nImportance;
     }

@@ -36,8 +36,9 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-//TODO per venerdì 14: note con tutti i tipi di dato interni pensati, CRUD ecc.
+//TODO spezzare activities e fragments
 
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
@@ -240,9 +241,16 @@ public class NoteActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                noteDBAdapter.createNote(new Note(editText.getText().toString()));
-                updateListView(currentOrder);
-                dialog.dismiss();
+                if(editText.getText().toString().length()!=0)
+                {
+                    noteDBAdapter.createNote(new Note(editText.getText().toString()));
+                    updateListView(currentOrder);
+                    dialog.dismiss();
+                }
+                else
+                {
+                    Toast.makeText(NoteActivity.this, "Empty field!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -274,8 +282,8 @@ public class NoteActivity extends AppCompatActivity {
         Switch alarmSwitch = (Switch) dialog.findViewById(R.id.switch_alarm);
         final Spinner prioritySpinner = (Spinner) dialog.findViewById(R.id.spinner_priority);
         Spinner urgencySpinner = (Spinner) dialog.findViewById(R.id.spinner_urgency);
-        final int[] priority = {java.lang.Character.getNumericValue(note.getImportance().translate().charAt(0))};
-        final char[] urgency = {note.getImportance().translate().charAt(1)};
+        final int[] priority = {java.lang.Character.getNumericValue(note.getImportance().toString().charAt(0))};
+        final char[] urgency = {note.getImportance().toString().charAt(1)};
 
         dialog.show();
 
@@ -305,18 +313,25 @@ public class NoteActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Note newNote = new Note(note);
-                newNote.setTitle(editTextTitle.getText().toString());
-                newNote.setImportance(priority[0],urgency[0]);
-                newNote.setDescription(editTextDesc.getText().toString());
-                newNote.setTag(editTextTag.getText().toString());
-                //l'orario è gestito altrove
-                noteDBAdapter.updateNote(newNote);
-                updateListView(currentOrder);
-                if(newNote.isAlarmOn() && newNote.getNoteState() == Note.NoteState.PLANNED)
-                    planNotification(newNote);
-                dialog.dismiss();
-                Toast.makeText(NoteActivity.this,"Changes applied",Toast.LENGTH_SHORT).show();
+                  if(editTextTitle.getText().toString().length()>0)
+                  {
+                      Note newNote = new Note(note);
+                      newNote.setTitle(editTextTitle.getText().toString());
+                      newNote.setImportance(priority[0], urgency[0]);
+                      newNote.setDescription(editTextDesc.getText().toString());
+                      newNote.setTag(editTextTag.getText().toString());
+                      //l'orario è gestito altrove
+                      noteDBAdapter.updateNote(newNote);
+                      updateListView(currentOrder);
+                      if (newNote.isAlarmOn() && newNote.getNoteState() == Note.NoteState.PLANNED)
+                          planNotification(newNote);
+                      dialog.dismiss();
+                      Toast.makeText(NoteActivity.this, "Changes applied", Toast.LENGTH_SHORT).show();
+                  }
+                  else
+                  {
+                      Toast.makeText(NoteActivity.this, "Note MUST have a title!", Toast.LENGTH_SHORT).show();
+                  }
             }
         });
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -394,7 +409,6 @@ public class NoteActivity extends AppCompatActivity {
                 editTextDate.setText(note.printDueDate());
                 dateTimeDialog.dismiss();
                 datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
-                //planNotification(note);
             }
         });
 
@@ -405,6 +419,37 @@ public class NoteActivity extends AppCompatActivity {
                 datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
                 timePicker.setCurrentHour(note.getDueDate().get(Calendar.HOUR_OF_DAY));
                 timePicker.setCurrentMinute(note.getDueDate().get(Calendar.MINUTE));
+            }
+        });
+
+
+        //inizializzazione sotto dialog checklist
+        final Dialog checkListDialog = new Dialog(this);
+        checkListDialog.setContentView(R.layout.dialog_checklist);
+
+        final EditText editTextCheckList = (EditText) checkListDialog.findViewById(R.id.editTextCheckList);
+        final Button buttonAddCheckListItem = (Button) checkListDialog.findViewById(R.id.buttonCheckListAdd);
+        final ListView listViewCheckList = (ListView) checkListDialog.findViewById(R.id.checklist_list_view);
+        note.addToCheckList("test");
+        //TODO ArrayAdapter<String> checkListAdapter = new ArrayAdapter<String>(NoteActivity.this,R.layout.checklist_row,note.getCheckList());
+        //listViewCheckList.setAdapter(checkListAdapter);
+        editTextCheckList.setText(note.getCheckList().toString());
+
+        buttonAddCheckListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(editTextCheckList.getText().toString().length()>=1)
+                    note.addToCheckList(editTextCheckList.getText().toString());
+                else
+                    Toast.makeText(NoteActivity.this,"Empty field",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        final Button buttonCheckList = (Button) dialog.findViewById(R.id.button_checklist);
+        buttonCheckList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkListDialog.show();
             }
         });
     }
@@ -439,8 +484,8 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void planNotification(Note note) {
-        //long when = note.getDueDate().getTimeInMillis(); //TODO ripristinare
-        long when = System.currentTimeMillis()+3000;
+        long when = note.getDueDate().getTimeInMillis(); //TODO ripristinare
+        //long when = System.currentTimeMillis()+3000;
         Intent intentAlarm = new Intent(this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("NotePayload",note);

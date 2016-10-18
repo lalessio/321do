@@ -83,7 +83,7 @@ class NoteListAdapter extends ArrayAdapter {
                     subNoteText.setText(note.printDueDate());
                     break;
                 case IMPORTANCE:
-                    subNoteText.setText(note.getImportance().translate());
+                    subNoteText.setText(note.getImportance().toString());
                     break;
                 case CATEGORY:
                     subNoteText.setText(note.getTag());
