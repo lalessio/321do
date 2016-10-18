@@ -313,7 +313,7 @@ public class NoteActivity extends AppCompatActivity {
                 //l'orario è gestito altrove
                 noteDBAdapter.updateNote(newNote);
                 updateListView(currentOrder);
-                if(newNote.isAlarmOn())
+                if(newNote.isAlarmOn() && newNote.getNoteState() == Note.NoteState.PLANNED)
                     planNotification(newNote);
                 dialog.dismiss();
                 Toast.makeText(NoteActivity.this,"Changes applied",Toast.LENGTH_SHORT).show();
@@ -439,8 +439,8 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void planNotification(Note note) {
-        long when = note.getDueDate().getTimeInMillis();
-        //long when = System.currentTimeMillis()+3000;
+        //long when = note.getDueDate().getTimeInMillis(); //TODO ripristinare
+        long when = System.currentTimeMillis()+3000;
         Intent intentAlarm = new Intent(this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("NotePayload",note);

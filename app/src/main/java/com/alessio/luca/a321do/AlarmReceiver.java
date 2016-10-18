@@ -32,15 +32,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pIntent = PendingIntent.getActivity(context, note.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intentComplete = new Intent(context, NotificationReceiverActivity.class);
+        intentComplete.putExtras(bundle);
         intentComplete.setAction(COMPLETE_NOTE);
         PendingIntent pendingIntentComplete = PendingIntent.getActivity(context, note.getId(), intentComplete, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intentDismiss = new Intent(context, NotificationReceiverActivity.class);
+        intentDismiss.putExtras(bundle);
         intentDismiss.setAction(CLOSE_NOTIFICATION);
         PendingIntent pendingIntentDismiss = PendingIntent.getActivity(context, note.getId(), intentDismiss, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intentSnooze = new Intent(context, NotificationReceiverActivity.class);
-        intentDismiss.setAction(SNOOZE_NOTE);
+        intentSnooze.putExtras(bundle);
+        intentSnooze.setAction(SNOOZE_NOTE);
         PendingIntent pendingIntentSnooze = PendingIntent.getActivity(context, note.getId(), intentSnooze, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new Notification.Builder(context)
