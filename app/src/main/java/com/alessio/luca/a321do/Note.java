@@ -92,6 +92,9 @@ public class Note implements Serializable {
     public List<String> getCheckList() {
         return checkList;
     }
+    public void setCheckList(ArrayList<String> checkList) {
+        this.checkList = checkList;
+    }
     public void addToCheckList(String n)
     {
         checkList.add(n);
@@ -149,7 +152,6 @@ public class Note implements Serializable {
         this.tag= new String();
         this.importance = new Importance();
         this.checkList = new ArrayList<String>();
-        checkList.add("se faccio così crasha");
         this.alarm = false;
     }
 
@@ -210,7 +212,7 @@ public class Note implements Serializable {
     public static ArrayList<String> convertStringToList(String str) {
         return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR)));
     }
-
+// TODO checklist da mettere a posto
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Note(String title) {

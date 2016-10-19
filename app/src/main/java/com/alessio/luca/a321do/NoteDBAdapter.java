@@ -20,6 +20,7 @@ import java.util.List;
     //TODO barra ricerca
         // TODO 6 NOTIFICHE
             // TODO 7 MEDIA + PLACE
+                //TODO suddivisione tripla menu iniziale fatte|tra  poco|futuro personalizzabile
 
 public class NoteDBAdapter {
     public static final String COL_ID = "id";
@@ -56,7 +57,7 @@ public class NoteDBAdapter {
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
         values.put(COL_TAG, note.getTag());
-        values.put(COL_CHECKLIST, note.convertListToString(note.getCheckList())); //TODO correggere
+//        values.put(COL_CHECKLIST, note.convertListToString(note.getCheckList())); //TODO correggere
         values.put(COL_IMPORTANCE,note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_DONE,note.isDone()?1:0);
@@ -100,7 +101,7 @@ public class NoteDBAdapter {
             String nTitle = cursor.getString(cursor.getColumnIndex(COL_TITLE));
             String nDescription = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
             String nTag = cursor.getString(cursor.getColumnIndex(COL_TAG));
-            ArrayList<String> nCheckList = Note.convertStringToList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST)));
+            ArrayList<String> nCheckList = new ArrayList<String>();/*Note.convertStringToList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST)))*/
             Calendar nDueDate = new GregorianCalendar();
             nDueDate.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DUEDATE)));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));

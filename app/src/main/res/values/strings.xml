@@ -33,4 +33,5 @@
     <string name="multipleTickTitle">Tick All</string>
     <string name="alarmTitle">Activate Alarm</string>
     <string name="switchAlarmTitle">Alarm</string>
+    <string name="errorEmptyField">Empty field!</string>
 </resources>

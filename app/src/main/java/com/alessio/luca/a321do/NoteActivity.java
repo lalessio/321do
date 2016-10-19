@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
@@ -89,7 +90,14 @@ public class NoteActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         switch (position){
                             case 0:
-                                showEditNoteMenu(noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
+                                EditNoteDialog editNoteDialog = new EditNoteDialog(NoteActivity.this,noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
+                                editNoteDialog.show();
+                                editNoteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        updateListView(currentOrder);
+                                    }
+                                });
                                 break;
                             case 1:
                                 noteDBAdapter.deleteNote(retrievedNotes.get(masterListPosition));
@@ -225,39 +233,13 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
     }
-
     private void showNewNoteMenu(){
-        //creo la finestrella e la popolo
-        final Dialog dialog = new Dialog(this);
-        dialog.setTitle(R.string.newNoteTitle);
-        dialog.setContentView(R.layout.dialog_new_note);
-        final EditText editText = (EditText) dialog.findViewById(R.id.editText_title);
-        //LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.new_note_layout);
-        final Button confirmButton = (Button) dialog.findViewById(R.id.button_confirm);
-        final Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
+        NewNoteDialog dialog = new NewNoteDialog(this);
         dialog.show();
-
-        //collego comando ai pulsanti
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onClick(View v) {
-                if(editText.getText().toString().length()!=0)
-                {
-                    noteDBAdapter.createNote(new Note(editText.getText().toString()));
-                    updateListView(currentOrder);
-                    dialog.dismiss();
-                }
-                else
-                {
-                    Toast.makeText(NoteActivity.this, "Empty field!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+            public void onDismiss(DialogInterface dialog) {
+                updateListView(currentOrder);
             }
         });
     }
@@ -454,11 +436,11 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
 
-    public void updateListView(NoteDBAdapter.SortingOrder sortBy) {
+    private void updateListView(NoteDBAdapter.SortingOrder sortBy) {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         cursor.moveToFirst();
         retrievedNotes.clear();
-
+//TODO casini con la checklist ancora da risolvere
         while (!cursor.isAfterLast())
         {
             Note temp = new Note();
@@ -470,6 +452,7 @@ public class NoteActivity extends AppCompatActivity {
             t.setTimeInMillis(Long.valueOf(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DUEDATE))));
             temp.setDueDate(t);
             temp.setImportance(new Importance(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_IMPORTANCE))));
+//            temp.setCheckList(Note.convertStringToList(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_CHECKLIST))));
             if(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_DONE))==0)
                 temp.setDone(false);
             else
