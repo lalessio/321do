@@ -35,7 +35,7 @@ public class Note implements Serializable {
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
     public enum NoteState {COMPLETED,PLANNED,EXPIRED}
-    private static String LIST_SEPARATOR = "__,__";
+    private static final String LIST_SEPARATOR = "__,__";
     private boolean done; //true se la nota è stata completata, false altrimenti
     private boolean alarm; //true se è stato impostata la notifica, false altrimenti
 
@@ -89,7 +89,7 @@ public class Note implements Serializable {
         this.importance = new Importance(this.importance.mapToPriority(priority), this.importance.mapToUrgency(urgency));
     }
 
-    public List<String> getCheckList() {
+    public ArrayList<String> getCheckList() {
         return checkList;
     }
     public void setCheckList(ArrayList<String> checkList) {
@@ -194,23 +194,21 @@ public class Note implements Serializable {
         }
         return s;
     }
-    public static String convertListToString(List<String> stringList) {
-        if (stringList==null) {
+    public static String checkListToString(ArrayList<String> stringList) {
+        if (stringList==null || stringList.isEmpty()) {
             return "";
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String str : stringList) {
-            stringBuilder.append(str).append(LIST_SEPARATOR);
+        String toString = new String();
+        for(int i=0; i<stringList.size(); i++)
+        {
+            toString = toString + stringList.get(i);
+            if(i!=stringList.size()-1)
+                toString = toString + LIST_SEPARATOR;
         }
-
-        // Remove last separator
-        int lastIndex = stringBuilder.lastIndexOf(LIST_SEPARATOR);
-        stringBuilder.delete(lastIndex, lastIndex + LIST_SEPARATOR.length() + 1);
-
-        return stringBuilder.toString();
+        return toString;
     }
-    public static ArrayList<String> convertStringToList(String str) {
-        return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR)));
+    public static ArrayList<String> stringToCheckList(String str) {
+        return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR))); //forse restituisce oggetto non modificabile
     }
 // TODO checklist da mettere a posto
 ///////////////////////////////////////////////////////////////////////////////////////////////////

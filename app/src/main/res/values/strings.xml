@@ -34,4 +34,10 @@
     <string name="alarmTitle">Activate Alarm</string>
     <string name="switchAlarmTitle">Alarm</string>
     <string name="errorEmptyField">Empty field!</string>
+    <string name="errorEmptyTitle">Note MUST have a title!</string>
+    <string name="messageChangesApplied">Changes applied</string>
+    <string name="messageChangesNotApplied">Changes NOT SAVED</string>
+    <string name="errorDateTimePassed">Date/Time already passed</string>
+    <string name="errorNoNeedForAlarm">Note completed, no need for reminder</string>
+    <string name="checkListTitle">Sub activities</string>
 </resources>

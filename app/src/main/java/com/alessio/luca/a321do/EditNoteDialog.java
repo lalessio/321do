@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,12 +13,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -32,7 +30,7 @@ public class EditNoteDialog extends Dialog {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
     private EditText editTextTitle, editTextDesc, editTextTag, editTextDate;
-    private Button dateButton, confirmButton, cancelButton, buttonDateTime;
+    private Button dateButton, confirmButton, cancelButton, buttonCheckList;
     private Switch alarmSwitch;
     private Spinner prioritySpinner, urgencySpinner;
 
@@ -45,7 +43,7 @@ public class EditNoteDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         noteDBAdapter = new NoteDBAdapter(context);
         setTitle(R.string.editNoteTitle);
         setContentView(R.layout.dialog_edit_note);
@@ -66,6 +64,33 @@ public class EditNoteDialog extends Dialog {
         prioritySpinner = (Spinner) findViewById(R.id.spinner_priority);
         urgencySpinner = (Spinner) findViewById(R.id.spinner_urgency);
 
+        /////////////////////////////////DATE/TIME///////////////////////////////////////////
+
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateTimeDialog dateTimeDialog = new DateTimeDialog(context,note);
+                dateTimeDialog.show();
+                dateTimeDialog.setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        editTextDate.setText(note.printDueDate());
+                    }
+                });
+            }
+        });
+
+        /////////////////////////////////CHECKLIST///////////////////////////////////////////
+
+        buttonCheckList = (Button) findViewById(R.id.button_checklist);
+        buttonCheckList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckListDialog checkListDialog = new CheckListDialog(context,note);
+                checkListDialog.show();
+            }
+        });
+
         /////////////////////////////////SWITCH///////////////////////////////////////////
 
         alarmSwitch.setChecked(note.isAlarmOn());
@@ -77,13 +102,13 @@ public class EditNoteDialog extends Dialog {
                 {
                     switch (note.getNoteState()){
                         case COMPLETED:
-                            Toast.makeText(context, "Note completed, no need for reminder", Toast.LENGTH_SHORT).show();
-                            break;
-                        case PLANNED:
-                            Log.d("321notifica","notifica creata");
+                            Toast.makeText(context, R.string.errorNoNeedForAlarm, Toast.LENGTH_SHORT).show();
                             break;
                         case EXPIRED:
-                            Toast.makeText(context, "Date/Time already passed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.errorDateTimePassed, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Log.d("321EditNodeDialog","case default or PLANNED note");
                             break;
                     }
                 }
@@ -91,9 +116,7 @@ public class EditNoteDialog extends Dialog {
                 {
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intentAlarm = new Intent(context, AlarmReceiver.class);
-                    PendingIntent pendingUpdateIntent = PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
-                    alarmManager.cancel(pendingUpdateIntent);
-                    Log.d("321notifica","notifica eliminata");
+                    alarmManager.cancel(PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
                 }
             }
         });
@@ -126,29 +149,7 @@ public class EditNoteDialog extends Dialog {
         });
         urgencySpinner.setSelection(java.lang.Character.getNumericValue(urgency[0])-10); //A = 12 in ASCII, la selezione va da 0 a 2 quindi converto la lettera in un valore accettabile dallo spinner
 
-
-        //inizializzazione sotto dialog date time
-//        final Dialog dateTimeDialog = new Dialog(this);
-//        dateTimeDialog.setTitle(R.string.editNoteDateTimeEditTitle);
-//        dateTimeDialog.setContentView(R.layout.date_time_layout);
-//
-//        final DatePicker datePicker = (DatePicker) dateTimeDialog.findViewById(R.id.datePicker);
-//        final TimePicker timePicker = (TimePicker) dateTimeDialog.findViewById(R.id.timePicker);
-//        Button buttonDateTime = (Button) dateTimeDialog.findViewById(R.id.buttonDateTime);
-//        Button buttonDismissDateTime = (Button) dateTimeDialog.findViewById(R.id.buttonDismissDateTime);
-//
-//        datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
-//        timePicker.setIs24HourView(true);
-//        timePicker.setCurrentHour(note.getDueDate().get(Calendar.HOUR_OF_DAY));
-//        timePicker.setCurrentMinute(note.getDueDate().get(Calendar.MINUTE));
-
-        //collego comando ai pulsanti
-//        dateButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dateTimeDialog.show();
-//            }
-//        });
+        /////////////////////////////////SAVE CHANGES LOGIC//////////////////////////////////////
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,94 +161,33 @@ public class EditNoteDialog extends Dialog {
                     newNote.setImportance(priority[0], urgency[0]);
                     newNote.setDescription(editTextDesc.getText().toString());
                     newNote.setTag(editTextTag.getText().toString());
-                    //l'orario è gestito altrove
+                    newNote.setCheckList(note.getCheckList());
+                    //l'orario è gestito da DateTimeDialog
                     noteDBAdapter.updateNote(newNote);
-                    //updateListView(currentOrder); TODO spostare in ondimisslistener
                     if (newNote.isAlarmOn() && newNote.getNoteState() == Note.NoteState.PLANNED)
                         planNotification(newNote);
                     dismiss();
-                    Toast.makeText(context, "Changes applied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.messageChangesApplied, Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(context, "Note MUST have a title!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.errorEmptyTitle, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"Changes NOT SAVED",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.messageChangesNotApplied,Toast.LENGTH_SHORT).show();
                 dismiss();
             }
         });
-
-        //gestisco lo switch del promemoria
-
-
-        //collego comandi agli spinner e imposto valori di default uguali a quelli già presenti nel db
-
-//        buttonDateTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Calendar c=note.getDueDate();
-//                c.set(Calendar.YEAR,datePicker.getYear());
-//                c.set(Calendar.MONTH,datePicker.getMonth());
-//                c.set(Calendar.DAY_OF_MONTH,datePicker.getDayOfMonth());
-//                c.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-//                c.set(Calendar.MINUTE,timePicker.getCurrentMinute());
-//                note.setDueDate(c);
-//                editTextDate.setText(note.printDueDate());
-//                dateTimeDialog.dismiss();
-//                datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
-//            }
-//        });
-//
-//        buttonDismissDateTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dateTimeDialog.dismiss();
-//                datePicker.init(note.getDueDate().get(Calendar.YEAR),note.getDueDate().get(Calendar.MONTH),note.getDueDate().get(Calendar.DAY_OF_MONTH),null);
-//                timePicker.setCurrentHour(note.getDueDate().get(Calendar.HOUR_OF_DAY));
-//                timePicker.setCurrentMinute(note.getDueDate().get(Calendar.MINUTE));
-//            }
-//        });
-
-
-        //inizializzazione sotto dialog checklist
-//        final Dialog checkListDialog = new Dialog(this);
-//        checkListDialog.setContentView(R.layout.dialog_checklist);
-//
-//        final EditText editTextCheckList = (EditText) checkListDialog.findViewById(R.id.editTextCheckList);
-//        final Button buttonAddCheckListItem = (Button) checkListDialog.findViewById(R.id.buttonCheckListAdd);
-//        final ListView listViewCheckList = (ListView) checkListDialog.findViewById(R.id.checklist_list_view);
-//        note.addToCheckList("test");
-//        //TODO ArrayAdapter<String> checkListAdapter = new ArrayAdapter<String>(context,R.layout.checklist_row,note.getCheckList());
-//        //listViewCheckList.setAdapter(checkListAdapter);
-//        editTextCheckList.setText(note.getCheckList().toString());
-//
-//        buttonAddCheckListItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(editTextCheckList.getText().toString().length()>=1)
-//                    note.addToCheckList(editTextCheckList.getText().toString());
-//                else
-//                    Toast.makeText(context,"Empty field",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        final Button buttonCheckList = (Button) findViewById(R.id.button_checklist);
-//        buttonCheckList.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                checkListDialog.show();
-//            }
-//        });
     }
 
     public void planNotification(Note note) {
-        long when = note.getDueDate().getTimeInMillis(); //TODO ripristinare
-        //long when = System.currentTimeMillis()+3000;
+        long when = note.getDueDate().getTimeInMillis();
+        //long when = System.currentTimeMillis()+3000; //for debug
         Intent intentAlarm = new Intent(context, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("NotePayload",note);
