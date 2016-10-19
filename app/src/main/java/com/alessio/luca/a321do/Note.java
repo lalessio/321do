@@ -21,7 +21,7 @@ public class Note implements Serializable {
     private String title;
     private String description;
     private String tag;
-    private ArrayList<String> checkList; //TODO sistemare checkList
+    private List<String> checkList; //TODO sistemare checkList
     private Calendar dueDate;
     private Importance importance;
 
@@ -89,10 +89,10 @@ public class Note implements Serializable {
         this.importance = new Importance(this.importance.mapToPriority(priority), this.importance.mapToUrgency(urgency));
     }
 
-    public ArrayList<String> getCheckList() {
+    public List<String> getCheckList() {
         return checkList;
     }
-    public void setCheckList(ArrayList<String> checkList) {
+    public void setCheckList(List<String> checkList) {
         this.checkList = checkList;
     }
     public void addToCheckList(String n)
@@ -194,9 +194,9 @@ public class Note implements Serializable {
         }
         return s;
     }
-    public static String checkListToString(ArrayList<String> stringList) {
+    public static String checkListToString(List<String> stringList) {
         if (stringList==null || stringList.isEmpty()) {
-            return "";
+            return new String();
         }
         String toString = new String();
         for(int i=0; i<stringList.size(); i++)
@@ -207,8 +207,11 @@ public class Note implements Serializable {
         }
         return toString;
     }
-    public static ArrayList<String> stringToCheckList(String str) {
-        return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR))); //forse restituisce oggetto non modificabile
+    public static List<String> stringToCheckList(String str) {
+        if(str != null)
+            return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR))); //forse restituisce oggetto non modificabile
+        else
+            return new ArrayList<String>();
     }
 // TODO checklist da mettere a posto
 ///////////////////////////////////////////////////////////////////////////////////////////////////

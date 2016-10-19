@@ -28,10 +28,9 @@
         </LinearLayout>
 
         <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/checklist_list_view"
-            tools:listitem="@layout/checklist_row"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/checklist_list_view"/>
 
             <Button
                 android:layout_width="match_parent"

@@ -99,7 +99,7 @@ public class NoteDBAdapter {
             String nTitle = cursor.getString(cursor.getColumnIndex(COL_TITLE));
             String nDescription = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
             String nTag = cursor.getString(cursor.getColumnIndex(COL_TAG));
-            ArrayList<String> nCheckList = new ArrayList<String>(Note.stringToCheckList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST))));
+            ArrayList<String> nCheckList = new ArrayList<>(Note.stringToCheckList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST))));
             Calendar nDueDate = new GregorianCalendar();
             nDueDate.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DUEDATE)));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
