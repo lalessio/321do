@@ -1,77 +1,51 @@
 package com.alessio.luca.a321do;
 
-import android.app.AlarmManager;
+import android.app.Activity;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionMode;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
-
-//TODO spezzare activities e fragments
 
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
     private ArrayList<Note> retrievedNotes;
     private NoteDBAdapter.SortingOrder currentOrder;
-    
 
-    //alla creazione imposto la lista che visualizza le note richieste (al momento solo questo)
     @Override
     protected void onCreate(Bundle savedInstanceState) { //TODO in futuro implementare il discorso di più liste simultanee
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
-
-        //TODO capire se la action bar serve
-        //ActionBar actionBar = getSupportActionBar();
-        //actionBar.setHomeButtonEnabled(true);
-        //actionBar.setDisplayShowHomeEnabled(true);
-        //actionBar.setIcon(R.mipmap.ic_launcher);
-
-        listView = (ListView) findViewById(R.id.note_list_view);
-        listView.setDivider(null);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         noteDBAdapter = new NoteDBAdapter(this);
-        //noteDBAdapter.open();
         listView = (ListView)findViewById(R.id.note_list_view);
         retrievedNotes = new ArrayList<>();
         currentOrder = NoteDBAdapter.SortingOrder.NONE;
         updateListView(currentOrder);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int masterListPosition, long id) {
                 //creo finestra
@@ -251,7 +225,7 @@ public class NoteActivity extends AppCompatActivity {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         cursor.moveToFirst();
         retrievedNotes.clear();
-//TODO casini con la checklist ancora da risolvere
+
         while (!cursor.isAfterLast())
         {
             Note temp = new Note();

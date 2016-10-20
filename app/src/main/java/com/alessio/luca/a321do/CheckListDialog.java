@@ -42,7 +42,6 @@ public class CheckListDialog extends Dialog {
 
         editTextCheckList = (EditText) findViewById(R.id.editTextCheckList);
         buttonAddCheckListItem = (Button) findViewById(R.id.buttonCheckListAdd);
-//        buttonRemoveCheckListItem = (Button) findViewById(R.id.buttonCheckListDelete);
         buttonConfirm = (Button) findViewById(R.id.button_confirm);
         listViewCheckList = (ListView) findViewById(R.id.checklist_list_view);
         update();

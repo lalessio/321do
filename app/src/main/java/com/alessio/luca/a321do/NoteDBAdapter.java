@@ -14,7 +14,6 @@ import java.util.GregorianCalendar;
  * Created by Luca on 27/09/2016.
  */
 
-// TODO 4 CHECKLIST
     //TODO barra ricerca
         // TODO 6 NOTIFICHE
             // TODO 7 MEDIA + PLACE

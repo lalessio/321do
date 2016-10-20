@@ -25,7 +25,6 @@
             android:layout_height="60dp"
             android:layout_weight="50"
             android:text="@string/cancelButtonText"
-            android:textColor="@color/white"
             android:id="@+id/button_cancel"/>
 
         <Button
@@ -33,7 +32,6 @@
             android:layout_height="60dp"
             android:layout_weight="50"
             android:text="@string/confirmButtonText"
-            android:textColor="@color/white"
             android:id="@+id/button_confirm" />
 
     </LinearLayout>

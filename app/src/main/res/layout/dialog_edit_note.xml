@@ -28,7 +28,8 @@
                 android:background="@color/light_grey"
                 android:textColor="@color/black"
                 android:layout_margin="4dp"
-                android:hint="@string/editTitleHint"/>
+                android:hint="@string/editTitleHint"
+                android:maxLength="140"/>
 
         </LinearLayout>
 
@@ -51,6 +52,7 @@
                 android:textColor="@color/black"
                 android:id="@+id/editText_description"
                 android:hint="@string/editDescriptionHint" />
+            <!-- TODO max lenght descrizione? -->
         </LinearLayout>
 
         <LinearLayout
@@ -73,7 +75,8 @@
                 android:textColor="@color/black"
                 android:background="@color/light_grey"
                 android:id="@+id/editText_tag"
-                android:hint="@string/editTagHint"/>
+                android:hint="@string/editTagHint"
+                android:maxLength="16"/>
 
         </LinearLayout>
 

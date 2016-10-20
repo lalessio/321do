@@ -21,7 +21,7 @@ public class Note implements Serializable {
     private String title;
     private String description;
     private String tag;
-    private List<String> checkList; //TODO sistemare checkList
+    private List<String> checkList;
     private Calendar dueDate;
     private Importance importance;
 
@@ -169,12 +169,15 @@ public class Note implements Serializable {
                 +" / alarm = "+isAlarmOn();
     }
     public String printDueDate(){
-        return getDueDate().get(Calendar.DAY_OF_MONTH) + " "
+        String dueDate = getDueDate().get(Calendar.DAY_OF_MONTH) + " "
                 + (getDueDate().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())) + " "
                 + getDueDate().get(Calendar.YEAR) + "   "
-                + getDueDate().get(Calendar.HOUR_OF_DAY) + ":"
-                + getDueDate().get(Calendar.MINUTE);
-    } //TODO sistemare stampa minuti (stampa solo una cifra per ora)
+                + getDueDate().get(Calendar.HOUR_OF_DAY) + ":";
+        if(getDueDate().get(Calendar.MINUTE)<10)
+            dueDate = dueDate + "0";
+        dueDate = dueDate + getDueDate().get(Calendar.MINUTE);
+        return dueDate;
+    }
     public String readNoteState(){
         String s;
         NoteState ns = getNoteState();
@@ -213,7 +216,6 @@ public class Note implements Serializable {
         else
             return new ArrayList<String>();
     }
-// TODO checklist da mettere a posto
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Note(String title) {
