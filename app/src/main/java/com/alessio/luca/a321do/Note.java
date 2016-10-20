@@ -35,7 +35,7 @@ public class Note implements Serializable {
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
     public enum NoteState {COMPLETED,PLANNED,EXPIRED}
-    private static String LIST_SEPARATOR = "__,__";
+    private static final String LIST_SEPARATOR = "__,__";
     private boolean done; //true se la nota è stata completata, false altrimenti
     private boolean alarm; //true se è stato impostata la notifica, false altrimenti
 
@@ -91,6 +91,9 @@ public class Note implements Serializable {
 
     public List<String> getCheckList() {
         return checkList;
+    }
+    public void setCheckList(List<String> checkList) {
+        this.checkList = checkList;
     }
     public void addToCheckList(String n)
     {
@@ -148,6 +151,7 @@ public class Note implements Serializable {
         this.description = new String();
         this.tag= new String();
         this.importance = new Importance();
+        this.checkList = new ArrayList<String>();
         this.alarm = false;
     }
 
@@ -159,7 +163,8 @@ public class Note implements Serializable {
                 +getDescription()+" / "
                 +getTag()+" / "
                 +printDueDate()+" / "
-                +getImportance().translate()
+                +getImportance().toString()+" / "
+//                +getCheckList().toString()+" / "
                 +" / done = "+isDone()
                 +" / alarm = "+isAlarmOn();
     }
@@ -189,22 +194,26 @@ public class Note implements Serializable {
         }
         return s;
     }
-    public static String convertListToString(List<String> stringList) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (String str : stringList) {
-            stringBuffer.append(str).append(LIST_SEPARATOR);
+    public static String checkListToString(List<String> stringList) {
+        if (stringList==null || stringList.isEmpty()) {
+            return new String();
         }
-
-        // Remove last separator
-        int lastIndex = stringBuffer.lastIndexOf(LIST_SEPARATOR);
-        stringBuffer.delete(lastIndex, lastIndex + LIST_SEPARATOR.length() + 1);
-
-        return stringBuffer.toString();
+        String toString = new String();
+        for(int i=0; i<stringList.size(); i++)
+        {
+            toString = toString + stringList.get(i);
+            if(i!=stringList.size()-1)
+                toString = toString + LIST_SEPARATOR;
+        }
+        return toString;
     }
-    public static List<String> convertStringToList(String str) {
-        return Arrays.asList(str.split(LIST_SEPARATOR));
+    public static List<String> stringToCheckList(String str) {
+        if(str != null)
+            return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR))); //forse restituisce oggetto non modificabile
+        else
+            return new ArrayList<String>();
     }
-
+// TODO checklist da mettere a posto
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Note(String title) {
@@ -222,12 +231,12 @@ public class Note implements Serializable {
         newNoteInitialization();
     }
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
-    public Note(int nId, String nTitle, String nDescription, String nTag, /*List<String> nCheckList,*/ Calendar nDueDate, Importance nImportance){
+    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;
         this.tag=nTag;
-//        this.checkList=nCheckList;
+        this.checkList=nCheckList;
         this.dueDate=nDueDate;
         this.importance=nImportance;
     }

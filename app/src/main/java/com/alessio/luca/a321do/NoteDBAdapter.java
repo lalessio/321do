@@ -3,10 +3,10 @@ package com.alessio.luca.a321do;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -15,9 +15,10 @@ import java.util.GregorianCalendar;
  */
 
 // TODO 4 CHECKLIST
-
+    //TODO barra ricerca
         // TODO 6 NOTIFICHE
             // TODO 7 MEDIA + PLACE
+                //TODO suddivisione tripla menu iniziale fatte|tra  poco|futuro personalizzabile
 
 public class NoteDBAdapter {
     public static final String COL_ID = "id";
@@ -34,7 +35,7 @@ public class NoteDBAdapter {
     public enum SortingOrder {NONE,DUEDATE,IMPORTANCE,CATEGORY};
 
     public static final String DEBUG_TAG = "321NoteDBAdapter";
-    public static final String DATABASE_NAME = "321dodbtest_2.db";
+    public static final String DATABASE_NAME = "321dodbtest_4.db";
     public static final String TABLE_NAME = "notes";
     public static final int DATABASE_VERSION = 1;
 
@@ -54,8 +55,8 @@ public class NoteDBAdapter {
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
         values.put(COL_TAG, note.getTag());
-        //values.put(COL_CHECKLIST, note.convertListToString(note.getCheckList())); //TODO correggere
-        values.put(COL_IMPORTANCE,note.getImportance().translate());
+        values.put(COL_CHECKLIST, note.checkListToString(note.getCheckList())); //TODO correggere
+        values.put(COL_IMPORTANCE,note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_DONE,note.isDone()?1:0);
         values.put(COL_ALARM,note.isAlarmOn()?1:0);
@@ -98,11 +99,11 @@ public class NoteDBAdapter {
             String nTitle = cursor.getString(cursor.getColumnIndex(COL_TITLE));
             String nDescription = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
             String nTag = cursor.getString(cursor.getColumnIndex(COL_TAG));
-            //List<String> nCheckList = Note.convertStringToList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST)));
+            ArrayList<String> nCheckList = new ArrayList<>(Note.stringToCheckList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST))));
             Calendar nDueDate = new GregorianCalendar();
             nDueDate.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DUEDATE)));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
-            note = new Note(nId, nTitle, nDescription, nTag, nDueDate, nImportance);
+            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance);
             note.setDone(cursor.getInt(cursor.getColumnIndex(COL_DONE)) != 0);
             note.setAlarm(cursor.getInt(cursor.getColumnIndex(COL_ALARM)) != 0);
             Log.d(DEBUG_TAG, "retrieved note: " + note.print());
@@ -149,8 +150,8 @@ public class NoteDBAdapter {
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
         values.put(COL_TAG, note.getTag());
-        //values.put(COL_CHECKLIST, note.convertListToString(note.getCheckList())); //TODO correggere
-        values.put(COL_IMPORTANCE, note.getImportance().translate());
+        values.put(COL_CHECKLIST, note.checkListToString(note.getCheckList())); //TODO correggere
+        values.put(COL_IMPORTANCE, note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_ALARM,note.isAlarmOn());
         // l'aggiornamento del campo done è gestito da tickNote()
