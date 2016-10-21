@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/light_grey</color>
     <color name="colorPrimaryDark">@color/dark_grey</color>
-    <color name="colorAccent">@color/light_grey</color>
+    <color name="colorAccent">@color/black</color>
     <color name="dark_grey">#181818</color>
     <color name="green">#00cc00</color>
     <color name="white">#ffffff</color>

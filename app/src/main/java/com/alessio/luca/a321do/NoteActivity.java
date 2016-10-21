@@ -1,15 +1,16 @@
 package com.alessio.luca.a321do;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +29,8 @@ public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
     private ArrayList<Note> retrievedNotes;
-    private NoteDBAdapter.SortingOrder currentOrder;
+    private SortingOrder currentOrder;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //TODO in futuro implementare il discorso di più liste simultanee
@@ -41,7 +43,7 @@ public class NoteActivity extends AppCompatActivity {
         noteDBAdapter = new NoteDBAdapter(this);
         listView = (ListView)findViewById(R.id.note_list_view);
         retrievedNotes = new ArrayList<>();
-        currentOrder = NoteDBAdapter.SortingOrder.NONE;
+        currentOrder = new SortingOrder();
         updateListView(currentOrder);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -152,15 +154,57 @@ public class NoteActivity extends AppCompatActivity {
 
     //gestisco il menù
 
+    @Override
+    public void onBackPressed() {
+        if (!searchView.isFocused()) {
+            searchView.setIconified(true);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_note, menu);
+        inflater.inflate(R.menu.toolbar_content, menu);
+
+         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                currentOrder = new SortingOrder(currentOrder.getOrder(),query);
+                updateListView(currentOrder);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                currentOrder = new SortingOrder(currentOrder.getOrder());
+                updateListView(currentOrder);
+                return false;
+            }
+        });
+
+
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_search:
+                // gestito in onCreateOptionsMenu()
+                return true;
             case R.id.action_new:
                 NewNoteDialog dialog = new NewNoteDialog(this);
                 dialog.show();
@@ -171,17 +215,19 @@ public class NoteActivity extends AppCompatActivity {
                     }
                 });
                 return true;
-            case R.id.action_exit:
-                finish();
+            case R.id.action_sort:
+                showSortMenu();
                 return true;
             case R.id.action_settings:
                 Toast.makeText(NoteActivity.this, "settings TODO", Toast.LENGTH_SHORT).show(); //TODO
                 return true;
-            case R.id.action_sort:
-                showSortMenu();
+            case R.id.action_exit:
+                finish();
                 return true;
             default:
-                return false;
+                Toast.makeText(this,"default",Toast.LENGTH_SHORT).show();
+                return super.onOptionsItemSelected(item);
+
         }
     }
 
@@ -204,16 +250,16 @@ public class NoteActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        currentOrder = NoteDBAdapter.SortingOrder.NONE;
+                        currentOrder = new SortingOrder(SortingOrder.Order.NONE,currentOrder.getSearchParameter());
                         break;
                     case 1:
-                        currentOrder = NoteDBAdapter.SortingOrder.DUEDATE;
+                        currentOrder = new SortingOrder(SortingOrder.Order.DUEDATE,currentOrder.getSearchParameter());
                         break;
                     case 2:
-                        currentOrder = NoteDBAdapter.SortingOrder.IMPORTANCE;
+                        currentOrder = new SortingOrder(SortingOrder.Order.IMPORTANCE,currentOrder.getSearchParameter());
                         break;
                     case 3:
-                        currentOrder = NoteDBAdapter.SortingOrder.CATEGORY;
+                        currentOrder = new SortingOrder(SortingOrder.Order.CATEGORY,currentOrder.getSearchParameter());
                         break;
                 }
                 updateListView(currentOrder);
@@ -221,7 +267,7 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
     }
-    private void updateListView(NoteDBAdapter.SortingOrder sortBy) {
+    private void updateListView(SortingOrder sortBy) {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         cursor.moveToFirst();
         retrievedNotes.clear();

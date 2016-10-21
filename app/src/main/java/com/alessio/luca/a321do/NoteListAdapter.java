@@ -19,9 +19,9 @@ class NoteListAdapter extends ArrayAdapter {
     private Context context;
     private int layoutResourceId;
     private Note[] data = null;
-    private NoteDBAdapter.SortingOrder sortingRequested;
+    private SortingOrder sortingRequested;
 
-    NoteListAdapter(Context context, int layoutResourceId, Note[] data, NoteDBAdapter.SortingOrder sortingRequested) {
+    NoteListAdapter(Context context, int layoutResourceId, Note[] data, SortingOrder sortingRequested) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -78,7 +78,7 @@ class NoteListAdapter extends ArrayAdapter {
 
             //mi occupo di popolare la sottovoce della nota se necessario
             TextView subNoteText = (TextView) row.findViewById(R.id.rowSubText);
-            switch (sortingRequested){
+            switch (sortingRequested.getOrder()){
                 case DUEDATE:
                     subNoteText.setText(note.printDueDate());
                     break;

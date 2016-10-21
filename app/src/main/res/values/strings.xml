@@ -40,4 +40,5 @@
     <string name="errorDateTimePassed">Date/Time already passed</string>
     <string name="errorNoNeedForAlarm">Note completed, no need for reminder</string>
     <string name="checkListTitle">Sub activities</string>
+    <string name="searchNoteMenuString">Search</string>
 </resources>

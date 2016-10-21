@@ -3,6 +3,7 @@ package com.alessio.luca.a321do;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -30,11 +31,8 @@ public class NoteDBAdapter {
     public static final String COL_DONE="done";
     public static final String COL_ALARM="alarm";
 
-    //enumerazione dedicata all'ordinamento della view
-    public enum SortingOrder {NONE,DUEDATE,IMPORTANCE,CATEGORY};
-
     public static final String DEBUG_TAG = "321NoteDBAdapter";
-    public static final String DATABASE_NAME = "321dodbtest_4.db";
+    public static final String DATABASE_NAME = "321dodbtest_5.db";
     public static final String TABLE_NAME = "notes";
     public static final int DATABASE_VERSION = 1;
 
@@ -118,9 +116,8 @@ public class NoteDBAdapter {
     }
     public Cursor retrieveAllNotes(SortingOrder sortBy) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
         String sorting = " order by "+COL_DONE;
-        switch (sortBy) {
+        switch (sortBy.getOrder()) {
             case DUEDATE:
                 sorting = sorting+", "+COL_DUEDATE;
                 break;
@@ -134,8 +131,11 @@ public class NoteDBAdapter {
                 sorting = sorting+", "+COL_ID;
                 break;
         }
-
-        Cursor c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
+        Cursor c = null;
+        if(sortBy.isSearchParameterSet())
+            c = db.rawQuery("select * from " + TABLE_NAME + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + sorting, null);
+        else
+            c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();
         Log.d(DEBUG_TAG,"all notes retrieved from db correctly");
         return c;

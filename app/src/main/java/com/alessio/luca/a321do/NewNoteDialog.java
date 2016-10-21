@@ -33,6 +33,7 @@ public class NewNoteDialog extends Dialog {
         setContentView(R.layout.dialog_new_note);
 
         editText = (EditText) findViewById(R.id.editText_title);
+        editText.requestFocus(); //TODO non prende il focus
         Button confirmButton = (Button) findViewById(R.id.button_confirm);
         Button cancelButton = (Button) findViewById(R.id.button_cancel);
 

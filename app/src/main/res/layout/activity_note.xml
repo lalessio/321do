@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
+            android:background="@color/light_grey"
             app:srcCompat="@drawable/plus" />
     </FrameLayout>
 </LinearLayout>
