@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,12 +32,14 @@ public class NoteActivity extends AppCompatActivity {
     private ArrayList<Note> retrievedNotes;
     private SortingOrder currentOrder;
     private SearchView searchView;
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //TODO in futuro implementare il discorso di più liste simultanee
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note);
+        setContentView(R.layout.drawer_layout);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
@@ -66,24 +69,21 @@ public class NoteActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         switch (position){
                             case 0:
-                                EditNoteDialog editNoteDialog = new EditNoteDialog(NoteActivity.this,noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
-                                editNoteDialog.show();
-                                editNoteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        updateListView(currentOrder);
-                                    }
-                                });
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("EditNotePayload",noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
+                                Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                overridePendingTransition(0,0);
                                 break;
                             case 1:
                                 noteDBAdapter.deleteNote(retrievedNotes.get(masterListPosition));
-                                updateListView(currentOrder);
                                 break;
                             case 2:
                                 noteDBAdapter.tickNote(retrievedNotes.get(masterListPosition));
-                                updateListView(currentOrder);
                                 break;
                         }
+                        updateListView(currentOrder);
                         dialog.dismiss();
                     }
                 });
@@ -102,6 +102,42 @@ public class NoteActivity extends AppCompatActivity {
                         updateListView(currentOrder);
                     }
                 });
+            }
+        });
+
+        drawerList = (ListView) findViewById(R.id.navList);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        String[] drawerContent = { "Today", "Tomorrow", "Next 7 Days", "Completed", "Expired", "All"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, drawerContent);
+        drawerList.setAdapter(adapter);
+
+        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        currentOrder = new SortingOrder(SortingOrder.Order.TODAY,currentOrder.getSearchParameter());
+                    case 1:
+                        currentOrder = new SortingOrder(SortingOrder.Order.TOMORROW,currentOrder.getSearchParameter());
+                        break;
+                    case 2:
+                        currentOrder = new SortingOrder(SortingOrder.Order.NEXT7DAYS,currentOrder.getSearchParameter());
+                        break;
+                    case 3:
+                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_COMPLETED,currentOrder.getSearchParameter());
+                        break;
+                    case 4:
+                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_EXPIRED,currentOrder.getSearchParameter());
+                        break;
+                    case 5:
+                        currentOrder = new SortingOrder(SortingOrder.Order.NONE);
+                        break;
+                    default:
+                        Toast.makeText(NoteActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                updateListView(currentOrder);
+                drawerLayout.closeDrawers();
             }
         });
 
@@ -167,7 +203,7 @@ public class NoteActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_content, menu);
 
-         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
@@ -236,9 +272,9 @@ public class NoteActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
         ListView modeListView = new ListView(NoteActivity.this);
         String[] modes = new String[] { getString(R.string.sortOptionCreation),
-                                        getString(R.string.sortOptionDueDate),
-                                        getString(R.string.sortOptionImportance),
-                                        getString(R.string.sortOptionTag) };
+                getString(R.string.sortOptionDueDate),
+                getString(R.string.sortOptionImportance),
+                getString(R.string.sortOptionTag) };
         ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
         modeListView.setAdapter(modeAdapter);
         builder.setView(modeListView);
@@ -272,7 +308,7 @@ public class NoteActivity extends AppCompatActivity {
         cursor.moveToFirst();
         retrievedNotes.clear();
 
-        while (!cursor.isAfterLast())
+        while (!cursor.isAfterLast()) //forse il contenuto di questo for può diventare una funzione da qualche altra parte
         {
             Note temp = new Note();
             temp.setId(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_ID)));
@@ -296,5 +332,10 @@ public class NoteActivity extends AppCompatActivity {
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
         NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row,notes,sortBy);
         listView.setAdapter(noteListAdapter);
+        TextView emptyText = (TextView)  findViewById(R.id.emptyList);
+        if(!noteListAdapter.isEmpty())
+            emptyText.setText("");
+        else
+            emptyText.setText(R.string.errorEmptyListView);
     }
 }

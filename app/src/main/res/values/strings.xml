@@ -41,4 +41,7 @@
     <string name="errorNoNeedForAlarm">Note completed, no need for reminder</string>
     <string name="checkListTitle">Sub activities</string>
     <string name="searchNoteMenuString">Search</string>
+    <string name="errorEmptyListView">Nothing to show</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>

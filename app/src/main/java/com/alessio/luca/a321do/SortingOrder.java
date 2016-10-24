@@ -5,7 +5,7 @@ package com.alessio.luca.a321do;
  */
 
 public class SortingOrder {
-    public enum Order {NONE,DUEDATE,IMPORTANCE,CATEGORY};
+    public enum Order {NONE,DUEDATE,IMPORTANCE,CATEGORY,ONLY_COMPLETED,ONLY_EXPIRED,TODAY,TOMORROW,NEXT7DAYS};
     private final Order order;
     private final String searchParameter;
 
@@ -21,11 +21,11 @@ public class SortingOrder {
 
     public SortingOrder(){
         this.order = Order.NONE;
-        this.searchParameter = new String();
+        this.searchParameter = "";
     }
     public SortingOrder(Order o){
         this.order = o;
-        this.searchParameter = new String();
+        this.searchParameter = "";
     }
     public SortingOrder(Order o, String s){
         this.order = o;

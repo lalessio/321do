@@ -1,7 +1,7 @@
 package com.alessio.luca.a321do;
 
+import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,60 +18,47 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import java.util.Calendar;
-
 /**
- * Created by Luca on 19/10/2016.
+ * Created by Luca on 24/10/2016.
  */
 
-public class EditNoteDialog extends Dialog {
-
-    private Context context;
+public class EditNoteActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
-    private EditText editTextTitle, editTextDesc, editTextTag, editTextDate;
-    private Button dateButton, confirmButton, cancelButton, buttonCheckList;
-    private Switch alarmSwitch;
-    private Spinner prioritySpinner, urgencySpinner;
-
-    public EditNoteDialog(Context context, Note note) {
-        super(context);
-        this.context=context;
-        this.note=note;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        note = (Note) getIntent().getExtras().get("EditNotePayload");
 
-        noteDBAdapter = new NoteDBAdapter(context);
+        noteDBAdapter = new NoteDBAdapter(EditNoteActivity.this);
         setTitle(R.string.editNoteTitle);
         setContentView(R.layout.dialog_edit_note);
 
-        editTextTitle = (EditText) findViewById(R.id.editText_title);
+        final EditText editTextTitle = (EditText) findViewById(R.id.editText_title);
         editTextTitle.setText(note.getTitle());
-        editTextDesc = (EditText) findViewById(R.id.editText_description);
+        final EditText editTextDesc = (EditText) findViewById(R.id.editText_description);
         editTextDesc.setText(note.getDescription());
-        editTextDate = (EditText) findViewById(R.id.editText_date);
+        final EditText editTextDate = (EditText) findViewById(R.id.editText_date);
         editTextDate.setText(note.printDueDate());
-        editTextTag = (EditText) findViewById(R.id.editText_tag);
+        final EditText editTextTag = (EditText) findViewById(R.id.editText_tag);
         editTextTag.setText(note.getTag());
 
-        dateButton = (Button) findViewById(R.id.button_date);
-        confirmButton = (Button) findViewById(R.id.button_confirm);
-        cancelButton = (Button) findViewById(R.id.button_cancel);
-        alarmSwitch = (Switch) findViewById(R.id.switch_alarm);
-        prioritySpinner = (Spinner) findViewById(R.id.spinner_priority);
-        urgencySpinner = (Spinner) findViewById(R.id.spinner_urgency);
+        Button dateButton = (Button) findViewById(R.id.button_date);
+        Button confirmButton = (Button) findViewById(R.id.button_confirm);
+        Button cancelButton = (Button) findViewById(R.id.button_cancel);
+        Switch alarmSwitch = (Switch) findViewById(R.id.switch_alarm);
+        Spinner prioritySpinner = (Spinner) findViewById(R.id.spinner_priority);
+        Spinner urgencySpinner = (Spinner) findViewById(R.id.spinner_urgency);
 
         /////////////////////////////////DATE/TIME///////////////////////////////////////////
 
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DateTimeDialog dateTimeDialog = new DateTimeDialog(context,note);
+                DateTimeDialog dateTimeDialog = new DateTimeDialog(EditNoteActivity.this,note);
                 dateTimeDialog.show();
-                dateTimeDialog.setOnDismissListener(new OnDismissListener() {
+                dateTimeDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         editTextDate.setText(note.printDueDate());
@@ -82,11 +69,11 @@ public class EditNoteDialog extends Dialog {
 
         /////////////////////////////////CHECKLIST///////////////////////////////////////////
 
-        buttonCheckList = (Button) findViewById(R.id.button_checklist);
+        Button buttonCheckList = (Button) findViewById(R.id.button_checklist);
         buttonCheckList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckListDialog checkListDialog = new CheckListDialog(context,note);
+                CheckListDialog checkListDialog = new CheckListDialog(EditNoteActivity.this,note);
                 checkListDialog.show();
             }
         });
@@ -102,10 +89,10 @@ public class EditNoteDialog extends Dialog {
                 {
                     switch (note.getNoteState()){
                         case COMPLETED:
-                            Toast.makeText(context, R.string.errorNoNeedForAlarm, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditNoteActivity.this, R.string.errorNoNeedForAlarm, Toast.LENGTH_SHORT).show();
                             break;
                         case EXPIRED:
-                            Toast.makeText(context, R.string.errorDateTimePassed, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditNoteActivity.this, R.string.errorDateTimePassed, Toast.LENGTH_SHORT).show();
                             break;
                         default:
                             Log.d("321EditNodeDialog","case default or PLANNED note");
@@ -114,9 +101,9 @@ public class EditNoteDialog extends Dialog {
                 }
                 else
                 {
-                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    Intent intentAlarm = new Intent(context, AlarmReceiver.class);
-                    alarmManager.cancel(PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+                    AlarmManager alarmManager = (AlarmManager) EditNoteActivity.this.getSystemService(ALARM_SERVICE);
+                    Intent intentAlarm = new Intent(EditNoteActivity.this, AlarmReceiver.class);
+                    alarmManager.cancel(PendingIntent.getBroadcast(EditNoteActivity.this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
                 }
             }
         });
@@ -127,7 +114,7 @@ public class EditNoteDialog extends Dialog {
         final int[] priority = {java.lang.Character.getNumericValue(note.getImportance().toString().charAt(0))};
         final char[] urgency = {note.getImportance().toString().charAt(1)};
 
-        ArrayAdapter<String> priorities = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, new Importance().getAllPriorities());
+        ArrayAdapter<String> priorities = new ArrayAdapter<>(EditNoteActivity.this, android.R.layout.simple_spinner_item, new Importance().getAllPriorities());
         prioritySpinner.setAdapter(priorities);
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
@@ -138,7 +125,7 @@ public class EditNoteDialog extends Dialog {
         });
         prioritySpinner.setSelection(priority[0]-1);
 
-        ArrayAdapter<String> urgencies = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, new Importance().getAllUrgencies());
+        ArrayAdapter<String> urgencies = new ArrayAdapter<>(EditNoteActivity.this, android.R.layout.simple_spinner_item, new Importance().getAllUrgencies());
         urgencySpinner.setAdapter(urgencies);
         urgencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view,int pos, long id) {
@@ -166,12 +153,13 @@ public class EditNoteDialog extends Dialog {
                     noteDBAdapter.updateNote(newNote);
                     if (newNote.isAlarmOn() && newNote.getNoteState() == Note.NoteState.PLANNED)
                         planNotification(newNote);
-                    dismiss();
-                    Toast.makeText(context, R.string.messageChangesApplied, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditNoteActivity.this, R.string.messageChangesApplied, Toast.LENGTH_SHORT).show();
+                    finish();
+                    overridePendingTransition(0,0);
                 }
                 else
                 {
-                    Toast.makeText(context, R.string.errorEmptyTitle, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditNoteActivity.this, R.string.errorEmptyTitle, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -179,20 +167,28 @@ public class EditNoteDialog extends Dialog {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, R.string.messageChangesNotApplied,Toast.LENGTH_SHORT).show();
-                dismiss();
+                Toast.makeText(EditNoteActivity.this, R.string.messageChangesNotApplied,Toast.LENGTH_SHORT).show();
+                finish();
+                overridePendingTransition(0,0);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Toast.makeText(EditNoteActivity.this, R.string.messageChangesNotApplied,Toast.LENGTH_SHORT).show();
+        overridePendingTransition(0,0);
     }
 
     public void planNotification(Note note) {
         long when = note.getDueDate().getTimeInMillis();
         //long when = System.currentTimeMillis()+3000; //for debug
-        Intent intentAlarm = new Intent(context, AlarmReceiver.class);
+        Intent intentAlarm = new Intent(EditNoteActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("NotePayload",note);
         intentAlarm.putExtras(bundle);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        AlarmManager alarmManager = (AlarmManager) EditNoteActivity.this.getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(EditNoteActivity.this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 }

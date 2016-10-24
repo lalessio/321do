@@ -144,6 +144,7 @@ public class Note implements Serializable {
         this.dueDate.set(Calendar.HOUR_OF_DAY,8);
         this.dueDate.set(Calendar.MINUTE,30);
         this.dueDate.set(Calendar.SECOND,0);
+        this.dueDate.set(Calendar.MILLISECOND,0);
     }
     private void newNoteInitialization(){
         this.done = false;

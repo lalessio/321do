@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:id="@+id/edit_note_layout"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <!-- TODO progettare gui modifica nota-->
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:text="@string/editTitleTitle"
+                android:id="@+id/textView1"
+                style="@style/genericTextView"
+                android:layout_width="match_parent" />
+
+            <EditText
+                android:id="@+id/editText_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/light_grey"
+                android:textColor="@color/black"
+                android:layout_margin="4dp"
+                android:hint="@string/editTitleHint"
+                android:maxLength="140"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:text="@string/editDescriptionTitle"
+                android:id="@+id/textView2"
+                style="@style/genericTextView"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@color/light_grey"
+                android:textColor="@color/black"
+                android:id="@+id/editText_description"
+                android:hint="@string/editDescriptionHint" />
+            <!-- TODO max lenght descrizione? -->
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:text="@string/editTagTitle"
+                android:id="@+id/textView5"
+                android:layout_margin="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:layout_margin="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@color/light_grey"
+                android:id="@+id/editText_tag"
+                android:hint="@string/editTagHint"
+                android:maxLength="16"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/editDateTimeHint"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:id="@+id/editText_date"
+                android:layout_weight="0.33"/>
+
+            <Button
+                android:text="@string/editDateTimeButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.66"
+                android:id="@+id/button_date" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:text="Checklist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_checklist"
+                android:layout_weight="0.1"/>
+
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/switchAlarmTitle"
+                android:layout_weight="100000"
+                android:id="@+id/switch_alarm" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/editPriorityTitle"
+                    android:id="@+id/textView3"
+                    style="@style/genericTextView" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_priority" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/editUrgencyTitle"
+                    android:id="@+id/textView4"
+                    style="@style/genericTextView" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_urgency"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/cancelButtonText"
+                android:id="@+id/button_cancel"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/confirmButtonText"
+                android:layout_margin="4dp"
+                android:id="@+id/button_confirm" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

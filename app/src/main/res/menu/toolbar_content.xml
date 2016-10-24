@@ -5,16 +5,17 @@
     <item
         android:id="@+id/action_search"
         android:title="@string/searchNoteMenuString"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|collapseActionView"
         android:icon="@drawable/search"
         android:orderInCategory="100"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
+    <item android:id="@+id/action_sort"
+    android:title="@string/sortNoteMenuString"
+    android:orderInCategory="200"
+    app:showAsAction="ifRoom|collapseActionView"
+        android:icon="@drawable/sort"/>
     <item android:id="@+id/action_new"
         android:title="@string/newNoteMenuString"
-        android:orderInCategory="200"
-        app:showAsAction="never" />
-    <item android:id="@+id/action_sort"
-        android:title="@string/sortNoteMenuString"
         android:orderInCategory="300"
         app:showAsAction="never" />
     <!-- TODO settings -->

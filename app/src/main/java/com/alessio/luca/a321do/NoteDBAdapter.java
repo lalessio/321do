@@ -3,7 +3,6 @@ package com.alessio.luca.a321do;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -32,7 +31,7 @@ public class NoteDBAdapter {
     public static final String COL_ALARM="alarm";
 
     public static final String DEBUG_TAG = "321NoteDBAdapter";
-    public static final String DATABASE_NAME = "321dodbtest_5.db";
+    public static final String DATABASE_NAME = "321dodbtest_5.db"; //prossimo 8
     public static final String TABLE_NAME = "notes";
     public static final int DATABASE_VERSION = 1;
 
@@ -116,6 +115,17 @@ public class NoteDBAdapter {
     }
     public Cursor retrieveAllNotes(SortingOrder sortBy) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long midnight = calendar.getTimeInMillis();
+
+        boolean whereClause = false;
+
         String sorting = " order by "+COL_DONE;
         switch (sortBy.getOrder()) {
             case DUEDATE:
@@ -127,17 +137,44 @@ public class NoteDBAdapter {
             case CATEGORY:
                 sorting = sorting+", "+COL_TAG+", "+COL_ID;
                 break;
+            case ONLY_COMPLETED:
+                sorting = " where " + COL_DONE + " = 1";
+                whereClause = true;
+                break;
+            case ONLY_EXPIRED:
+                sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
+                whereClause = true;
+                break;
+            case TODAY:
+                sorting = " where " + COL_DUEDATE + " between " + (midnight-86400000) + " and " + midnight; //+ sorting?
+                whereClause = true;
+                break;
+            case TOMORROW:
+                sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+86400000);
+                whereClause = true;
+                break;
+            case NEXT7DAYS:
+                sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+7*86400000);
+                whereClause = true;
+                break;
             default: //che sarebbe il case NONE e quindi CREATIONDATE
                 sorting = sorting+", "+COL_ID;
                 break;
         }
         Cursor c = null;
         if(sortBy.isSearchParameterSet())
-            c = db.rawQuery("select * from " + TABLE_NAME + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + sorting, null);
+        {
+            if(whereClause)
+            {
+                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' ";
+                c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
+            }
+            else
+                c = db.rawQuery("select * from " + TABLE_NAME + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + sorting, null);
+        }
         else
             c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();
-        Log.d(DEBUG_TAG,"all notes retrieved from db correctly");
         return c;
     }
 
