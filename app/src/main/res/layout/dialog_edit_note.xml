@@ -107,25 +107,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
             <Button
-                android:text="Checklist"
+                android:text="@string/checkListButtonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_checklist"
-                android:layout_weight="0.1"/>
+                android:id="@+id/button_checklist"/>
 
-                <Switch
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/switchAlarmTitle"
-                    android:layout_weight="100000"
-                    android:id="@+id/switch_alarm" />
+            <Switch
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/switchAlarmTitle"
+                        android:layout_weight="100000"
+                        android:id="@+id/switch_alarm" />
     </LinearLayout>
 
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_margin="4dp">
 

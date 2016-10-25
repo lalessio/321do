@@ -71,7 +71,7 @@ public class NoteActivity extends AppCompatActivity {
                             case 0:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("EditNotePayload",noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
-                                Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
+                                Intent intent = new Intent(NoteActivity.this, EditNoteActivity2.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                                 overridePendingTransition(0,0);

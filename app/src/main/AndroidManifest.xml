@@ -25,7 +25,7 @@
         <activity android:name=".NotificationReceiverActivity"
             android:noHistory="true"
             android:excludeFromRecents="true"/>
-        <activity android:name=".EditNoteActivity" android:theme="@style/noAnimTheme"/>
+        <activity android:name=".EditNoteActivity2" android:theme="@style/noAnimTheme"/>
         <receiver android:name=".AlarmReceiver" />
     </application>
 

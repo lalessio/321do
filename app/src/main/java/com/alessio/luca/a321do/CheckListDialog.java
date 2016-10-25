@@ -3,7 +3,6 @@ package com.alessio.luca.a321do;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +20,7 @@ public class CheckListDialog extends Dialog {
     private Context context;
     private Note note;
     private EditText editTextCheckList;
-    private Button buttonAddCheckListItem, buttonRemoveCheckListItem, buttonConfirm;
+    private Button buttonAddCheckListItem, buttonConfirm;
     private ListView listViewCheckList;
 
 
@@ -44,7 +43,7 @@ public class CheckListDialog extends Dialog {
         buttonAddCheckListItem = (Button) findViewById(R.id.buttonCheckListAdd);
         buttonConfirm = (Button) findViewById(R.id.button_confirm);
         listViewCheckList = (ListView) findViewById(R.id.checklist_list_view);
-        update();
+        updateCheckListView();
 
         buttonAddCheckListItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +52,7 @@ public class CheckListDialog extends Dialog {
                 {
                     note.addToCheckList(editTextCheckList.getText().toString());
                     editTextCheckList.setText("");
-                    update();
+                    updateCheckListView();
                 }
                 else
                     Toast.makeText(context,R.string.errorEmptyField,Toast.LENGTH_SHORT).show();
@@ -78,7 +77,7 @@ public class CheckListDialog extends Dialog {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         note.removeFromCheckList(masterListPosition);
-                        update();
+                        updateCheckListView();
                         dialog.dismiss();
                     }
                 });
@@ -93,7 +92,7 @@ public class CheckListDialog extends Dialog {
         });
     }
 
-    private void update(){
+    private void updateCheckListView(){
         ArrayAdapter<String> checkListAdapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,note.getCheckList());
         listViewCheckList.setAdapter(checkListAdapter);
     }

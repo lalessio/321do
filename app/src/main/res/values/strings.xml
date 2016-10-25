@@ -44,4 +44,12 @@
     <string name="errorEmptyListView">Nothing to show</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="checkListButtonText">Checklist</string>
+    <string name="messageAlarmOff">Alarm OFF</string>
+    <string name="messageAlarmOn">Alarm ON</string>
+    <string name="saveButtonText">Save</string>
+    <string name="editOptionsMedia">Media Attachment</string>
+    <string name="editOptionsChecklist">Sub Activities</string>
+    <string name="editOptionsAlarm">Reminder</string>
+    <string name="editOptionsDetails">Details</string>
 </resources>
