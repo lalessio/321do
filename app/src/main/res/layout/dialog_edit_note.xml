@@ -172,19 +172,13 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                style="@style/genericButton"
                 android:text="@string/cancelButtonText"
                 android:id="@+id/button_cancel"/>
 
             <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
+                style="@style/genericButton"
                 android:text="@string/confirmButtonText"
-                android:layout_margin="4dp"
                 android:id="@+id/button_confirm" />
 
         </LinearLayout>

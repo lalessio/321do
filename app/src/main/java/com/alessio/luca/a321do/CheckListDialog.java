@@ -20,18 +20,13 @@ public class CheckListDialog extends Dialog {
     private Context context;
     private Note note;
     private EditText editTextCheckList;
-    private Button buttonAddCheckListItem, buttonConfirm;
     private ListView listViewCheckList;
-
 
     public CheckListDialog(Context context, Note note) {
         super(context);
         this.context = context;
         this.note = note;
-        if(note.getCheckList().get(0)=="") //viene visualizzata una nota vuota altrimenti, problema dovuto alla scrittura su db di checklist vuote che richiede per forza un placeholder
-            note.removeFromCheckList(0);
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +35,8 @@ public class CheckListDialog extends Dialog {
         setContentView(R.layout.dialog_checklist);
 
         editTextCheckList = (EditText) findViewById(R.id.editTextCheckList);
-        buttonAddCheckListItem = (Button) findViewById(R.id.buttonCheckListAdd);
-        buttonConfirm = (Button) findViewById(R.id.button_confirm);
+        Button buttonAddCheckListItem = (Button) findViewById(R.id.buttonCheckListAdd);
+        Button buttonConfirm = (Button) findViewById(R.id.button_confirm);
         listViewCheckList = (ListView) findViewById(R.id.checklist_list_view);
         updateCheckListView();
 
@@ -91,7 +86,6 @@ public class CheckListDialog extends Dialog {
             }
         });
     }
-
     private void updateCheckListView(){
         ArrayAdapter<String> checkListAdapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,note.getCheckList());
         listViewCheckList.setAdapter(checkListAdapter);

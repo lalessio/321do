@@ -52,4 +52,6 @@
     <string name="editOptionsChecklist">Sub Activities</string>
     <string name="editOptionsAlarm">Reminder</string>
     <string name="editOptionsDetails">Details</string>
+    <string name="editNoteMediaTitle">Media management</string>
+    <string name="chooseMediaImageText">Choose Image</string>
 </resources>

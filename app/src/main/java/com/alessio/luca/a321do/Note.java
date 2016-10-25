@@ -90,9 +90,11 @@ public class Note implements Serializable {
     }
 
     public List<String> getCheckList() {
+        checkList.remove("");
         return checkList;
     }
     public void setCheckList(List<String> checkList) {
+        checkList.remove("");
         this.checkList = checkList;
     }
     public void addToCheckList(String n)

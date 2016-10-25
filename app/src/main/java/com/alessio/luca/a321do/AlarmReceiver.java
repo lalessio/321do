@@ -84,7 +84,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
+        Log.d("321AlarmReceiver","creando notifica titolo = "+note.getTitle()+" id= "+note.getId());
         notificationManager.notify(note.getId(), notification);
     }
 }

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -71,7 +72,7 @@ public class NoteActivity extends AppCompatActivity {
                             case 0:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("EditNotePayload",noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
-                                Intent intent = new Intent(NoteActivity.this, EditNoteActivity2.class);
+                                Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                                 overridePendingTransition(0,0);
@@ -192,11 +193,13 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!searchView.isFocused()) {
-            searchView.setIconified(true);
-        } else {
-            super.onBackPressed();
+        if(currentOrder.getOrder()!= SortingOrder.Order.NONE)
+        {
+            currentOrder = new SortingOrder(SortingOrder.Order.NONE);
+            updateListView(currentOrder);
         }
+        else
+            super.onBackPressed();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -221,16 +224,31 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
+        //buggato non funziona!
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                currentOrder = new SortingOrder(currentOrder.getOrder());
+                currentOrder = new SortingOrder(SortingOrder.Order.NONE);
                 updateListView(currentOrder);
                 return false;
             }
         });
 
+        //per gestire il ritorno alla vista normale dopo che premo indietro
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                currentOrder = new SortingOrder(SortingOrder.Order.NONE);
+                updateListView(currentOrder);
+                return true;  // Return true to collapse action view
+            }
 
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do something when expanded
+                return true;  // Return true to expand action view
+            }
+        });
 
         return true;
     }

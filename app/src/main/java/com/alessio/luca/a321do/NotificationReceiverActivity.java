@@ -66,7 +66,6 @@ public class NotificationReceiverActivity extends Activity {
                 finish();
                 break;
         }
-        return;
     }
     private void snoozeNotification(Note note, long amount) {
         //prima chiudo la notifica che esiste già perchè andrò a riusarne l'id
@@ -77,7 +76,7 @@ public class NotificationReceiverActivity extends Activity {
         intentAlarm.putExtras(bundle);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         //per ora snooze DAL MOMENTO IN CUI PREMO SNOOZE
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+amount, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+amount, PendingIntent.getBroadcast(this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
     private void tickAction(Note note) {
         NoteDBAdapter noteDBAdapter = new NoteDBAdapter(NotificationReceiverActivity.this);
