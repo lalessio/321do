@@ -19,12 +19,12 @@ import android.widget.ImageView;
 
 // molto TODO
 
-public class MediaDialog extends Activity {
+public class EditMediaActivity extends Activity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private Context context;
     private Note note;
 
-//    public MediaDialog(Context context, Note note) {
+//    public EditMediaActivity(Context context, Note note) {
 //        super(context);
 //        this.context = context;
 //        this.note = note;

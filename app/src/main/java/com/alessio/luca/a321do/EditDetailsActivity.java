@@ -1,8 +1,9 @@
 package com.alessio.luca.a321do;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,34 +12,30 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 /**
- * Created by Luca on 25/10/2016.
+ * Created by Luca on 26/10/2016.
  */
 
-public class DetailsDialog extends Dialog {
-    private Context context;
+public class EditDetailsActivity extends Activity {
     private Note note;
-
-    public DetailsDialog(Context context, Note note) {
-        super(context);
-        this.context = context;
-        this.note = note;
-    }
-
+    private NoteDBAdapter noteDBAdapter;
+    private EditText editTextTitle, editTextDesc, editTextTag;
+    private int[] priority;
+    private char[] urgency;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        noteDBAdapter = new NoteDBAdapter(this);
+
         setTitle(note.getTitle());
         setContentView(R.layout.dialog_details);
 
-        Button confirmButton = (Button) findViewById(R.id.buttonDetailsConfirm);
-        Button cancelButton = (Button) findViewById(R.id.buttonDetailsCancel);
-
-        final EditText editTextTitle = (EditText) findViewById(R.id.editText_title);
+        editTextTitle = (EditText) findViewById(R.id.editText_title);
         editTextTitle.setText(note.getTitle());
-        final EditText editTextDesc = (EditText) findViewById(R.id.editText_description);
+        editTextDesc = (EditText) findViewById(R.id.editText_description);
         editTextDesc.setText(note.getDescription());
-        final EditText editTextTag = (EditText) findViewById(R.id.editText_tag);
+        editTextTag = (EditText) findViewById(R.id.editText_tag);
         editTextTag.setText(note.getTag());
 
 
@@ -46,10 +43,11 @@ public class DetailsDialog extends Dialog {
         Spinner urgencySpinner = (Spinner) findViewById(R.id.spinner_urgency);
 
         //TODO migliorare salvataggio importance
-        final int[] priority = {java.lang.Character.getNumericValue(note.getImportance().toString().charAt(0))};
-        final char[] urgency = {note.getImportance().toString().charAt(1)};
 
-        ArrayAdapter<String> priorities = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, new Importance().getAllPriorities());
+        priority = new int[]{Character.getNumericValue(note.getImportance().toString().charAt(0))};
+        urgency = new char[]{note.getImportance().toString().charAt(1)};
+
+        ArrayAdapter<String> priorities = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new Importance().getAllPriorities());
         prioritySpinner.setAdapter(priorities);
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
@@ -60,7 +58,7 @@ public class DetailsDialog extends Dialog {
         });
         prioritySpinner.setSelection(priority[0]-1);
 
-        ArrayAdapter<String> urgencies = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, new Importance().getAllUrgencies());
+        ArrayAdapter<String> urgencies = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new Importance().getAllUrgencies());
         urgencySpinner.setAdapter(urgencies);
         urgencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view,int pos, long id) {
@@ -70,24 +68,14 @@ public class DetailsDialog extends Dialog {
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
         urgencySpinner.setSelection(java.lang.Character.getNumericValue(urgency[0])-10); //A = 12 in ASCII, la selezione va da 0 a 2 quindi converto la lettera in un valore accettabile dallo spinner
-
-
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                note.setTitle(editTextTitle.getText().toString());
-                note.setImportance(priority[0], urgency[0]);
-                note.setDescription(editTextDesc.getText().toString());
-                note.setTag(editTextTag.getText().toString());
-                dismiss();
-              }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+    }
+    @Override
+    protected void onPause() {
+        note.setTitle(editTextTitle.getText().toString());
+        note.setImportance(priority[0], urgency[0]);
+        note.setDescription(editTextDesc.getText().toString());
+        note.setTag(editTextTag.getText().toString());
+        noteDBAdapter.updateNote(note);
+        super.onPause();
     }
 }

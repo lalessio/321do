@@ -117,21 +117,21 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
-        <Button
-            style="@style/genericButton"
-            android:text="@string/cancelButtonText"
-            android:id="@+id/buttonDetailsCancel"/>
+        <!--<Button-->
+            <!--style="@style/genericButton"-->
+            <!--android:text="@string/cancelButtonText"-->
+            <!--android:id="@+id/buttonDetailsCancel"/>-->
 
-        <Button
-            style="@style/genericButton"
-            android:text="@string/confirmButtonText"
-            android:id="@+id/buttonDetailsConfirm" />
+        <!--<Button-->
+            <!--style="@style/genericButton"-->
+            <!--android:text="@string/confirmButtonText"-->
+            <!--android:id="@+id/buttonDetailsConfirm" />-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </LinearLayout>

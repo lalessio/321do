@@ -20,22 +20,22 @@
         android:id="@+id/listviewEditNoteOptions">
     </ListView>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="2dp">
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="2dp">-->
 
-        <Button
-            android:text="@string/cancelButtonText"
-            android:id="@+id/button_annulla"
-            style="@style/genericButton" />
+        <!--<Button-->
+            <!--android:text="@string/cancelButtonText"-->
+            <!--android:id="@+id/button_annulla"-->
+            <!--style="@style/genericButton" />-->
 
-        <Button
-            android:text="@string/saveButtonText"
-            style="@style/genericButton"
-            android:id="@+id/button_save" />
+        <!--<Button-->
+            <!--android:text="@string/saveButtonText"-->
+            <!--style="@style/genericButton"-->
+            <!--android:id="@+id/button_save" />-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </LinearLayout>

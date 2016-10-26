@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 public class EditNoteActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
+    private TextView textViewEditNoteTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +31,9 @@ public class EditNoteActivity extends Activity {
         note = (Note) getIntent().getExtras().get("EditNotePayload");
         noteDBAdapter = new NoteDBAdapter(this);
 
-        TextView textViewEditNoteTitle = (TextView) findViewById(R.id.textViewEditNoteTitle);
+        textViewEditNoteTitle = (TextView) findViewById(R.id.textViewEditNoteTitle);
         textViewEditNoteTitle.setText(note.getTitle());
         ListView listView = (ListView) findViewById(R.id.listviewEditNoteOptions);
-        Button buttonSave = (Button) findViewById(R.id.button_save);
-        Button buttonDismiss = (Button) findViewById(R.id.button_annulla);
 
         String[] options = new String[] { getString(R.string.editOptionsDetails), getString(R.string.editOptionsAlarm), getString(R.string.editOptionsChecklist), getString(R.string.editOptionsMedia) };
         ArrayAdapter<String> arraydapter = new ArrayAdapter<>(EditNoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, options);
@@ -44,50 +42,27 @@ public class EditNoteActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("EditNotePayload",note);
+                Intent intent = null;
                 switch (position){
                     case 0:
-                        DetailsDialog detailsDialog = new DetailsDialog(EditNoteActivity.this,note);
-                        detailsDialog.show();
+                        intent = new Intent(EditNoteActivity.this, EditDetailsActivity.class);
                         break;
                     case 1:
-                        DateTimeDialog dateTimeDialog = new DateTimeDialog(EditNoteActivity.this,note);
-                        dateTimeDialog.show();
+                        intent = new Intent(EditNoteActivity.this, EditDateTimeActivity.class);
                         break;
                     case 2:
-                        CheckListDialog checkListDialog = new CheckListDialog(EditNoteActivity.this,note);
-                        checkListDialog.show();
+                        intent = new Intent(EditNoteActivity.this, EditCheckListActivity.class);
                         break;
                     case 3:
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("EditNotePayload",note);
-                        Intent intent = new Intent(EditNoteActivity.this, MediaDialog.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                        overridePendingTransition(0,0);
+                        intent = new Intent(EditNoteActivity.this, EditMediaActivity.class);
                         break;
                     default:
                         break;
                 }
-            }
-        });
-
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                noteDBAdapter.updateNote(note);
-                if (note.isAlarmOn() && note.getNoteState() == Note.NoteState.PLANNED)
-                    planNotification(note);
-                Toast.makeText(EditNoteActivity.this, R.string.messageChangesApplied, Toast.LENGTH_SHORT).show();
-                finish();
-                overridePendingTransition(0,0);
-            }
-        });
-
-        buttonDismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(EditNoteActivity.this, R.string.messageChangesNotApplied,Toast.LENGTH_SHORT).show();
-                finish();
+                intent.putExtras(bundle);
+                startActivity(intent);
                 overridePendingTransition(0,0);
             }
         });
@@ -107,5 +82,12 @@ public class EditNoteActivity extends Activity {
         intentAlarm.putExtras(bundle);
         AlarmManager alarmManager = (AlarmManager) EditNoteActivity.this.getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(EditNoteActivity.this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+    }
+
+    @Override
+    protected void onResume() {
+        note = noteDBAdapter.retrieveNoteById(note.getId());
+        textViewEditNoteTitle.setText(note.getTitle());
+        super.onResume();
     }
 }

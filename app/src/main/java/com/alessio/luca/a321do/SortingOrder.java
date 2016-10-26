@@ -5,7 +5,7 @@ package com.alessio.luca.a321do;
  */
 
 public class SortingOrder {
-    public enum Order {NONE,DUEDATE,IMPORTANCE,CATEGORY,ONLY_COMPLETED,ONLY_EXPIRED,TODAY,TOMORROW,NEXT7DAYS};
+    public enum Order {NONE,DUEDATE,IMPORTANCE,CATEGORY,ONLY_PLANNED,ONLY_EXPIRED,ONLY_COMPLETED,TODAY,TOMORROW,NEXT7DAYS};
     private final Order order;
     private final String searchParameter;
 

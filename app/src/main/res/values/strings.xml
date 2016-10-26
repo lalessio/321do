@@ -54,4 +54,12 @@
     <string name="editOptionsDetails">Details</string>
     <string name="editNoteMediaTitle">Media management</string>
     <string name="chooseMediaImageText">Choose Image</string>
+    <string name="noteOptionClone">Clone</string>
+    <string name="drawerOptionToday">Today</string>
+    <string name="drawerOptionTomorrow">Tomorrow</string>
+    <string name="drawerOptionNext7Days">Next 7 Days</string>
+    <string name="drawerOptionPlanned">Planned</string>
+    <string name="drawerOptionExpired">Expired</string>
+    <string name="drawerOptionCompleted">Completed</string>
+    <string name="drawerOptionAll">All</string>
 </resources>

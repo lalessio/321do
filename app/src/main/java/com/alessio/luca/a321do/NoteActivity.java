@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,9 +33,7 @@ public class NoteActivity extends AppCompatActivity {
     private NoteDBAdapter noteDBAdapter;
     private ArrayList<Note> retrievedNotes;
     private SortingOrder currentOrder;
-    private SearchView searchView;
     private DrawerLayout drawerLayout;
-    private ListView drawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //TODO in futuro implementare il discorso di più liste simultanee
@@ -57,7 +56,7 @@ public class NoteActivity extends AppCompatActivity {
                 //creo finestra
                 AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
                 ListView modeListView = new ListView(NoteActivity.this);
-                String[] modes = new String[] { getString(R.string.noteOptionEdit), getString(R.string.noteOptionDelete), getString(R.string.noteOptionTick) };
+                String[] modes = new String[] { getString(R.string.noteOptionEdit), getString(R.string.noteOptionDelete), getString(R.string.noteOptionClone), getString(R.string.noteOptionTick) };
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
                 modeListView.setAdapter(modeAdapter);
                 builder.setView(modeListView);
@@ -81,6 +80,9 @@ public class NoteActivity extends AppCompatActivity {
                                 noteDBAdapter.deleteNote(retrievedNotes.get(masterListPosition));
                                 break;
                             case 2:
+                                noteDBAdapter.cloneNote(retrievedNotes.get(masterListPosition));
+                                break;
+                            case 3:
                                 noteDBAdapter.tickNote(retrievedNotes.get(masterListPosition));
                                 break;
                         }
@@ -106,10 +108,16 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
-        drawerList = (ListView) findViewById(R.id.navList);
+        ListView drawerList = (ListView) findViewById(R.id.navList);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        String[] drawerContent = { "Today", "Tomorrow", "Next 7 Days", "Completed", "Expired", "All"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, drawerContent);
+        String[] drawerContent = { getString(R.string.drawerOptionToday),
+                                    getString(R.string.drawerOptionTomorrow),
+                                    getString(R.string.drawerOptionNext7Days),
+                                    getString(R.string.drawerOptionPlanned),
+                                    getString(R.string.drawerOptionExpired),
+                                    getString(R.string.drawerOptionCompleted),
+                                    getString(R.string.drawerOptionAll) };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, drawerContent);
         drawerList.setAdapter(adapter);
 
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,12 +133,15 @@ public class NoteActivity extends AppCompatActivity {
                         currentOrder = new SortingOrder(SortingOrder.Order.NEXT7DAYS,currentOrder.getSearchParameter());
                         break;
                     case 3:
-                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_COMPLETED,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_PLANNED,currentOrder.getSearchParameter());
                         break;
                     case 4:
                         currentOrder = new SortingOrder(SortingOrder.Order.ONLY_EXPIRED,currentOrder.getSearchParameter());
                         break;
                     case 5:
+                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_COMPLETED,currentOrder.getSearchParameter());
+                        break;
+                    case 6:
                         currentOrder = new SortingOrder(SortingOrder.Order.NONE);
                         break;
                     default:
@@ -182,15 +193,11 @@ public class NoteActivity extends AppCompatActivity {
 //        });
 
     }
-
     @Override
     protected void onResume() {
         super.onResume();
         updateListView(currentOrder);
     }
-
-    //gestisco il menù
-
     @Override
     public void onBackPressed() {
         if(currentOrder.getOrder()!= SortingOrder.Order.NONE)
@@ -201,12 +208,12 @@ public class NoteActivity extends AppCompatActivity {
         else
             super.onBackPressed();
     }
-
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_content, menu);
 
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
@@ -217,7 +224,6 @@ public class NoteActivity extends AppCompatActivity {
                 updateListView(currentOrder);
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
@@ -240,19 +246,16 @@ public class NoteActivity extends AppCompatActivity {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 currentOrder = new SortingOrder(SortingOrder.Order.NONE);
                 updateListView(currentOrder);
-                return true;  // Return true to collapse action view
+                return true;
             }
-
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // Do something when expanded
-                return true;  // Return true to expand action view
+                return true;
             }
         });
 
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -284,7 +287,6 @@ public class NoteActivity extends AppCompatActivity {
 
         }
     }
-
     //funzioni di servizio
     private void showSortMenu() {
         AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);

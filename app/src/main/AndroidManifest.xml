@@ -28,7 +28,10 @@
             android:excludeFromRecents="true"/>
         <activity android:name=".EditNoteActivity" android:configChanges="orientation|screenSize"/>
         <receiver android:name=".AlarmReceiver" />
-        <activity android:name=".MediaDialog"/>
+        <activity android:name=".EditMediaActivity"/>
+        <activity android:name=".EditDetailsActivity"/>
+        <activity android:name=".EditCheckListActivity"/>
+        <activity android:name=".EditDateTimeActivity"/>
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
 </manifest>

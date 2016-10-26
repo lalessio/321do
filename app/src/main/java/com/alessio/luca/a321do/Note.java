@@ -167,7 +167,7 @@ public class Note implements Serializable {
                 +getTag()+" / "
                 +printDueDate()+" / "
                 +getImportance().toString()+" / "
-//                +getCheckList().toString()+" / "
+                +checkListToString(checkList)+" / "
                 +" / done = "+isDone()
                 +" / alarm = "+isAlarmOn();
     }
@@ -219,6 +219,7 @@ public class Note implements Serializable {
         else
             return new ArrayList<String>();
     }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Note(String title) {

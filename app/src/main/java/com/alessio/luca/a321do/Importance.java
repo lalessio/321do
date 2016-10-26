@@ -1,7 +1,7 @@
 package com.alessio.luca.a321do;
 
 import java.io.Serializable;
-
+//TODO invertire priorità e urgenza
 /**
  * Created by Luca on 04/10/2016.
  */

@@ -32,10 +32,10 @@
             android:layout_height="match_parent"
             android:id="@+id/checklist_list_view"/>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/confirmButtonText"
-                android:layout_margin="4dp"
-                android:id="@+id/button_confirm" />
+            <!--<Button-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/confirmButtonText"-->
+                <!--android:layout_margin="4dp"-->
+                <!--android:id="@+id/button_confirm" />-->
     </LinearLayout>

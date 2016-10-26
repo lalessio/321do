@@ -67,6 +67,16 @@ public class NoteDBAdapter {
         Log.d(DEBUG_TAG,"created new note: "+newNote.print());
         return newNote;
     }
+    public void cloneNote(Note note) {
+        Note clone = createNote(new Note());
+        clone.setTitle(note.getTitle());
+        clone.setDescription(note.getDescription());
+        clone.setTag(note.getTag());
+        clone.setImportance(note.getImportance());
+        clone.setCheckList(note.getCheckList());
+        //dueDate, done, alarm e tutto il contenuto non testuale non viene copiato da requisiti
+        updateNote(clone);
+    }
 
     //READ
     public Note retrieveNoteById(int id) {
@@ -137,12 +147,16 @@ public class NoteDBAdapter {
             case CATEGORY:
                 sorting = sorting+", "+COL_TAG+", "+COL_ID;
                 break;
-            case ONLY_COMPLETED:
-                sorting = " where " + COL_DONE + " = 1";
+            case ONLY_PLANNED:
+                sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
                 whereClause = true;
                 break;
             case ONLY_EXPIRED:
                 sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
+                whereClause = true;
+                break;
+            case ONLY_COMPLETED:
+                sorting = " where " + COL_DONE + " = 1";
                 whereClause = true;
                 break;
             case TODAY:
