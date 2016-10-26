@@ -1,5 +1,6 @@
 package com.alessio.luca.a321do;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Note implements Serializable {
     private List<String> checkList;
     private Calendar dueDate;
     private Importance importance;
+    private byte[] imgBytes;
 
 //////////////////////////////////////////TODO/////////////////////////////////////////////////////
 
@@ -120,7 +122,14 @@ public class Note implements Serializable {
         this.alarm = alarm;
     }
 
-////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
+    public byte[] getImgBytes() {
+        return imgBytes;
+    }
+    public void setImgBytes(byte[] imgBytes) {
+        this.imgBytes = imgBytes;
+    }
+
+    ////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
 
     public boolean isDueOver(){
     Calendar now = Calendar.getInstance();
@@ -237,7 +246,7 @@ public class Note implements Serializable {
         newNoteInitialization();
     }
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
-    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance){
+    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;
@@ -245,6 +254,7 @@ public class Note implements Serializable {
         this.checkList=nCheckList;
         this.dueDate=nDueDate;
         this.importance=nImportance;
+        this.imgBytes=nImgBytes;
     }
     public Note(Note note){
         //primo abbozzo costruttore copia
@@ -252,12 +262,14 @@ public class Note implements Serializable {
         this.title = note.getTitle();
         this.description = note.getDescription();
         this.tag = note.getTag();
-//        this.checkList = note.getCheckList();
+        this.checkList = note.getCheckList();
         this.dueDate = note.getDueDate();
         this.importance = note.getImportance();
         this.done=note.isDone();
         this.alarm=note.isAlarmOn();
+        this.imgBytes=note.getImgBytes();
     }
+    //TODO distruttore
 
 //    private class Place {
 //        //TODO place

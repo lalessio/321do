@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -13,9 +16,6 @@ import java.util.GregorianCalendar;
 /**
  * Created by Luca on 27/09/2016.
  */
-
-    //TODO barra ricerca
-        // TODO 6 NOTIFICHE
             // TODO 7 MEDIA + PLACE
                 //TODO suddivisione tripla menu iniziale fatte|tra  poco|futuro personalizzabile
 
@@ -29,37 +29,40 @@ public class NoteDBAdapter {
     public static final String COL_IMPORTANCE="importance";
     public static final String COL_DONE="done";
     public static final String COL_ALARM="alarm";
+    public static final String COL_IMAGE="imgAttachment";
 
     public static final String DEBUG_TAG = "321NoteDBAdapter";
-    public static final String DATABASE_NAME = "321dodbtest_5.db"; //prossimo 8
-    public static final String TABLE_NAME = "notes";
-    public static final int DATABASE_VERSION = 1;
+    public static final String TABLE_NAME = "notes_table";
+
 
     private DatabaseHelper dbHelper;
 
     public NoteDBAdapter(Context ctx) {
-        //this.context = ctx;
         dbHelper = new DatabaseHelper(ctx);
+        dbHelper.getWritableDatabase();
+        dbHelper.getReadableDatabase();
     }
 
     //CREATE
-    public Note createNote(Note note) {
+    public Note createNote(String noteName) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Note newNote = new Note(noteName);
 
         //prima salvo tutti i valori
         ContentValues values = new ContentValues();
-        values.put(COL_TITLE, note.getTitle());
-        values.put(COL_DESCRIPTION, note.getDescription());
-        values.put(COL_TAG, note.getTag());
-        values.put(COL_CHECKLIST, note.checkListToString(note.getCheckList())); //TODO correggere
-        values.put(COL_IMPORTANCE,note.getImportance().toString());
-        values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
-        values.put(COL_DONE,note.isDone()?1:0);
-        values.put(COL_ALARM,note.isAlarmOn()?1:0);
+        values.put(COL_TITLE, newNote.getTitle());
+        values.put(COL_DUEDATE,newNote.getDueDate().getTimeInMillis());
+        values.put(COL_IMPORTANCE,newNote.getImportance().toString());
+        values.put(COL_DESCRIPTION, newNote.getDescription());
+        values.put(COL_TAG, newNote.getTag());
+        values.put(COL_CHECKLIST, newNote.checkListToString(newNote.getCheckList()));
+        values.put(COL_DONE,newNote.isDone()?1:0);
+        values.put(COL_ALARM,newNote.isAlarmOn()?1:0);
+        values.put(COL_IMAGE,newNote.getImgBytes());
+
         db.insert(TABLE_NAME, null, values);
 
         //poi restituisco un nuovo oggetto identico a quello passato ma con id aggiornato
-        Note newNote = new Note(note);
         Cursor cursor = db.rawQuery("SELECT MAX(id) FROM "+TABLE_NAME,null);
         cursor.moveToFirst();
         db.close();
@@ -68,8 +71,8 @@ public class NoteDBAdapter {
         return newNote;
     }
     public void cloneNote(Note note) {
-        Note clone = createNote(new Note());
-        clone.setTitle(note.getTitle());
+        Note clone = createNote(note.getTitle());
+        //clone.setTitle(note.getTitle());
         clone.setDescription(note.getDescription());
         clone.setTag(note.getTag());
         clone.setImportance(note.getImportance());
@@ -91,7 +94,8 @@ public class NoteDBAdapter {
                         COL_IMPORTANCE,
                         COL_DUEDATE,
                         COL_DONE,
-                        COL_ALARM},
+                        COL_ALARM,
+                        COL_IMAGE},
                 COL_ID + "=?",
                 new String[]{String.valueOf(id)},
                 null, null, null, null
@@ -109,7 +113,8 @@ public class NoteDBAdapter {
             Calendar nDueDate = new GregorianCalendar();
             nDueDate.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DUEDATE)));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
-            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance);
+            byte [] nImgBytes = cursor.getBlob(cursor.getColumnIndex(COL_IMAGE));
+            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance, nImgBytes);
             note.setDone(cursor.getInt(cursor.getColumnIndex(COL_DONE)) != 0);
             note.setAlarm(cursor.getInt(cursor.getColumnIndex(COL_ALARM)) != 0);
             Log.d(DEBUG_TAG, "retrieved note: " + note.print());
@@ -204,6 +209,18 @@ public class NoteDBAdapter {
         values.put(COL_IMPORTANCE, note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_ALARM,note.isAlarmOn());
+        values.put(COL_IMAGE,note.getImgBytes());
+//        if(note.getImg()!=null)
+//        {
+//            ByteArrayOutputStream out = new ByteArrayOutputStream();
+//            note.getImg().compress(Bitmap.CompressFormat.PNG,0,out);
+//            values.put(COL_IMAGE,out.toByteArray());
+//        }
+//        else
+//        {
+//            byte[] emptyBlob = new byte[0];
+//            values.put(COL_IMAGE,emptyBlob);
+//        }
         // l'aggiornamento del campo done è gestito da tickNote()
         db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
         Log.d(DEBUG_TAG,"updated note to values: "+note.print());

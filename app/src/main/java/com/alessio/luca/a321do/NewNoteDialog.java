@@ -48,7 +48,7 @@ public class NewNoteDialog extends Dialog {
                 {
                     if(editText.getText().toString().length()!=0)
                     {
-                        noteDBAdapter.createNote(new Note(editText.getText().toString()));
+                        noteDBAdapter.createNote(editText.getText().toString());
                         closeKeyboard();
                         dismiss();
                     }
@@ -67,7 +67,7 @@ public class NewNoteDialog extends Dialog {
             public void onClick(View v) {
                 if(editText.getText().toString().length()!=0)
                 {
-                    noteDBAdapter.createNote(new Note(editText.getText().toString()));
+                    noteDBAdapter.createNote(editText.getText().toString());
                     closeKeyboard();
                     dismiss();
                 }

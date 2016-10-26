@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -339,7 +340,8 @@ public class NoteActivity extends AppCompatActivity {
             t.setTimeInMillis(Long.valueOf(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DUEDATE))));
             temp.setDueDate(t);
             temp.setImportance(new Importance(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_IMPORTANCE))));
-            ArrayList<String> nCheckList = new ArrayList<String>(Note.stringToCheckList(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_CHECKLIST))));
+            temp.setImgBytes(cursor.getBlob(cursor.getColumnIndex(NoteDBAdapter.COL_IMAGE)));
+            ArrayList<String> nCheckList = new ArrayList<>(Note.stringToCheckList(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_CHECKLIST))));
             temp.setCheckList(nCheckList);
             if(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_DONE))==0)
                 temp.setDone(false);
@@ -348,7 +350,7 @@ public class NoteActivity extends AppCompatActivity {
             retrievedNotes.add(temp);
             cursor.moveToNext();
         }
-
+//TODO deallocazione
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
         NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row,notes,sortBy);
         listView.setAdapter(noteListAdapter);

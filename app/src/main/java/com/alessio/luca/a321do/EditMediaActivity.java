@@ -1,53 +1,78 @@
 package com.alessio.luca.a321do;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Luca on 25/10/2016.
  */
-
+// TODO migliorare gestione memoria
 // molto TODO
 
 public class EditMediaActivity extends Activity {
     private static final int RESULT_LOAD_IMAGE = 1;
-    private Context context;
     private Note note;
-
-//    public EditMediaActivity(Context context, Note note) {
-//        super(context);
-//        this.context = context;
-//        this.note = note;
-//    }
+    private NoteDBAdapter noteDBAdapter;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        noteDBAdapter = new NoteDBAdapter(this);
+
         setTitle(R.string.editNoteMediaTitle);
         setContentView(R.layout.dialog_media);
 
+        imageView = (ImageView) findViewById(R.id.imageView);
         Button chooseImageButton = (Button) findViewById(R.id.buttonChooseImage);
-        //ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        Button saveButton = (Button) findViewById(R.id.buttonsaveeeeeeeeee);
+        Button resetButton = (Button) findViewById(R.id.buttonResetMediaImage);
+        TextView emptyMessage = (TextView) findViewById(R.id.textViewMediaImage);
+
+        if(note.getImgBytes()==null)
+            emptyMessage.setText(R.string.errorEmptyMediaImage);
+        else
+            imageView.setImageBitmap(BitmapFactory.decodeByteArray(note.getImgBytes(),0,note.getImgBytes().length));
 
         chooseImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(
-                        Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noteDBAdapter.updateNote(note);
+                Toast.makeText(EditMediaActivity.this,"saved image hopefully!",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //TODO testare cancellazione
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                note.setImgBytes(new byte[0]);
+                imageView.setImageResource(android.R.color.transparent);
             }
         });
     }
@@ -55,7 +80,6 @@ public class EditMediaActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -68,11 +92,14 @@ public class EditMediaActivity extends Activity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            ImageView imageView = (ImageView) findViewById(R.id.imageView);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            Bitmap fileDecoded = BitmapFactory.decodeFile(picturePath);
 
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            fileDecoded.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+
+            note.setImgBytes(outputStream.toByteArray());
+            imageView.setImageBitmap(fileDecoded);
         }
-
-
     }
+    //TODO onPause()
 }

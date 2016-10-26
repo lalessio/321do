@@ -70,7 +70,7 @@ public class EditNoteActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Toast.makeText(EditNoteActivity.this, R.string.messageChangesNotApplied,Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditNoteActivity.this, R.string.messageChangesApplied,Toast.LENGTH_SHORT).show();
         overridePendingTransition(0,0);
     }
     public void planNotification(Note note) {

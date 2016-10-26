@@ -2,14 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView" />
+    android:layout_height="match_parent"
+    android:gravity="center">
+
     <Button
         android:text="@string/chooseMediaImageText"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/buttonChooseImage" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25sp"
+        android:id="@+id/textViewMediaImage" />
+
+    <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/imageView" />
+
+    <Button
+        android:text="salva"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/buttonsaveeeeeeeeee" />
+
+    <Button
+        android:text="@string/resetButtonText"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/buttonResetMediaImage" />
 </LinearLayout>

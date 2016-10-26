@@ -42,8 +42,6 @@
     <string name="checkListTitle">Sub activities</string>
     <string name="searchNoteMenuString">Search</string>
     <string name="errorEmptyListView">Nothing to show</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
     <string name="checkListButtonText">Checklist</string>
     <string name="messageAlarmOff">Alarm OFF</string>
     <string name="messageAlarmOn">Alarm ON</string>
@@ -62,4 +60,6 @@
     <string name="drawerOptionExpired">Expired</string>
     <string name="drawerOptionCompleted">Completed</string>
     <string name="drawerOptionAll">All</string>
+    <string name="errorEmptyMediaImage">No Image Assigned</string>
+    <string name="resetButtonText">Reset</string>
 </resources>
