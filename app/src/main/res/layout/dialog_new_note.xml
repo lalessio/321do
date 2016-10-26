@@ -11,6 +11,9 @@
         android:layout_margin="4dp"
         android:background="@color/light_grey"
         android:gravity="start"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="@color/black">
         <requestFocus />
     </EditText>
@@ -21,19 +24,13 @@
         android:layout_height="fill_parent">
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="50"
+            style="@style/genericButton"
             android:text="@string/cancelButtonText"
-            android:textColor="@color/white"
             android:id="@+id/button_cancel"/>
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="50"
+            style="@style/genericButton"
             android:text="@string/confirmButtonText"
-            android:textColor="@color/white"
             android:id="@+id/button_confirm" />
 
     </LinearLayout>

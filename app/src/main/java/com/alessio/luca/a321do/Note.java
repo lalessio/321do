@@ -21,7 +21,7 @@ public class Note implements Serializable {
     private String title;
     private String description;
     private String tag;
-    private List<String> checkList; //TODO sistemare checkList
+    private List<String> checkList;
     private Calendar dueDate;
     private Importance importance;
 
@@ -90,9 +90,11 @@ public class Note implements Serializable {
     }
 
     public List<String> getCheckList() {
+        checkList.remove("");
         return checkList;
     }
     public void setCheckList(List<String> checkList) {
+        checkList.remove("");
         this.checkList = checkList;
     }
     public void addToCheckList(String n)
@@ -144,6 +146,7 @@ public class Note implements Serializable {
         this.dueDate.set(Calendar.HOUR_OF_DAY,8);
         this.dueDate.set(Calendar.MINUTE,30);
         this.dueDate.set(Calendar.SECOND,0);
+        this.dueDate.set(Calendar.MILLISECOND,0);
     }
     private void newNoteInitialization(){
         this.done = false;
@@ -164,17 +167,20 @@ public class Note implements Serializable {
                 +getTag()+" / "
                 +printDueDate()+" / "
                 +getImportance().toString()+" / "
-//                +getCheckList().toString()+" / "
+                +checkListToString(checkList)+" / "
                 +" / done = "+isDone()
                 +" / alarm = "+isAlarmOn();
     }
     public String printDueDate(){
-        return getDueDate().get(Calendar.DAY_OF_MONTH) + " "
+        String dueDate = getDueDate().get(Calendar.DAY_OF_MONTH) + " "
                 + (getDueDate().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())) + " "
                 + getDueDate().get(Calendar.YEAR) + "   "
-                + getDueDate().get(Calendar.HOUR_OF_DAY) + ":"
-                + getDueDate().get(Calendar.MINUTE);
-    } //TODO sistemare stampa minuti (stampa solo una cifra per ora)
+                + getDueDate().get(Calendar.HOUR_OF_DAY) + ":";
+        if(getDueDate().get(Calendar.MINUTE)<10)
+            dueDate = dueDate + "0";
+        dueDate = dueDate + getDueDate().get(Calendar.MINUTE);
+        return dueDate;
+    }
     public String readNoteState(){
         String s;
         NoteState ns = getNoteState();
@@ -213,7 +219,7 @@ public class Note implements Serializable {
         else
             return new ArrayList<String>();
     }
-// TODO checklist da mettere a posto
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Note(String title) {

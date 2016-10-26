@@ -14,7 +14,6 @@ import java.util.GregorianCalendar;
  * Created by Luca on 27/09/2016.
  */
 
-// TODO 4 CHECKLIST
     //TODO barra ricerca
         // TODO 6 NOTIFICHE
             // TODO 7 MEDIA + PLACE
@@ -31,11 +30,8 @@ public class NoteDBAdapter {
     public static final String COL_DONE="done";
     public static final String COL_ALARM="alarm";
 
-    //enumerazione dedicata all'ordinamento della view
-    public enum SortingOrder {NONE,DUEDATE,IMPORTANCE,CATEGORY};
-
     public static final String DEBUG_TAG = "321NoteDBAdapter";
-    public static final String DATABASE_NAME = "321dodbtest_4.db";
+    public static final String DATABASE_NAME = "321dodbtest_5.db"; //prossimo 8
     public static final String TABLE_NAME = "notes";
     public static final int DATABASE_VERSION = 1;
 
@@ -70,6 +66,16 @@ public class NoteDBAdapter {
         newNote.setId(cursor.getInt(0)); //è la colonna che contiene l'id
         Log.d(DEBUG_TAG,"created new note: "+newNote.print());
         return newNote;
+    }
+    public void cloneNote(Note note) {
+        Note clone = createNote(new Note());
+        clone.setTitle(note.getTitle());
+        clone.setDescription(note.getDescription());
+        clone.setTag(note.getTag());
+        clone.setImportance(note.getImportance());
+        clone.setCheckList(note.getCheckList());
+        //dueDate, done, alarm e tutto il contenuto non testuale non viene copiato da requisiti
+        updateNote(clone);
     }
 
     //READ
@@ -120,8 +126,18 @@ public class NoteDBAdapter {
     public Cursor retrieveAllNotes(SortingOrder sortBy) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long midnight = calendar.getTimeInMillis();
+
+        boolean whereClause = false;
+
         String sorting = " order by "+COL_DONE;
-        switch (sortBy) {
+        switch (sortBy.getOrder()) {
             case DUEDATE:
                 sorting = sorting+", "+COL_DUEDATE;
                 break;
@@ -131,14 +147,48 @@ public class NoteDBAdapter {
             case CATEGORY:
                 sorting = sorting+", "+COL_TAG+", "+COL_ID;
                 break;
+            case ONLY_PLANNED:
+                sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
+                whereClause = true;
+                break;
+            case ONLY_EXPIRED:
+                sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
+                whereClause = true;
+                break;
+            case ONLY_COMPLETED:
+                sorting = " where " + COL_DONE + " = 1";
+                whereClause = true;
+                break;
+            case TODAY:
+                sorting = " where " + COL_DUEDATE + " between " + (midnight-86400000) + " and " + midnight; //+ sorting?
+                whereClause = true;
+                break;
+            case TOMORROW:
+                sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+86400000);
+                whereClause = true;
+                break;
+            case NEXT7DAYS:
+                sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+7*86400000);
+                whereClause = true;
+                break;
             default: //che sarebbe il case NONE e quindi CREATIONDATE
                 sorting = sorting+", "+COL_ID;
                 break;
         }
-
-        Cursor c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
+        Cursor c = null;
+        if(sortBy.isSearchParameterSet())
+        {
+            if(whereClause)
+            {
+                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' ";
+                c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
+            }
+            else
+                c = db.rawQuery("select * from " + TABLE_NAME + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + sorting, null);
+        }
+        else
+            c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();
-        Log.d(DEBUG_TAG,"all notes retrieved from db correctly");
         return c;
     }
 

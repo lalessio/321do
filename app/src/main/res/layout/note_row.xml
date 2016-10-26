@@ -9,13 +9,18 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/activatedBackgroundIndicator">
+        android:background="@drawable/list_item_selector"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/errorNoteText"
-            android:textColor="@color/green"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:textColor="@color/black"
+            android:gravity="start"
             android:textSize="18sp"
             android:id="@+id/rowText" />
 
@@ -23,6 +28,7 @@
             android:text="@string/errorNoteText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:id="@+id/rowSubText"
             android:textStyle="italic" />
 

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:id="@+id/edit_note_layout"
-        android:layout_height="wrap_content">
-    <!-- TODO progettare gui modifica nota-->
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <!-- TODO progettare gui modifica nota-->
 
         <LinearLayout
             android:orientation="vertical"
@@ -80,52 +82,52 @@
 
         </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:hint="@string/editDateTimeHint"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:id="@+id/editText_date"
-                    android:layout_weight="0.33"/>
-
-                <Button
-                    android:text="@string/editDateTimeButtonText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.66"
-                    android:id="@+id/button_date" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-            <Button
-                android:text="@string/checkListButtonText"
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_checklist"/>
+                android:layout_margin="4dp"
+                android:hint="@string/editDateTimeHint"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:id="@+id/editText_date"
+                android:layout_weight="0.33"/>
+
+            <Button
+                android:text="@string/editDateTimeButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.66"
+                android:id="@+id/button_date" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:text="Checklist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_checklist"
+                android:layout_weight="0.1"/>
 
             <Switch
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/switchAlarmTitle"
-                        android:layout_weight="100000"
-                        android:id="@+id/switch_alarm" />
-    </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/switchAlarmTitle"
+                android:layout_weight="100000"
+                android:id="@+id/switch_alarm" />
+        </LinearLayout>
 
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp">
 
@@ -172,13 +174,19 @@
             android:layout_height="wrap_content">
 
             <Button
-                style="@style/genericButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:text="@string/cancelButtonText"
                 android:id="@+id/button_cancel"/>
 
             <Button
-                style="@style/genericButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:text="@string/confirmButtonText"
+                android:layout_margin="4dp"
                 android:id="@+id/button_confirm" />
 
         </LinearLayout>

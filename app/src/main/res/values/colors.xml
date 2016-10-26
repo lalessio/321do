@@ -7,6 +7,7 @@
     <color name="green">#00cc00</color>
     <color name="white">#ffffff</color>
     <color name="red">#ff0000</color>
+    <color name="very_light_grey">#f2f3f4</color>
     <color name="light_grey">#bababa</color>
     <color name="black">#000000</color>
     <color name="blue">#0000ff</color>
