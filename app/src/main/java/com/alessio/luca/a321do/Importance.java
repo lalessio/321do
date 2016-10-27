@@ -92,7 +92,7 @@ public class Importance implements Serializable{
         }
         return temp;
     }
-    public Priority mapToPriority(int i) {
+    public static Priority mapToPriority(int i) {
         Priority p;
         switch (i){
             case 1: p=Priority.IMPORTANT; break;
@@ -102,7 +102,7 @@ public class Importance implements Serializable{
         }
         return p;
     }
-    public Urgency mapToUrgency(char c) {
+    public static Urgency mapToUrgency(char c) {
         Urgency u;
         switch (c){
             case 'A': u=Urgency.HIGH; break;
@@ -112,7 +112,7 @@ public class Importance implements Serializable{
         }
         return u;
     }
-    public String[] getAllPriorities(){
+    public static String[] getAllPriorities(){
         Priority[] priorities = Priority.values();
         String[] names = new String[priorities.length];
 
@@ -122,7 +122,7 @@ public class Importance implements Serializable{
 
         return names;
     }
-    public String[] getAllUrgencies(){
+    public static String[] getAllUrgencies(){
         Urgency[] urgencies = Urgency.values();
         String[] names = new String[urgencies.length];
 

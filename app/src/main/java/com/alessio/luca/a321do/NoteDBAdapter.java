@@ -14,10 +14,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
+ * methods are not static because whoever uses this class should always instantiate it otherwise the dbhelper is not initialized
  * Created by Luca on 27/09/2016.
  */
             // TODO 7 MEDIA + PLACE
-                //TODO suddivisione tripla menu iniziale fatte|tra  poco|futuro personalizzabile
 
 public class NoteDBAdapter {
     public static final String COL_ID = "id";

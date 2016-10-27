@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +29,7 @@ public class EditCheckListActivity extends Activity {
         noteDBAdapter = new NoteDBAdapter(this);
 
         setTitle(R.string.checkListTitle);
-        setContentView(R.layout.dialog_checklist);
+        setContentView(R.layout.checklist_layout);
 
         editTextCheckList = (EditText) findViewById(R.id.editTextCheckList);
         Button buttonAddCheckListItem = (Button) findViewById(R.id.buttonCheckListAdd);

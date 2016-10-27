@@ -190,25 +190,6 @@ public class Note implements Serializable {
         dueDate = dueDate + getDueDate().get(Calendar.MINUTE);
         return dueDate;
     }
-    public String readNoteState(){
-        String s;
-        NoteState ns = getNoteState();
-        switch (ns){
-            case COMPLETED:
-                s = "completed";
-                break;
-            case PLANNED:
-                s = "planned";
-                break;
-            case EXPIRED:
-                s = "expired";
-                break;
-            default:
-                s = "non riconosciuto";
-                break;
-        }
-        return s;
-    }
     public static String checkListToString(List<String> stringList) {
         if (stringList==null || stringList.isEmpty()) {
             return new String();

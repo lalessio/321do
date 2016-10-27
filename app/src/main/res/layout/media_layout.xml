@@ -24,12 +24,6 @@
     android:id="@+id/imageView" />
 
     <Button
-        android:text="salva"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/buttonsaveeeeeeeeee" />
-
-    <Button
         android:text="@string/resetButtonText"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

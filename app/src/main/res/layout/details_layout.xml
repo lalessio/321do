@@ -22,7 +22,9 @@
             android:textColor="@color/black"
             android:layout_margin="4dp"
             android:hint="@string/editTitleHint"
-            android:maxLength="140"/>
+            android:maxLength="140"
+            android:imeOptions="actionNext|flagNoExtractUi"
+            android:singleLine="true"/>
 
     </LinearLayout>
 
@@ -39,12 +41,15 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_margin="4dp"
             android:background="@color/light_grey"
             android:textColor="@color/black"
             android:id="@+id/editText_description"
-            android:hint="@string/editDescriptionHint" />
+            android:hint="@string/editDescriptionHint"
+            android:imeOptions="actionNext|flagNoExtractUi"
+            android:maxLines="3"
+            />
         <!-- TODO max lenght descrizione? -->
     </LinearLayout>
 
@@ -61,15 +66,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:layout_margin="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:background="@color/light_grey"
-            android:id="@+id/editText_tag"
+            android:id="@+id/autoCompleteTag"
             android:hint="@string/editTagHint"
-            android:maxLength="16"/>
+            android:maxLength="16"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:singleLine="true"
+            android:inputType="textCapWords"/>
 
     </LinearLayout>
 
@@ -116,22 +124,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-
-        <!--<Button-->
-            <!--style="@style/genericButton"-->
-            <!--android:text="@string/cancelButtonText"-->
-            <!--android:id="@+id/buttonDetailsCancel"/>-->
-
-        <!--<Button-->
-            <!--style="@style/genericButton"-->
-            <!--android:text="@string/confirmButtonText"-->
-            <!--android:id="@+id/buttonDetailsConfirm" />-->
-
-    <!--</LinearLayout>-->
 
 </LinearLayout>

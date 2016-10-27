@@ -36,7 +36,7 @@ public class NewNoteDialog extends Dialog {
 
         editText = (EditText) findViewById(R.id.editText_title);
         editText.requestFocus();
-        openKeyboard();
+        openKeyboard(context);
 
         Button confirmButton = (Button) findViewById(R.id.button_confirm);
         Button cancelButton = (Button) findViewById(R.id.button_cancel);
@@ -49,7 +49,7 @@ public class NewNoteDialog extends Dialog {
                     if(editText.getText().toString().length()!=0)
                     {
                         noteDBAdapter.createNote(editText.getText().toString());
-                        closeKeyboard();
+                        closeKeyboard(context, editText);
                         dismiss();
                     }
                     else
@@ -68,7 +68,7 @@ public class NewNoteDialog extends Dialog {
                 if(editText.getText().toString().length()!=0)
                 {
                     noteDBAdapter.createNote(editText.getText().toString());
-                    closeKeyboard();
+                    closeKeyboard(context, editText);
                     dismiss();
                 }
                 else
@@ -81,16 +81,16 @@ public class NewNoteDialog extends Dialog {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                closeKeyboard();
+                closeKeyboard(context, editText);
                 dismiss();
             }
         });
     }
-    private void openKeyboard() {
+    public static void openKeyboard(Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
-    private void closeKeyboard() {
+    public static void closeKeyboard(Context context, EditText editText) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }

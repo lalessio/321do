@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
@@ -21,13 +19,15 @@ import java.io.ByteArrayOutputStream;
  * Created by Luca on 25/10/2016.
  */
 // TODO migliorare gestione memoria
-// molto TODO
+// TODO AUDIO
 
 public class EditMediaActivity extends Activity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private Note note;
     private NoteDBAdapter noteDBAdapter;
     private ImageView imageView;
+    private boolean modified;
+    private TextView emptyMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +35,15 @@ public class EditMediaActivity extends Activity {
 
         note = (Note) getIntent().getExtras().get("EditNotePayload");
         noteDBAdapter = new NoteDBAdapter(this);
+        modified = false;
 
         setTitle(R.string.editNoteMediaTitle);
-        setContentView(R.layout.dialog_media);
+        setContentView(R.layout.media_layout);
 
         imageView = (ImageView) findViewById(R.id.imageView);
         Button chooseImageButton = (Button) findViewById(R.id.buttonChooseImage);
-        Button saveButton = (Button) findViewById(R.id.buttonsaveeeeeeeeee);
         Button resetButton = (Button) findViewById(R.id.buttonResetMediaImage);
-        TextView emptyMessage = (TextView) findViewById(R.id.textViewMediaImage);
+        emptyMessage = (TextView) findViewById(R.id.textViewMediaImage);
 
         if(note.getImgBytes()==null)
             emptyMessage.setText(R.string.errorEmptyMediaImage);
@@ -54,25 +54,17 @@ public class EditMediaActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                startActivityForResult(i, RESULT_LOAD_IMAGE); //TODO impostare limite di grandezza file (1 mb? 500 kb ok)
             }
         });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                noteDBAdapter.updateNote(note);
-                Toast.makeText(EditMediaActivity.this,"saved image hopefully!",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //TODO testare cancellazione
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 note.setImgBytes(new byte[0]);
                 imageView.setImageResource(android.R.color.transparent);
+                emptyMessage.setText(R.string.errorEmptyMediaImage);
+                modified = true;
             }
         });
     }
@@ -95,11 +87,20 @@ public class EditMediaActivity extends Activity {
             Bitmap fileDecoded = BitmapFactory.decodeFile(picturePath);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            fileDecoded.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+            fileDecoded.compress(Bitmap.CompressFormat.JPEG, 50, outputStream); //sopporta 70 senza problemi (sul mio dispositivo)
 
             note.setImgBytes(outputStream.toByteArray());
             imageView.setImageBitmap(fileDecoded);
+
+            emptyMessage.setText("");
+            modified = true;
         }
     }
-    //TODO onPause()
+
+    @Override
+    protected void onPause() {
+        if(modified)
+            noteDBAdapter.updateNote(note);
+        super.onPause();
+    }
 }

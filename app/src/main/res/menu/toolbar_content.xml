@@ -18,7 +18,7 @@
         android:title="@string/newNoteMenuString"
         android:orderInCategory="300"
         app:showAsAction="never" />
-    <!-- TODO settings -->
+    <!-- TODO settings (ultima cosa quando tutto funziona e sarà carino) -->
     <item android:id="@+id/action_settings"
         android:title="@string/settingsMenuString"
         android:orderInCategory="400"

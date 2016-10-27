@@ -62,4 +62,13 @@
     <string name="drawerOptionAll">All</string>
     <string name="errorEmptyMediaImage">No Image Assigned</string>
     <string name="resetButtonText">Reset</string>
+    <string name="notificationOptionDismiss">Dismiss</string>
+    <string name="notificationOptionTick">Tick</string>
+    <string name="notificationOptionSnooze">Snooze</string>
+    <string name="notificationMessageHYDI">Have you done it?</string>
+    <string name="notificationMessageTaggedAs">Tagged as :  </string>
+    <string name="notificationMessageImportance">Importance :   </string>
+    <string name="toastNoteDismissed">Note dismissed</string>
+    <string name="toastNoteSnoozed">Alarm snoozed</string>
+    <string name="toastNoteCompleted">Task completed!</string>
 </resources>

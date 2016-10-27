@@ -28,16 +28,17 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
-    private ArrayList<Note> retrievedNotes;
+    private static ArrayList<Note> retrievedNotes;
     private SortingOrder currentOrder;
     private DrawerLayout drawerLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) { //TODO in futuro implementare il discorso di più liste simultanee
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
@@ -72,6 +73,7 @@ public class NoteActivity extends AppCompatActivity {
                             case 0:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("EditNotePayload",noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
+                                //bundle.putSerializable("TagsPayload",getExistingTags());
                                 Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
@@ -120,7 +122,7 @@ public class NoteActivity extends AppCompatActivity {
                                     getString(R.string.drawerOptionAll) };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, drawerContent);
         drawerList.setAdapter(adapter);
-
+        //TODO order by tag
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -149,8 +151,9 @@ public class NoteActivity extends AppCompatActivity {
                         Toast.makeText(NoteActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                         break;
                 }
-                updateListView(currentOrder);
+
                 drawerLayout.closeDrawers();
+                updateListView(currentOrder);
             }
         });
 
@@ -359,5 +362,15 @@ public class NoteActivity extends AppCompatActivity {
             emptyText.setText("");
         else
             emptyText.setText(R.string.errorEmptyListView);
+    }
+    public static String[] getExistingTags(){
+        List<String> tags = new ArrayList<>();
+        for(int i=0; i<retrievedNotes.size(); i++)
+        {
+            String currentTag = retrievedNotes.get(i).getTag();
+            if(currentTag!="" && !tags.contains(currentTag))
+                tags.add(currentTag);
+        }
+        return tags.toArray(new String[tags.size()]);
     }
 }

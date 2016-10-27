@@ -69,7 +69,6 @@ public class EditDateTimeActivity extends Activity {
             }
         });
     }
-
     @Override
     protected void onPause() {
         Calendar c=note.getDueDate();

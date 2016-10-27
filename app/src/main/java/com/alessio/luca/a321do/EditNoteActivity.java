@@ -16,8 +16,6 @@ import android.widget.Toast;
  * Created by Luca on 25/10/2016.
  */
 
-//TODO decidere se è il caso di portare tutti i dialog ad activity -> mi obbliga ad implementare l'autosalvataggio per ogni modifica
-
 public class EditNoteActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
@@ -27,7 +25,7 @@ public class EditNoteActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.edit_menu);
+        setContentView(R.layout.edit_menu_layout);
         note = (Note) getIntent().getExtras().get("EditNotePayload");
         noteDBAdapter = new NoteDBAdapter(this);
 
@@ -47,6 +45,7 @@ public class EditNoteActivity extends Activity {
                 Intent intent = null;
                 switch (position){
                     case 0:
+                        //bundle.putSerializable("TagsPayload",(String []) getIntent().getExtras().get("TagsPayload"));
                         intent = new Intent(EditNoteActivity.this, EditDetailsActivity.class);
                         break;
                     case 1:
