@@ -2,10 +2,11 @@ package com.alessio.luca.a321do;
 
 import android.app.Dialog;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,18 +24,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
     private static ArrayList<Note> retrievedNotes;
     private SortingOrder currentOrder;
-    private DrawerLayout drawerLayout;
+    private DrawerLayout drawerLayout; //TODO aggiungere pulsante
+    public static final int REQ_CODE_SPEECH_INPUT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,6 @@ public class NoteActivity extends AppCompatActivity {
                             case 0:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("EditNotePayload",noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
-                                //bundle.putSerializable("TagsPayload",getExistingTags());
                                 Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
@@ -96,8 +96,8 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabText = (FloatingActionButton) findViewById(R.id.fabText);
+        fabText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NewNoteDialog dialog = new NewNoteDialog(NoteActivity.this);
@@ -111,6 +111,14 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton fabAudio = (FloatingActionButton) findViewById(R.id.fabAudio);
+        fabAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newAudioNote();
+            }
+        });
+
         ListView drawerList = (ListView) findViewById(R.id.navList);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         String[] drawerContent = { getString(R.string.drawerOptionToday),
@@ -119,6 +127,7 @@ public class NoteActivity extends AppCompatActivity {
                                     getString(R.string.drawerOptionPlanned),
                                     getString(R.string.drawerOptionExpired),
                                     getString(R.string.drawerOptionCompleted),
+                                    getString(R.string.drawerOptionAttachment),
                                     getString(R.string.drawerOptionAll) };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, drawerContent);
         drawerList.setAdapter(adapter);
@@ -128,24 +137,27 @@ public class NoteActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        currentOrder = new SortingOrder(SortingOrder.Order.TODAY,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.TODAY,currentOrder.getSearchParameter());
                     case 1:
-                        currentOrder = new SortingOrder(SortingOrder.Order.TOMORROW,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.TOMORROW,currentOrder.getSearchParameter());
                         break;
                     case 2:
-                        currentOrder = new SortingOrder(SortingOrder.Order.NEXT7DAYS,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.NEXT7DAYS,currentOrder.getSearchParameter());
                         break;
                     case 3:
-                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_PLANNED,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.ONLY_PLANNED,currentOrder.getSearchParameter());
                         break;
                     case 4:
-                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_EXPIRED,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.ONLY_EXPIRED,currentOrder.getSearchParameter());
                         break;
                     case 5:
-                        currentOrder = new SortingOrder(SortingOrder.Order.ONLY_COMPLETED,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.ONLY_COMPLETED,currentOrder.getSearchParameter());
                         break;
                     case 6:
-                        currentOrder = new SortingOrder(SortingOrder.Order.NONE);
+                        currentOrder = new SortingOrder(currentOrder.getOrder(), SortingOrder.Filter.WITH_ATTACHMENT,currentOrder.getSearchParameter());
+                        break;
+                    case 7:
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.NONE);
                         break;
                     default:
                         Toast.makeText(NoteActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
@@ -204,9 +216,9 @@ public class NoteActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        if(currentOrder.getOrder()!= SortingOrder.Order.NONE)
+        if(currentOrder.getOrder()!= SortingOrder.Order.NONE || currentOrder.getFilter()!= SortingOrder.Filter.NONE)
         {
-            currentOrder = new SortingOrder(SortingOrder.Order.NONE);
+            currentOrder = new SortingOrder(SortingOrder.Order.NONE, SortingOrder.Filter.NONE);
             updateListView(currentOrder);
         }
         else
@@ -224,7 +236,7 @@ public class NoteActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                currentOrder = new SortingOrder(currentOrder.getOrder(),query);
+                currentOrder = new SortingOrder(currentOrder.getOrder(),currentOrder.getFilter(),query);
                 updateListView(currentOrder);
                 return false;
             }
@@ -238,7 +250,7 @@ public class NoteActivity extends AppCompatActivity {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                currentOrder = new SortingOrder(SortingOrder.Order.NONE);
+                currentOrder = new SortingOrder(SortingOrder.Order.NONE, SortingOrder.Filter.NONE);
                 updateListView(currentOrder);
                 return false;
             }
@@ -248,7 +260,7 @@ public class NoteActivity extends AppCompatActivity {
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                currentOrder = new SortingOrder(SortingOrder.Order.NONE);
+                currentOrder = new SortingOrder(SortingOrder.Order.NONE,currentOrder.getFilter());
                 updateListView(currentOrder);
                 return true;
             }
@@ -291,14 +303,36 @@ public class NoteActivity extends AppCompatActivity {
 
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && resultCode == RESULT_OK)
+        {
+            if (requestCode == REQ_CODE_SPEECH_INPUT) {
+                noteDBAdapter.createNote(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
+                updateListView(currentOrder);
+            }
+        }
+    }
     //funzioni di servizio
+    private void newAudioNote() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.audioRecordMessage));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(), getString(R.string.errorAudioRecord), Toast.LENGTH_LONG).show();
+        }
+    }
     private void showSortMenu() {
         AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
         ListView modeListView = new ListView(NoteActivity.this);
         String[] modes = new String[] { getString(R.string.sortOptionCreation),
                 getString(R.string.sortOptionDueDate),
                 getString(R.string.sortOptionImportance),
-                getString(R.string.sortOptionTag) };
+                getString(R.string.sortOptionTag)};
         ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
         modeListView.setAdapter(modeAdapter);
         builder.setView(modeListView);
@@ -310,16 +344,16 @@ public class NoteActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        currentOrder = new SortingOrder(SortingOrder.Order.NONE,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(SortingOrder.Order.NONE,currentOrder.getFilter(),currentOrder.getSearchParameter());
                         break;
                     case 1:
-                        currentOrder = new SortingOrder(SortingOrder.Order.DUEDATE,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(SortingOrder.Order.DUEDATE,currentOrder.getFilter(),currentOrder.getSearchParameter());
                         break;
                     case 2:
-                        currentOrder = new SortingOrder(SortingOrder.Order.IMPORTANCE,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(SortingOrder.Order.IMPORTANCE,currentOrder.getFilter(),currentOrder.getSearchParameter());
                         break;
                     case 3:
-                        currentOrder = new SortingOrder(SortingOrder.Order.CATEGORY,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(SortingOrder.Order.CATEGORY,currentOrder.getFilter(),currentOrder.getSearchParameter());
                         break;
                 }
                 updateListView(currentOrder);
@@ -367,7 +401,7 @@ public class NoteActivity extends AppCompatActivity {
         List<String> tags = new ArrayList<>();
         for(int i=0; i<retrievedNotes.size(); i++)
         {
-            String currentTag = retrievedNotes.get(i).getTag();
+            String currentTag = retrievedNotes.get(i).getTag().replaceAll("\\s+","");
             if(currentTag!="" && !tags.contains(currentTag))
                 tags.add(currentTag);
         }

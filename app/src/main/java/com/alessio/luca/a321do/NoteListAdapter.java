@@ -9,13 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
  * Created by Luca on 11/10/2016.
  */
 
-class NoteListAdapter extends ArrayAdapter {
+public class NoteListAdapter extends ArrayAdapter {
     private Context context;
     private int layoutResourceId;
     private Note[] data = null;
@@ -28,7 +29,6 @@ class NoteListAdapter extends ArrayAdapter {
         this.data = data;
         this.sortingRequested = sortingRequested;
     }
-
     @Override
     public int getItemViewType(int position) {
         Note.NoteState state = data[position].getNoteState();
@@ -43,7 +43,6 @@ class NoteListAdapter extends ArrayAdapter {
                 return 2;
         }
     }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
@@ -90,6 +89,11 @@ class NoteListAdapter extends ArrayAdapter {
                     break;
                 default:
                     subNoteText.setText(note.getDescription().replaceAll("[\\t\\n\\r]"," ")); //tolgo caporiga e inserisco spaziature per riparmiare spazio nella visualizzazione
+                    if(note.getImgBytes()!=null)
+                    {
+                        ImageView imageView = (ImageView) row.findViewById(R.id.rowAttachmentImage);
+                        imageView.setImageResource(R.mipmap.photo);
+                    }
                     break;
             }
             holder = new NoteViewHolder();
@@ -103,7 +107,6 @@ class NoteListAdapter extends ArrayAdapter {
         holder.getTextView().setText(content);
         return row;
     }
-
     private static class NoteViewHolder
     {
         TextView textView;

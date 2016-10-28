@@ -23,9 +23,4 @@
     android:layout_height="wrap_content"
     android:id="@+id/imageView" />
 
-    <Button
-        android:text="@string/resetButtonText"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/buttonResetMediaImage" />
 </LinearLayout>

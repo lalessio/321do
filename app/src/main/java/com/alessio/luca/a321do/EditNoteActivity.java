@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by Luca on 25/10/2016.
@@ -69,7 +68,6 @@ public class EditNoteActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Toast.makeText(EditNoteActivity.this, R.string.messageChangesApplied,Toast.LENGTH_SHORT).show();
         overridePendingTransition(0,0);
     }
     public void planNotification(Note note) {

@@ -5,7 +5,7 @@
     <string name="noteOptionDelete">Delete Note</string>
     <string name="noteOptionTick">Tick</string>
     <string name="sortOptionCreation">Creation (default)</string>
-    <string name="sortOptionDueDate">Due date</string>
+    <string name="sortOptionDueDate">Due Date</string>
     <string name="sortOptionImportance">Importance</string>
     <string name="sortOptionTag">Tag</string>
     <string name="sortOptionTitle">Order Notes by:</string>
@@ -71,4 +71,11 @@
     <string name="toastNoteDismissed">Note dismissed</string>
     <string name="toastNoteSnoozed">Alarm snoozed</string>
     <string name="toastNoteCompleted">Task completed!</string>
+    <string name="optionMediaChooseFromGallery">Choose from Gallery</string>
+    <string name="optionMediaTakePhoto">Take Photo</string>
+    <string name="optionMediaDeleteAttachment">Delete Attachment</string>
+    <string name="sortOptionWithAttachment">With Attachment</string>
+    <string name="drawerOptionAttachment">With Attachment</string>
+    <string name="errorAudioRecord">Error encountered while recording audio</string>
+    <string name="audioRecordMessage">Please speak now</string>
 </resources>

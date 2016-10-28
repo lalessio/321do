@@ -34,7 +34,6 @@ public class NoteDBAdapter {
     public static final String DEBUG_TAG = "321NoteDBAdapter";
     public static final String TABLE_NAME = "notes_table";
 
-
     private DatabaseHelper dbHelper;
 
     public NoteDBAdapter(Context ctx) {
@@ -141,16 +140,11 @@ public class NoteDBAdapter {
 
         boolean whereClause = false;
 
-        String sorting = " order by "+COL_DONE;
-        switch (sortBy.getOrder()) {
-            case DUEDATE:
-                sorting = sorting+", "+COL_DUEDATE;
-                break;
-            case IMPORTANCE:
-                sorting = sorting+", "+COL_IMPORTANCE;
-                break;
-            case CATEGORY:
-                sorting = sorting+", "+COL_TAG+", "+COL_ID;
+        String sorting;
+        switch (sortBy.getFilter()) {
+            case WITH_ATTACHMENT:
+                sorting = " where " + COL_IMAGE + " is not null";
+                whereClause = true;
                 break;
             case ONLY_PLANNED:
                 sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
@@ -165,7 +159,10 @@ public class NoteDBAdapter {
                 whereClause = true;
                 break;
             case TODAY:
-                sorting = " where " + COL_DUEDATE + " between " + (midnight-86400000) + " and " + midnight; //+ sorting?
+                //TODO risolvere today tomorrow risultati scorretti
+                Calendar cal = Calendar.getInstance();
+                long now = cal.getTimeInMillis();
+                sorting = " where " + COL_DUEDATE + " between " + now + " and " + midnight;
                 whereClause = true;
                 break;
             case TOMORROW:
@@ -176,11 +173,27 @@ public class NoteDBAdapter {
                 sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+7*86400000);
                 whereClause = true;
                 break;
-            default: //che sarebbe il case NONE e quindi CREATIONDATE
-                sorting = sorting+", "+COL_ID;
+            default:
+                sorting = new String();
                 break;
         }
         Cursor c = null;
+        sorting = sorting + " order by "+COL_DONE;
+        switch (sortBy.getOrder())
+        {
+            case DUEDATE:
+                sorting = sorting+", "+COL_DUEDATE;
+                break;
+            case IMPORTANCE:
+                sorting = sorting+", "+COL_IMPORTANCE;
+                break;
+            case CATEGORY:
+                sorting = sorting+", "+COL_TAG+", "+COL_ID;
+                break;
+            default: //che sarebbe il case NONE e quindi CREATIONDATE
+                sorting = sorting + ", "+COL_ID;
+                break;
+        }
         if(sortBy.isSearchParameterSet())
         {
             if(whereClause)

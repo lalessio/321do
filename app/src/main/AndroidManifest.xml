@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alessio.luca.a321do">
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,19 +18,17 @@
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-data android:name="android.app.default_searchable"
-                android:value=".NoteActivity"/>
+            <meta-data android:name="android.app.default_searchable" android:value=".NoteActivity"/>
         </activity>
         <activity android:name=".NotificationReceiverActivity"
-                android:noHistory="true"
-                android:excludeFromRecents="true"
-                android:screenOrientation="portrait"/>
+                    android:noHistory="true"
+                    android:excludeFromRecents="true"
+                    android:screenOrientation="portrait"/>
         <activity android:name=".EditNoteActivity" android:configChanges="orientation|screenSize"/>
         <receiver android:name=".AlarmReceiver" />
         <activity android:name=".EditMediaActivity"/>
@@ -34,6 +36,4 @@
         <activity android:name=".EditCheckListActivity"/>
         <activity android:name=".EditDateTimeActivity"/>
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 </manifest>

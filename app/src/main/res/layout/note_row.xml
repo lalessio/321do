@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="50dp"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:background="@color/white">
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_selector"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp"
+        android:layout_weight="0.3">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="325dp"
             android:layout_height="wrap_content"
             android:text="@string/errorNoteText"
             android:paddingBottom="2dp"
@@ -28,9 +29,13 @@
             android:text="@string/errorNoteText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:id="@+id/rowSubText"
             android:textStyle="italic" />
 
     </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.7"
+        android:id="@+id/rowAttachmentImage"/>
 </LinearLayout>
