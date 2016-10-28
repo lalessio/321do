@@ -36,6 +36,7 @@ public class NoteActivity extends AppCompatActivity {
     private static ArrayList<Note> retrievedNotes;
     private SortingOrder currentOrder;
     private DrawerLayout drawerLayout; //TODO aggiungere pulsante
+
     public static final int REQ_CODE_SPEECH_INPUT = 1;
 
     @Override
@@ -290,6 +291,12 @@ public class NoteActivity extends AppCompatActivity {
                 return true;
             case R.id.action_sort:
                 showSortMenu();
+                return true;
+            case R.id.action_clear_completed:
+                for(int i=0; i<retrievedNotes.size(); i++)
+                    if(retrievedNotes.get(i).isDone())
+                        noteDBAdapter.deleteNote(retrievedNotes.get(i));
+                updateListView(currentOrder);
                 return true;
             case R.id.action_settings:
                 Toast.makeText(NoteActivity.this, "settings TODO", Toast.LENGTH_SHORT).show(); //TODO

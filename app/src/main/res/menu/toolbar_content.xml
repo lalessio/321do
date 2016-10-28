@@ -18,13 +18,17 @@
         android:title="@string/newNoteMenuString"
         android:orderInCategory="300"
         app:showAsAction="never" />
+    <item android:id="@+id/action_clear_completed"
+        android:title="@string/clearCompletedMenuString"
+        android:orderInCategory="400"
+        app:showAsAction="never" />
     <!-- TODO settings (ultima cosa quando tutto funziona e sarà carino) -->
     <item android:id="@+id/action_settings"
         android:title="@string/settingsMenuString"
-        android:orderInCategory="400"
+        android:orderInCategory="500"
         app:showAsAction="never" />
     <item android:id="@+id/action_exit"
         android:title="@string/exitMenuString"
-        android:orderInCategory="500"
+        android:orderInCategory="600"
         app:showAsAction="never" />
 </menu>

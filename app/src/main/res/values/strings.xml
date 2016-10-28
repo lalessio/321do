@@ -78,4 +78,9 @@
     <string name="drawerOptionAttachment">With Attachment</string>
     <string name="errorAudioRecord">Error encountered while recording audio</string>
     <string name="audioRecordMessage">Please speak now</string>
+    <string name="title_activity_note_location">Map</string>
+    <string name="clearCompletedMenuString">Clear completed notes</string>
+    <string name="snoozeDialogMessage">Remind me again in...</string>
+    <string name="snoozeDialogHours">Hours</string>
+    <string name="snoozeDialogMinutes">Minutes</string>
 </resources>

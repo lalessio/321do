@@ -1,8 +1,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--<item android:state_window_focused="false" android:state_selected="true"-->
-        <!--android:drawable="@android:color/transparent" />-->
-    <!--<item android:state_selected="true"-->
-        <!--android:drawable="@android:color/transparent" />-->
     <item android:state_pressed="true"
         android:drawable="@color/very_light_grey" />
     <item android:state_selected="false"

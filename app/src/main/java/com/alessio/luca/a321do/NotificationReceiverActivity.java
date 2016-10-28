@@ -2,9 +2,11 @@ package com.alessio.luca.a321do;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,10 +64,8 @@ public class NotificationReceiverActivity extends Activity {
                 buttonNotificationSnooze.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        long amount = 10000;
-                        snoozeNotification(note,amount);
+                        showSnoozeDialog(note);
                         Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteSnoozed,Toast.LENGTH_SHORT).show();
-                        finish();
                     }
                 });
                 buttonNotificationTick.setOnClickListener(new View.OnClickListener() {
@@ -83,9 +84,7 @@ public class NotificationReceiverActivity extends Activity {
                 break;
 
             case AlarmReceiver.SNOOZE_NOTE:
-                long amount = 10000;
-                snoozeNotification(note,amount);
-                finish();
+                showSnoozeDialog(note);
                 break;
 
             default:
@@ -113,5 +112,31 @@ public class NotificationReceiverActivity extends Activity {
     private void closeNotification(int id){
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(id);
+    }
+    private void showSnoozeDialog(final Note note) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_snooze);
+        dialog.show();
+
+        final NumberPicker npHours = (NumberPicker) dialog.findViewById(R.id.snoozeNumberPickerHours);
+        npHours.setMaxValue(8);
+        npHours.setMinValue(0);
+        npHours.setValue(0);
+
+        final NumberPicker npMinutes = (NumberPicker) dialog.findViewById(R.id.snoozeNumberPickerMinutes);
+        npMinutes.setMaxValue(7);
+        npMinutes.setMinValue(0);
+        npMinutes.setDisplayedValues(new String[] {"0", "2", "5", "10", "15", "20", "30", "45"});
+
+        Button snoozeConfirmButton = (Button) dialog.findViewById(R.id.snoozeConfirmButton);
+        snoozeConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snoozeNotification(note,npHours.getValue()*3600000+npMinutes.getValue()*60000);
+                Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteSnoozed,Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                finish();
+            }
+        });
     }
 }

@@ -80,8 +80,8 @@ public class EditDateTimeActivity extends Activity {
         note.setDueDate(c);
         if(note.isAlarmOn() && note.getNoteState()== Note.NoteState.PLANNED)
         {
-            long when = note.getDueDate().getTimeInMillis();
-            //long when = System.currentTimeMillis()+3000; //for debug
+            //long when = note.getDueDate().getTimeInMillis();
+            long when = System.currentTimeMillis()+3000; //for debug
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("NotePayload",note);
@@ -92,7 +92,7 @@ public class EditDateTimeActivity extends Activity {
         }
         else
         {
-            ;AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
             alarmManager.cancel(PendingIntent.getBroadcast(EditDateTimeActivity.this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 
