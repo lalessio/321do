@@ -83,4 +83,7 @@
     <string name="snoozeDialogMessage">Remind me again in...</string>
     <string name="snoozeDialogHours">Hours</string>
     <string name="snoozeDialogMinutes">Minutes</string>
+    <string name="checklistButtonText">Add</string>
+    <string name="checklistHintText">Insert new item</string>
+    <string name="deleteOptionCheckListText">Delete</string>
 </resources>

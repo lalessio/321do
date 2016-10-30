@@ -1,11 +1,7 @@
 package com.alessio.luca.a321do;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -37,7 +33,7 @@ public class Note implements Serializable {
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
     public enum NoteState {COMPLETED,PLANNED,EXPIRED}
-    private static final String LIST_SEPARATOR = "__,__";
+
     private boolean done; //true se la nota è stata completata, false altrimenti
     private boolean alarm; //true se è stato impostata la notifica, false altrimenti
 
@@ -176,7 +172,7 @@ public class Note implements Serializable {
                 +getTag()+" / "
                 +printDueDate()+" / "
                 +getImportance().toString()+" / "
-                +checkListToString(checkList)+" / "
+                + Utilities.checkListToString(checkList)+" / "
                 +" / done = "+isDone()
                 +" / alarm = "+isAlarmOn();
     }
@@ -189,25 +185,6 @@ public class Note implements Serializable {
             dueDate = dueDate + "0";
         dueDate = dueDate + getDueDate().get(Calendar.MINUTE);
         return dueDate;
-    }
-    public static String checkListToString(List<String> stringList) {
-        if (stringList==null || stringList.isEmpty()) {
-            return new String();
-        }
-        String toString = new String();
-        for(int i=0; i<stringList.size(); i++)
-        {
-            toString = toString + stringList.get(i);
-            if(i!=stringList.size()-1)
-                toString = toString + LIST_SEPARATOR;
-        }
-        return toString;
-    }
-    public static List<String> stringToCheckList(String str) {
-        if(str != null)
-            return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR))); //forse restituisce oggetto non modificabile
-        else
-            return new ArrayList<String>();
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

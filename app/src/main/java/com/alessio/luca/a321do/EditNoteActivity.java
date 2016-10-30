@@ -25,7 +25,7 @@ public class EditNoteActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.edit_menu_layout);
-        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        note = (Note) getIntent().getExtras().get(Utilities.EDIT_NOTE_PAYLOAD_CODE);
         noteDBAdapter = new NoteDBAdapter(this);
 
         textViewEditNoteTitle = (TextView) findViewById(R.id.textViewEditNoteTitle);
@@ -40,7 +40,7 @@ public class EditNoteActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("EditNotePayload",note);
+                bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,note);
                 Intent intent = null;
                 switch (position){
                     case 0:
@@ -75,7 +75,7 @@ public class EditNoteActivity extends Activity {
         //long when = System.currentTimeMillis()+3000; //for debug
         Intent intentAlarm = new Intent(EditNoteActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("NotePayload",note);
+        bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
         intentAlarm.putExtras(bundle);
         AlarmManager alarmManager = (AlarmManager) EditNoteActivity.this.getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(EditNoteActivity.this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));

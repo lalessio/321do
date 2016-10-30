@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,17 +37,26 @@ public class NoteActivity extends AppCompatActivity {
     private NoteDBAdapter noteDBAdapter;
     private static ArrayList<Note> retrievedNotes;
     private SortingOrder currentOrder;
-    private DrawerLayout drawerLayout; //TODO aggiungere pulsante
-
+    private DrawerLayout drawerLayout;
     public static final int REQ_CODE_SPEECH_INPUT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        //here i had to use an actionbardrawertoggle just to have the hamburger animated icon...
+        //i'm sure there is a smarter way to achieve that
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
         noteDBAdapter = new NoteDBAdapter(this);
         listView = (ListView)findViewById(R.id.note_list_view);
@@ -74,7 +85,7 @@ public class NoteActivity extends AppCompatActivity {
                         switch (position){
                             case 0:
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("EditNotePayload",noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
+                                bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
                                 Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
@@ -305,7 +316,7 @@ public class NoteActivity extends AppCompatActivity {
                 finish();
                 return true;
             default:
-                Toast.makeText(this,"default",Toast.LENGTH_SHORT).show();
+                drawerLayout.openDrawer(GravityCompat.START);
                 return super.onOptionsItemSelected(item);
 
         }
@@ -385,7 +396,7 @@ public class NoteActivity extends AppCompatActivity {
             temp.setDueDate(t);
             temp.setImportance(new Importance(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_IMPORTANCE))));
             temp.setImgBytes(cursor.getBlob(cursor.getColumnIndex(NoteDBAdapter.COL_IMAGE)));
-            ArrayList<String> nCheckList = new ArrayList<>(Note.stringToCheckList(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_CHECKLIST))));
+            ArrayList<String> nCheckList = new ArrayList<>(Utilities.stringToCheckList(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_CHECKLIST))));
             temp.setCheckList(nCheckList);
             if(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_DONE))==0)
                 temp.setDone(false);

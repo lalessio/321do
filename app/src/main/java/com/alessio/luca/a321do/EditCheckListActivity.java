@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -25,28 +28,30 @@ public class EditCheckListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        note = (Note) getIntent().getExtras().get(Utilities.EDIT_NOTE_PAYLOAD_CODE);
         noteDBAdapter = new NoteDBAdapter(this);
 
         setTitle(R.string.checkListTitle);
         setContentView(R.layout.checklist_layout);
 
         editTextCheckList = (EditText) findViewById(R.id.editTextCheckList);
-        Button buttonAddCheckListItem = (Button) findViewById(R.id.buttonCheckListAdd);
         listViewCheckList = (ListView) findViewById(R.id.checklist_list_view);
         updateCheckListView();
 
-        buttonAddCheckListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(editTextCheckList.getText().toString().length()>=1)
-                {
-                    note.addToCheckList(editTextCheckList.getText().toString());
-                    editTextCheckList.setText("");
-                    updateCheckListView();
+        editTextCheckList.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_NEXT)) {
+                    if(editTextCheckList.getText().toString().length()>=1)
+                    {
+                        note.addToCheckList(editTextCheckList.getText().toString());
+                        editTextCheckList.setText("");
+                        updateCheckListView();
+                        editTextCheckList.requestFocus();
+                    }
+                    else
+                        Toast.makeText(EditCheckListActivity.this,R.string.errorEmptyField,Toast.LENGTH_SHORT).show();
                 }
-                else
-                    Toast.makeText(EditCheckListActivity.this,R.string.errorEmptyField,Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
 
@@ -56,7 +61,7 @@ public class EditCheckListActivity extends Activity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditCheckListActivity.this);
                 ListView modeListView = new ListView(EditCheckListActivity.this);
-                String[] modes = new String[] {"Delete"};
+                String[] modes = new String[] {getString(R.string.deleteOptionCheckListText)};
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(EditCheckListActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
                 modeListView.setAdapter(modeAdapter);
                 builder.setView(modeListView);

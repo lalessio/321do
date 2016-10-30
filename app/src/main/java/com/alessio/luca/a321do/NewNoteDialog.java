@@ -3,11 +3,9 @@ package com.alessio.luca.a321do;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,7 +34,7 @@ public class NewNoteDialog extends Dialog {
 
         editText = (EditText) findViewById(R.id.editText_title);
         editText.requestFocus();
-        openKeyboard(context);
+        Utilities.openKeyboard(context);
 
         Button confirmButton = (Button) findViewById(R.id.button_confirm);
         Button cancelButton = (Button) findViewById(R.id.button_cancel);
@@ -49,7 +47,7 @@ public class NewNoteDialog extends Dialog {
                     if(editText.getText().toString().length()!=0)
                     {
                         noteDBAdapter.createNote(editText.getText().toString());
-                        closeKeyboard(context, editText);
+                        Utilities.closeKeyboard(context, editText);
                         dismiss();
                     }
                     else
@@ -68,7 +66,7 @@ public class NewNoteDialog extends Dialog {
                 if(editText.getText().toString().length()!=0)
                 {
                     noteDBAdapter.createNote(editText.getText().toString());
-                    closeKeyboard(context, editText);
+                    Utilities.closeKeyboard(context, editText);
                     dismiss();
                 }
                 else
@@ -81,18 +79,10 @@ public class NewNoteDialog extends Dialog {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                closeKeyboard(context, editText);
+                Utilities.closeKeyboard(context, editText);
                 dismiss();
             }
         });
-    }
-    public static void openKeyboard(Context context) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }
-    public static void closeKeyboard(Context context, EditText editText) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }
 

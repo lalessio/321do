@@ -4,11 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -54,7 +51,7 @@ public class NoteDBAdapter {
         values.put(COL_IMPORTANCE,newNote.getImportance().toString());
         values.put(COL_DESCRIPTION, newNote.getDescription());
         values.put(COL_TAG, newNote.getTag());
-        values.put(COL_CHECKLIST, newNote.checkListToString(newNote.getCheckList()));
+        values.put(COL_CHECKLIST, Utilities.checkListToString(newNote.getCheckList()));
         values.put(COL_DONE,newNote.isDone()?1:0);
         values.put(COL_ALARM,newNote.isAlarmOn()?1:0);
         values.put(COL_IMAGE,newNote.getImgBytes());
@@ -108,7 +105,7 @@ public class NoteDBAdapter {
             String nTitle = cursor.getString(cursor.getColumnIndex(COL_TITLE));
             String nDescription = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
             String nTag = cursor.getString(cursor.getColumnIndex(COL_TAG));
-            ArrayList<String> nCheckList = new ArrayList<>(Note.stringToCheckList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST))));
+            ArrayList<String> nCheckList = new ArrayList<>(Utilities.stringToCheckList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST))));
             Calendar nDueDate = new GregorianCalendar();
             nDueDate.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DUEDATE)));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
@@ -218,7 +215,7 @@ public class NoteDBAdapter {
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
         values.put(COL_TAG, note.getTag());
-        values.put(COL_CHECKLIST, note.checkListToString(note.getCheckList())); //TODO correggere
+        values.put(COL_CHECKLIST, Utilities.checkListToString(note.getCheckList())); //TODO correggere
         values.put(COL_IMPORTANCE, note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_ALARM,note.isAlarmOn());

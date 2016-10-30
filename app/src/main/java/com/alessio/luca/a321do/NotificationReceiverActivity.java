@@ -26,7 +26,7 @@ public class NotificationReceiverActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Note note = (Note) getIntent().getExtras().get("NotePayload");
+        final Note note = (Note) getIntent().getExtras().get(Utilities.NOTIFICATION_PAYLOAD_CODE);
         switch (getIntent().getAction()){
             case AlarmReceiver.COMPLETE_NOTE:
                 tickAction(note);
@@ -99,7 +99,7 @@ public class NotificationReceiverActivity extends Activity {
         closeNotification(note.getId());
         Intent intentAlarm = new Intent(NotificationReceiverActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("NotePayload",note);
+        bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
         intentAlarm.putExtras(bundle);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         //per ora snooze DAL MOMENTO IN CUI PREMO SNOOZE

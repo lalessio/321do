@@ -25,9 +25,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Note note = (Note) intent.getExtras().get("NotePayload");
+        Note note = (Note) intent.getExtras().get(Utilities.NOTIFICATION_PAYLOAD_CODE);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("NotePayload",note);
+        bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
         intent = new Intent(context, NotificationReceiverActivity.class);
         intent.putExtras(bundle);
         intent.setAction(OPEN_NOTIFICATION);

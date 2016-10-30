@@ -24,7 +24,7 @@ public class EditDetailsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        note = (Note) getIntent().getExtras().get(Utilities.EDIT_NOTE_PAYLOAD_CODE);
         noteDBAdapter = new NoteDBAdapter(this);
 
         setTitle(note.getTitle());
