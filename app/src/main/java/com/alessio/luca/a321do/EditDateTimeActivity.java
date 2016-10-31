@@ -28,7 +28,7 @@ public class EditDateTimeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        note = (Note) getIntent().getExtras().get(Utilities.EDIT_NOTE_PAYLOAD_CODE);
         noteDBAdapter = new NoteDBAdapter(this);
 
         setTitle(R.string.editNoteDateTimeEditTitle);
@@ -69,7 +69,6 @@ public class EditDateTimeActivity extends Activity {
             }
         });
     }
-
     @Override
     protected void onPause() {
         Calendar c=note.getDueDate();
@@ -85,7 +84,7 @@ public class EditDateTimeActivity extends Activity {
             //long when = System.currentTimeMillis()+3000; //for debug
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("NotePayload",note);
+            bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
             intentAlarm.putExtras(bundle);
             AlarmManager alarmManager = (AlarmManager) EditDateTimeActivity.this.getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(EditDateTimeActivity.this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
@@ -93,7 +92,7 @@ public class EditDateTimeActivity extends Activity {
         }
         else
         {
-            ;AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
             alarmManager.cancel(PendingIntent.getBroadcast(EditDateTimeActivity.this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 

@@ -2,19 +2,21 @@ package com.alessio.luca.a321do;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Luca on 11/10/2016.
@@ -24,7 +26,7 @@ public class NotificationReceiverActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Note note = (Note) getIntent().getExtras().get("NotePayload");
+        final Note note = (Note) getIntent().getExtras().get(Utilities.NOTIFICATION_PAYLOAD_CODE);
         switch (getIntent().getAction()){
             case AlarmReceiver.COMPLETE_NOTE:
                 tickAction(note);
@@ -33,17 +35,44 @@ public class NotificationReceiverActivity extends Activity {
                 break;
 
             case AlarmReceiver.OPEN_NOTIFICATION:
-                //TODO layout result
-                setContentView(R.layout.result);
-                final TextView t = (TextView) findViewById(R.id.textViewResult);
-                Button b = (Button) findViewById(R.id.buttonResult);
-                t.setText(note.print());
-                b.setOnClickListener(new View.OnClickListener() {
+                setContentView(R.layout.notification_layout);
+
+                TextView textViewNotificationTitle = (TextView) findViewById(R.id.textViewNotificationTitle);
+                TextView textViewNotificationDescription = (TextView) findViewById(R.id.textViewNotificationDescription);
+                TextView textViewNotificationTag = (TextView) findViewById(R.id.textViewNotificationTag);
+                TextView textViewNotificationImportance = (TextView) findViewById(R.id.textViewNotificationImportance);
+                ImageView imageViewNotification = (ImageView) findViewById(R.id.imageViewNotification);
+                Button buttonNotificationDismiss = (Button) findViewById(R.id.buttonNotificationDismiss);
+                Button buttonNotificationSnooze = (Button) findViewById(R.id.buttonNotificationSnooze);
+                Button buttonNotificationTick = (Button) findViewById(R.id.buttonNotificationTick);
+
+                textViewNotificationTitle.setText(note.getTitle());
+                textViewNotificationDescription.setText(note.getDescription());
+                textViewNotificationTag.setText(note.getTag());
+                textViewNotificationImportance.setText(note.getImportance().toString());
+
+                if(note.getImgBytes()!=null)
+                    imageViewNotification.setImageBitmap(BitmapFactory.decodeByteArray(note.getImgBytes(),0,note.getImgBytes().length));
+
+                buttonNotificationDismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteDismissed,Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+                buttonNotificationSnooze.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSnoozeDialog(note);
+                        Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteSnoozed,Toast.LENGTH_SHORT).show();
+                    }
+                });
+                buttonNotificationTick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         tickAction(note);
-                        Intent intent = new Intent(NotificationReceiverActivity.this, NoteActivity.class);
-                        startActivity(intent);
+                        Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteCompleted,Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -55,9 +84,7 @@ public class NotificationReceiverActivity extends Activity {
                 break;
 
             case AlarmReceiver.SNOOZE_NOTE:
-                long amount = 10000;
-                snoozeNotification(note,amount);
-                finish();
+                showSnoozeDialog(note);
                 break;
 
             default:
@@ -72,7 +99,7 @@ public class NotificationReceiverActivity extends Activity {
         closeNotification(note.getId());
         Intent intentAlarm = new Intent(NotificationReceiverActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("NotePayload",note);
+        bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
         intentAlarm.putExtras(bundle);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         //per ora snooze DAL MOMENTO IN CUI PREMO SNOOZE
@@ -85,5 +112,31 @@ public class NotificationReceiverActivity extends Activity {
     private void closeNotification(int id){
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(id);
+    }
+    private void showSnoozeDialog(final Note note) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_snooze);
+        dialog.show();
+
+        final NumberPicker npHours = (NumberPicker) dialog.findViewById(R.id.snoozeNumberPickerHours);
+        npHours.setMaxValue(8);
+        npHours.setMinValue(0);
+        npHours.setValue(0);
+
+        final NumberPicker npMinutes = (NumberPicker) dialog.findViewById(R.id.snoozeNumberPickerMinutes);
+        npMinutes.setMaxValue(7);
+        npMinutes.setMinValue(0);
+        npMinutes.setDisplayedValues(new String[] {"0", "2", "5", "10", "15", "20", "30", "45"});
+
+        Button snoozeConfirmButton = (Button) dialog.findViewById(R.id.snoozeConfirmButton);
+        snoozeConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snoozeNotification(note,npHours.getValue()*3600000+npMinutes.getValue()*60000);
+                Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteSnoozed,Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                finish();
+            }
+        });
     }
 }

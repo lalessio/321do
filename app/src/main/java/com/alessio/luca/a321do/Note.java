@@ -1,10 +1,7 @@
 package com.alessio.luca.a321do;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -24,6 +21,8 @@ public class Note implements Serializable {
     private List<String> checkList;
     private Calendar dueDate;
     private Importance importance;
+    private byte[] imgBytes;
+    //TODO private Lenght lenght; come lo implemento? a cosa servirà?
 
 //////////////////////////////////////////TODO/////////////////////////////////////////////////////
 
@@ -35,7 +34,7 @@ public class Note implements Serializable {
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
     public enum NoteState {COMPLETED,PLANNED,EXPIRED}
-    private static final String LIST_SEPARATOR = "__,__";
+
     private boolean done; //true se la nota è stata completata, false altrimenti
     private boolean alarm; //true se è stato impostata la notifica, false altrimenti
 
@@ -120,7 +119,14 @@ public class Note implements Serializable {
         this.alarm = alarm;
     }
 
-////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
+    public byte[] getImgBytes() {
+        return imgBytes;
+    }
+    public void setImgBytes(byte[] imgBytes) {
+        this.imgBytes = imgBytes;
+    }
+
+    ////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
 
     public boolean isDueOver(){
     Calendar now = Calendar.getInstance();
@@ -167,7 +173,7 @@ public class Note implements Serializable {
                 +getTag()+" / "
                 +printDueDate()+" / "
                 +getImportance().toString()+" / "
-                +checkListToString(checkList)+" / "
+                + Utilities.checkListToString(checkList)+" / "
                 +" / done = "+isDone()
                 +" / alarm = "+isAlarmOn();
     }
@@ -180,44 +186,6 @@ public class Note implements Serializable {
             dueDate = dueDate + "0";
         dueDate = dueDate + getDueDate().get(Calendar.MINUTE);
         return dueDate;
-    }
-    public String readNoteState(){
-        String s;
-        NoteState ns = getNoteState();
-        switch (ns){
-            case COMPLETED:
-                s = "completed";
-                break;
-            case PLANNED:
-                s = "planned";
-                break;
-            case EXPIRED:
-                s = "expired";
-                break;
-            default:
-                s = "non riconosciuto";
-                break;
-        }
-        return s;
-    }
-    public static String checkListToString(List<String> stringList) {
-        if (stringList==null || stringList.isEmpty()) {
-            return new String();
-        }
-        String toString = new String();
-        for(int i=0; i<stringList.size(); i++)
-        {
-            toString = toString + stringList.get(i);
-            if(i!=stringList.size()-1)
-                toString = toString + LIST_SEPARATOR;
-        }
-        return toString;
-    }
-    public static List<String> stringToCheckList(String str) {
-        if(str != null)
-            return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR))); //forse restituisce oggetto non modificabile
-        else
-            return new ArrayList<String>();
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +205,7 @@ public class Note implements Serializable {
         newNoteInitialization();
     }
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
-    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance){
+    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;
@@ -245,6 +213,7 @@ public class Note implements Serializable {
         this.checkList=nCheckList;
         this.dueDate=nDueDate;
         this.importance=nImportance;
+        this.imgBytes=nImgBytes;
     }
     public Note(Note note){
         //primo abbozzo costruttore copia
@@ -252,12 +221,14 @@ public class Note implements Serializable {
         this.title = note.getTitle();
         this.description = note.getDescription();
         this.tag = note.getTag();
-//        this.checkList = note.getCheckList();
+        this.checkList = note.getCheckList();
         this.dueDate = note.getDueDate();
         this.importance = note.getImportance();
         this.done=note.isDone();
         this.alarm=note.isAlarmOn();
+        this.imgBytes=note.getImgBytes();
     }
+    //TODO distruttore
 
 //    private class Place {
 //        //TODO place

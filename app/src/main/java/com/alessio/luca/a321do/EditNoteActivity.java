@@ -10,13 +10,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by Luca on 25/10/2016.
  */
-
-//TODO decidere se è il caso di portare tutti i dialog ad activity -> mi obbliga ad implementare l'autosalvataggio per ogni modifica
 
 public class EditNoteActivity extends Activity {
     private Note note;
@@ -27,8 +24,8 @@ public class EditNoteActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.edit_menu);
-        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        setContentView(R.layout.edit_menu_layout);
+        note = (Note) getIntent().getExtras().get(Utilities.EDIT_NOTE_PAYLOAD_CODE);
         noteDBAdapter = new NoteDBAdapter(this);
 
         textViewEditNoteTitle = (TextView) findViewById(R.id.textViewEditNoteTitle);
@@ -36,14 +33,14 @@ public class EditNoteActivity extends Activity {
         ListView listView = (ListView) findViewById(R.id.listviewEditNoteOptions);
 
         String[] options = new String[] { getString(R.string.editOptionsDetails), getString(R.string.editOptionsAlarm), getString(R.string.editOptionsChecklist), getString(R.string.editOptionsMedia) };
-        ArrayAdapter<String> arraydapter = new ArrayAdapter<>(EditNoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, options);
-        listView.setAdapter(arraydapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(EditNoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, options);
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("EditNotePayload",note);
+                bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,note);
                 Intent intent = null;
                 switch (position){
                     case 0:
@@ -70,24 +67,17 @@ public class EditNoteActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Toast.makeText(EditNoteActivity.this, R.string.messageChangesNotApplied,Toast.LENGTH_SHORT).show();
         overridePendingTransition(0,0);
     }
-    public void planNotification(Note note) {
-        long when = note.getDueDate().getTimeInMillis();
-        //long when = System.currentTimeMillis()+3000; //for debug
-        Intent intentAlarm = new Intent(EditNoteActivity.this, AlarmReceiver.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("NotePayload",note);
-        intentAlarm.putExtras(bundle);
-        AlarmManager alarmManager = (AlarmManager) EditNoteActivity.this.getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(EditNoteActivity.this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-    }
-
     @Override
     protected void onResume() {
         note = noteDBAdapter.retrieveNoteById(note.getId());
         textViewEditNoteTitle.setText(note.getTitle());
         super.onResume();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.gc();
     }
 }

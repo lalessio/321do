@@ -1,13 +1,11 @@
 package com.alessio.luca.a321do;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -18,26 +16,28 @@ import android.widget.Spinner;
 public class EditDetailsActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
-    private EditText editTextTitle, editTextDesc, editTextTag;
+    private EditText editTextTitle, editTextDesc;
+    private AutoCompleteTextView autoCompleteTag;
     private int[] priority;
     private char[] urgency;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        note = (Note) getIntent().getExtras().get("EditNotePayload");
+        note = (Note) getIntent().getExtras().get(Utilities.EDIT_NOTE_PAYLOAD_CODE);
         noteDBAdapter = new NoteDBAdapter(this);
 
         setTitle(note.getTitle());
-        setContentView(R.layout.dialog_details);
+        setContentView(R.layout.details_layout);
 
-        editTextTitle = (EditText) findViewById(R.id.editText_title);
+        editTextTitle = (EditText) findViewById(R.id.editTextTitle);
         editTextTitle.setText(note.getTitle());
-        editTextDesc = (EditText) findViewById(R.id.editText_description);
+        editTextDesc = (EditText) findViewById(R.id.editTextDescription);
         editTextDesc.setText(note.getDescription());
-        editTextTag = (EditText) findViewById(R.id.editText_tag);
-        editTextTag.setText(note.getTag());
 
+        autoCompleteTag = (AutoCompleteTextView) findViewById(R.id.autoCompleteTag);
+        autoCompleteTag.setText(note.getTag());
+        autoCompleteTag.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NoteActivity.getExistingTags()));
 
         Spinner prioritySpinner = (Spinner) findViewById(R.id.spinner_priority);
         Spinner urgencySpinner = (Spinner) findViewById(R.id.spinner_urgency);
@@ -47,7 +47,8 @@ public class EditDetailsActivity extends Activity {
         priority = new int[]{Character.getNumericValue(note.getImportance().toString().charAt(0))};
         urgency = new char[]{note.getImportance().toString().charAt(1)};
 
-        ArrayAdapter<String> priorities = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new Importance().getAllPriorities());
+        new Importance();
+        ArrayAdapter<String> priorities = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Importance.getAllPriorities());
         prioritySpinner.setAdapter(priorities);
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
@@ -58,7 +59,7 @@ public class EditDetailsActivity extends Activity {
         });
         prioritySpinner.setSelection(priority[0]-1);
 
-        ArrayAdapter<String> urgencies = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new Importance().getAllUrgencies());
+        ArrayAdapter<String> urgencies = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Importance.getAllUrgencies());
         urgencySpinner.setAdapter(urgencies);
         urgencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view,int pos, long id) {
@@ -74,7 +75,7 @@ public class EditDetailsActivity extends Activity {
         note.setTitle(editTextTitle.getText().toString());
         note.setImportance(priority[0], urgency[0]);
         note.setDescription(editTextDesc.getText().toString());
-        note.setTag(editTextTag.getText().toString());
+        note.setTag(autoCompleteTag.getText().toString());
         noteDBAdapter.updateNote(note);
         super.onPause();
     }
