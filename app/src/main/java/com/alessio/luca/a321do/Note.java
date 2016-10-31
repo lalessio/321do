@@ -22,6 +22,7 @@ public class Note implements Serializable {
     private Calendar dueDate;
     private Importance importance;
     private byte[] imgBytes;
+    //TODO private Lenght lenght; come lo implemento? a cosa servirà?
 
 //////////////////////////////////////////TODO/////////////////////////////////////////////////////
 

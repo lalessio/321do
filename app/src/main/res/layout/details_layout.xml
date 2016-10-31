@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="8dp">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -15,7 +17,7 @@
             android:layout_width="match_parent" />
 
         <EditText
-            android:id="@+id/editText_title"
+            android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/light_grey"
@@ -45,7 +47,7 @@
             android:layout_margin="4dp"
             android:background="@color/light_grey"
             android:textColor="@color/black"
-            android:id="@+id/editText_description"
+            android:id="@+id/editTextDescription"
             android:hint="@string/editDescriptionHint"
             android:imeOptions="actionNext|flagNoExtractUi"
             android:maxLines="3"

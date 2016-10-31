@@ -14,7 +14,6 @@ import java.util.GregorianCalendar;
  * methods are not static because whoever uses this class should always instantiate it otherwise the dbhelper is not initialized
  * Created by Luca on 27/09/2016.
  */
-            // TODO 7 MEDIA + PLACE
 
 public class NoteDBAdapter {
     public static final String COL_ID = "id";
@@ -66,7 +65,7 @@ public class NoteDBAdapter {
         Log.d(DEBUG_TAG,"created new note: "+newNote.print());
         return newNote;
     }
-    public void cloneNote(Note note) {
+    public Note cloneNote(Note note) {
         Note clone = createNote(note.getTitle());
         //clone.setTitle(note.getTitle());
         clone.setDescription(note.getDescription());
@@ -75,6 +74,7 @@ public class NoteDBAdapter {
         clone.setCheckList(note.getCheckList());
         //dueDate, done, alarm e tutto il contenuto non testuale non viene copiato da requisiti
         updateNote(clone);
+        return clone;
     }
 
     //READ
@@ -215,7 +215,7 @@ public class NoteDBAdapter {
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_DESCRIPTION, note.getDescription());
         values.put(COL_TAG, note.getTag());
-        values.put(COL_CHECKLIST, Utilities.checkListToString(note.getCheckList())); //TODO correggere
+        values.put(COL_CHECKLIST, Utilities.checkListToString(note.getCheckList()));
         values.put(COL_IMPORTANCE, note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
         values.put(COL_ALARM,note.isAlarmOn());
@@ -250,10 +250,11 @@ public class NoteDBAdapter {
     }
 
     //DELETE
-    public void deleteNote(Note note) {
+    public Note deleteNote(Note note) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
         db.close();
+        return note;
     }
     public void deleteAllNotes() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

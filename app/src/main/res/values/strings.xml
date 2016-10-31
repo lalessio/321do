@@ -74,16 +74,21 @@
     <string name="optionMediaChooseFromGallery">Choose from Gallery</string>
     <string name="optionMediaTakePhoto">Take Photo</string>
     <string name="optionMediaDeleteAttachment">Delete Attachment</string>
-    <string name="sortOptionWithAttachment">With Attachment</string>
-    <string name="drawerOptionAttachment">With Attachment</string>
+    <string name="sortOptionWithAttachment">With Attachments</string>
+    <string name="drawerOptionAttachment">With Attachments</string>
     <string name="errorAudioRecord">Error encountered while recording audio</string>
     <string name="audioRecordMessage">Please speak now</string>
     <string name="title_activity_note_location">Map</string>
     <string name="clearCompletedMenuString">Clear completed notes</string>
-    <string name="snoozeDialogMessage">Remind me again in...</string>
+    <string name="snoozeDialogMessage">Remind me again in…</string>
     <string name="snoozeDialogHours">Hours</string>
     <string name="snoozeDialogMinutes">Minutes</string>
     <string name="checklistButtonText">Add</string>
     <string name="checklistHintText">Insert new item</string>
     <string name="deleteOptionCheckListText">Delete</string>
+    <string name="snackbarDeleteMessage">Note successfully deleted!</string>
+    <string name="snackbarUndo">UNDO</string>
+    <string name="snackbarCloneMessage">Note successfully cloned!</string>
+    <string name="noteCreatedMessage">Note successfully created!</string>
+    <string name="deleteAllCompletedMessage">Are you really sure?\nDeleted notes cannot be recovered</string>
 </resources>

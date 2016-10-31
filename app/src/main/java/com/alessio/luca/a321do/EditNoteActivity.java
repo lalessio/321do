@@ -33,8 +33,8 @@ public class EditNoteActivity extends Activity {
         ListView listView = (ListView) findViewById(R.id.listviewEditNoteOptions);
 
         String[] options = new String[] { getString(R.string.editOptionsDetails), getString(R.string.editOptionsAlarm), getString(R.string.editOptionsChecklist), getString(R.string.editOptionsMedia) };
-        ArrayAdapter<String> arraydapter = new ArrayAdapter<>(EditNoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, options);
-        listView.setAdapter(arraydapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(EditNoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, options);
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -44,7 +44,6 @@ public class EditNoteActivity extends Activity {
                 Intent intent = null;
                 switch (position){
                     case 0:
-                        //bundle.putSerializable("TagsPayload",(String []) getIntent().getExtras().get("TagsPayload"));
                         intent = new Intent(EditNoteActivity.this, EditDetailsActivity.class);
                         break;
                     case 1:
@@ -70,21 +69,15 @@ public class EditNoteActivity extends Activity {
         super.onBackPressed();
         overridePendingTransition(0,0);
     }
-    public void planNotification(Note note) {
-        long when = note.getDueDate().getTimeInMillis();
-        //long when = System.currentTimeMillis()+3000; //for debug
-        Intent intentAlarm = new Intent(EditNoteActivity.this, AlarmReceiver.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
-        intentAlarm.putExtras(bundle);
-        AlarmManager alarmManager = (AlarmManager) EditNoteActivity.this.getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(EditNoteActivity.this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-    }
-
     @Override
     protected void onResume() {
         note = noteDBAdapter.retrieveNoteById(note.getId());
         textViewEditNoteTitle.setText(note.getTitle());
         super.onResume();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.gc();
     }
 }

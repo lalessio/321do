@@ -6,8 +6,10 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -31,13 +34,17 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-
+//TODO salvataggio audio
+//TODO abbellimento layout
+//TODO temi?
+//TODO faq
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
     private static ArrayList<Note> retrievedNotes;
     private SortingOrder currentOrder;
     private DrawerLayout drawerLayout;
+    private FloatingActionButton fabText, fabAudio;
     public static final int REQ_CODE_SPEECH_INPUT = 1;
 
     @Override
@@ -69,6 +76,9 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int masterListPosition, long id) {
                 //creo finestra
+                final Note selectedNote = retrievedNotes.get(masterListPosition);
+                fabText.hide();
+                fabAudio.hide();
                 AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
                 ListView modeListView = new ListView(NoteActivity.this);
                 String[] modes = new String[] { getString(R.string.noteOptionEdit), getString(R.string.noteOptionDelete), getString(R.string.noteOptionClone), getString(R.string.noteOptionTick) };
@@ -78,52 +88,101 @@ public class NoteActivity extends AppCompatActivity {
                 final Dialog dialog = builder.create();
                 dialog.show();
 
-                //gestico ordini
                 modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         switch (position){
                             case 0:
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.retrieveNoteById(retrievedNotes.get(masterListPosition).getId()));
+                                bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.retrieveNoteById(selectedNote.getId()));
                                 Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
-                                overridePendingTransition(0,0);
+                                overridePendingTransition(0,0); //TODO decidere se tenere animazioni
                                 break;
                             case 1:
-                                noteDBAdapter.deleteNote(retrievedNotes.get(masterListPosition));
+                                final Note deletedNote = noteDBAdapter.deleteNote(selectedNote);
+                                Snackbar snackbarDelete = Snackbar
+                                        .make(findViewById(android.R.id.content), R.string.snackbarDeleteMessage, Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.YELLOW)
+                                        .setAction(R.string.snackbarUndo, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Note restoredNote =  noteDBAdapter.createNote(deletedNote.getTitle());
+                                                deletedNote.setId(restoredNote.getId());
+                                                noteDBAdapter.updateNote(deletedNote);
+                                                updateListView(currentOrder);
+                                            }
+                                        });
+                                snackbarDelete.show();
                                 break;
                             case 2:
-                                noteDBAdapter.cloneNote(retrievedNotes.get(masterListPosition));
+                                final Note clonedNote = noteDBAdapter.cloneNote(selectedNote);
+                                Snackbar snackbarClone = Snackbar
+                                        .make(findViewById(android.R.id.content), R.string.snackbarCloneMessage, Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.YELLOW)
+                                        .setAction(R.string.snackbarUndo, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                noteDBAdapter.deleteNote(clonedNote);
+                                                updateListView(currentOrder);
+                                            }
+                                        });
+                                snackbarClone.show();
                                 break;
                             case 3:
-                                noteDBAdapter.tickNote(retrievedNotes.get(masterListPosition));
+                                noteDBAdapter.tickNote(selectedNote);
                                 break;
                         }
                         updateListView(currentOrder);
                         dialog.dismiss();
+                        fabText.show();
+                        fabAudio.show();
                     }
                 });
-            }
-        });
 
-        FloatingActionButton fabText = (FloatingActionButton) findViewById(R.id.fabText);
-        fabText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NewNoteDialog dialog = new NewNoteDialog(NoteActivity.this);
-                dialog.show();
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        updateListView(currentOrder);
+                        fabText.show();
+                        fabAudio.show();
                     }
                 });
             }
         });
 
-        FloatingActionButton fabAudio = (FloatingActionButton) findViewById(R.id.fabAudio);
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == SCROLL_STATE_TOUCH_SCROLL)
+                {
+                    fabText.hide();
+                    fabAudio.hide();
+                }
+                else
+                {
+                    fabText.show();
+                    fabAudio.show();
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+        fabText = (FloatingActionButton) findViewById(R.id.fabText);
+        fabText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NoteActivity.this,NewNoteActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0,0);
+            }
+        });
+
+        fabAudio = (FloatingActionButton) findViewById(R.id.fabAudio);
         fabAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,10 +309,14 @@ public class NoteActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 currentOrder = new SortingOrder(currentOrder.getOrder(),currentOrder.getFilter(),query);
                 updateListView(currentOrder);
+                fabText.show();
+                fabAudio.show();
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
+                fabText.hide();
+                fabAudio.hide();
                 return false;
             }
         });
@@ -291,26 +354,42 @@ public class NoteActivity extends AppCompatActivity {
                 // gestito in onCreateOptionsMenu()
                 return true;
             case R.id.action_new:
-                NewNoteDialog dialog = new NewNoteDialog(this);
-                dialog.show();
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateListView(currentOrder);
-                    }
-                });
+                Intent intent = new Intent(NoteActivity.this,NewNoteActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0,0);
                 return true;
             case R.id.action_sort:
                 showSortMenu();
                 return true;
             case R.id.action_clear_completed:
-                for(int i=0; i<retrievedNotes.size(); i++)
-                    if(retrievedNotes.get(i).isDone())
-                        noteDBAdapter.deleteNote(retrievedNotes.get(i));
-                updateListView(currentOrder);
+                AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
+                builder.setTitle(R.string.deleteAllCompletedMessage);
+                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        for(int i=0; i<retrievedNotes.size(); i++)
+                            if(retrievedNotes.get(i).isDone())
+                                noteDBAdapter.deleteNote(retrievedNotes.get(i));
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateListView(currentOrder);
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 return true;
             case R.id.action_settings:
-                Toast.makeText(NoteActivity.this, "settings TODO", Toast.LENGTH_SHORT).show(); //TODO
+                Intent intent1 = new Intent(NoteActivity.this,SettingsActivity.class);
+                startActivity(intent1);
+                overridePendingTransition(0,0);
                 return true;
             case R.id.action_exit:
                 finish();
@@ -326,11 +405,14 @@ public class NoteActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == RESULT_OK)
         {
-            if (requestCode == REQ_CODE_SPEECH_INPUT) {
+            if (requestCode == REQ_CODE_SPEECH_INPUT)
+            {
                 noteDBAdapter.createNote(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
                 updateListView(currentOrder);
             }
         }
+        fabText.show();
+        fabAudio.show();
     }
     //funzioni di servizio
     private void newAudioNote() {
@@ -339,12 +421,16 @@ public class NoteActivity extends AppCompatActivity {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.audioRecordMessage));
         try {
+            fabText.hide();
+            fabAudio.hide();
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
             Toast.makeText(getApplicationContext(), getString(R.string.errorAudioRecord), Toast.LENGTH_LONG).show();
         }
     }
     private void showSortMenu() {
+        fabText.hide();
+        fabAudio.hide();
         AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
         ListView modeListView = new ListView(NoteActivity.this);
         String[] modes = new String[] { getString(R.string.sortOptionCreation),
@@ -376,6 +462,15 @@ public class NoteActivity extends AppCompatActivity {
                 }
                 updateListView(currentOrder);
                 dialog.dismiss();
+                System.gc();
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                fabText.show();
+                fabAudio.show();
             }
         });
     }
@@ -402,6 +497,10 @@ public class NoteActivity extends AppCompatActivity {
                 temp.setDone(false);
             else
                 temp.setDone(true);
+            if(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_ALARM))==0)
+                temp.setAlarm(false);
+            else
+                temp.setAlarm(true);
             retrievedNotes.add(temp);
             cursor.moveToNext();
         }

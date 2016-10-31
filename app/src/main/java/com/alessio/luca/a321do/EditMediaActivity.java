@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,7 +40,7 @@ public class EditMediaActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
     private ImageView imageView;
-    private boolean modified;
+    private boolean modified; //used to avoid heavy and useless rewriting operations in case the image is not modified
     private TextView emptyMessage;
 
     @Override
@@ -54,7 +55,7 @@ public class EditMediaActivity extends Activity {
         setContentView(R.layout.media_layout);
 
         imageView = (ImageView) findViewById(R.id.imageView);
-        Button chooseImageButton = (Button) findViewById(R.id.buttonChooseImage);
+        final Button chooseImageButton = (Button) findViewById(R.id.buttonChooseImage);
         emptyMessage = (TextView) findViewById(R.id.textViewMediaImage);
 
         if(note.getImgBytes()==null)
@@ -84,15 +85,16 @@ public class EditMediaActivity extends Activity {
                                 startActivityForResult(i, RESULT_LOAD_IMAGE); //TODO impostare limite di grandezza file (1 mb? 500 kb ok)
                                 break;
                             case 1: //uso fotocamera
-                                Toast.makeText(EditMediaActivity.this,"todo camera",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                                 startActivityForResult(intent, REQUEST_CAMERA);
                                 break;
                             case 2: //cancello allegato
                                 note.setImgBytes(new byte[0]);
                                 imageView.setImageResource(android.R.color.transparent);
+                                chooseImageButton.setGravity(Gravity.CENTER); //doesn't work
                                 emptyMessage.setText(R.string.errorEmptyMediaImage);
                                 modified = true;
+                                System.gc();
                                 break;
                         }
                         dialog.dismiss();

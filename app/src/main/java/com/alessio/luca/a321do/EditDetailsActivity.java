@@ -30,9 +30,9 @@ public class EditDetailsActivity extends Activity {
         setTitle(note.getTitle());
         setContentView(R.layout.details_layout);
 
-        editTextTitle = (EditText) findViewById(R.id.editText_title);
+        editTextTitle = (EditText) findViewById(R.id.editTextTitle);
         editTextTitle.setText(note.getTitle());
-        editTextDesc = (EditText) findViewById(R.id.editText_description);
+        editTextDesc = (EditText) findViewById(R.id.editTextDescription);
         editTextDesc.setText(note.getDescription());
 
         autoCompleteTag = (AutoCompleteTextView) findViewById(R.id.autoCompleteTag);
@@ -47,7 +47,8 @@ public class EditDetailsActivity extends Activity {
         priority = new int[]{Character.getNumericValue(note.getImportance().toString().charAt(0))};
         urgency = new char[]{note.getImportance().toString().charAt(1)};
 
-        ArrayAdapter<String> priorities = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new Importance().getAllPriorities());
+        new Importance();
+        ArrayAdapter<String> priorities = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Importance.getAllPriorities());
         prioritySpinner.setAdapter(priorities);
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
@@ -58,7 +59,7 @@ public class EditDetailsActivity extends Activity {
         });
         prioritySpinner.setSelection(priority[0]-1);
 
-        ArrayAdapter<String> urgencies = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new Importance().getAllUrgencies());
+        ArrayAdapter<String> urgencies = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Importance.getAllUrgencies());
         urgencySpinner.setAdapter(urgencies);
         urgencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapter, View view,int pos, long id) {
