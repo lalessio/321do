@@ -36,6 +36,7 @@ public class WidgetProvider extends AppWidgetProvider {
         if (QUICK_NOTE_ACTION.equals(intent.getAction())) {
             Intent intent1 = new Intent(context, NewNoteActivity.class);
             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Utilities.openKeyboard(context);
             context.startActivity(intent1);
         }
     }

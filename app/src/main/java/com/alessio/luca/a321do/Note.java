@@ -22,7 +22,7 @@ public class Note implements Serializable {
     private Calendar dueDate;
     private Importance importance;
     private byte[] imgBytes;
-    //audio
+    private  byte[] audioBytes;
     private int length;
 
 //////////////////////////////////////////TODO/////////////////////////////////////////////////////
@@ -125,6 +125,13 @@ public class Note implements Serializable {
     }
     public void setImgBytes(byte[] imgBytes) {
         this.imgBytes = imgBytes;
+    }
+
+    public byte[] getAudioBytes() {
+        return audioBytes;
+    }
+    public void setAudioBytes(byte[] audioBytes) {
+        this.audioBytes = audioBytes;
     }
 
     public int getLength() {

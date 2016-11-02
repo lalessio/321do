@@ -91,4 +91,8 @@
     <string name="snackbarCloneMessage">Note successfully cloned!</string>
     <string name="noteCreatedMessage">Note successfully created!</string>
     <string name="deleteAllCompletedMessage">Are you really sure?\nDeleted notes cannot be recovered</string>
+    <string name="recordButtonStop">Stop recording</string>
+    <string name="recordButtonStart">Start recording</string>
+    <string name="playButtonStop">Stop playing</string>
+    <string name="playButtonStart">Start playing</string>
 </resources>

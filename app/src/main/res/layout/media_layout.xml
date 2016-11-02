@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:padding="8dp">
-
-    <Button
-        android:text="@string/chooseMediaImageText"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/buttonChooseImage" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:textSize="25sp"
-        android:id="@+id/textViewMediaImage" />
+        android:padding="8dp">
 
-    <ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/imageView" />
+        <Button
+            android:text="@string/chooseMediaImageText"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/buttonChooseImage" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:id="@+id/textViewMediaImage" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:contentDescription="Note attachment chosen by the user" />
+
+        <Button
+            android:text="Start Recording"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/buttonRecord" />
+
+        <Button
+            android:text="Start Playing"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/buttonPlay" />
+
+    </LinearLayout>
+</ScrollView>

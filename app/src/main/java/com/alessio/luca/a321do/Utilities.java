@@ -1,9 +1,13 @@
 package com.alessio.luca.a321do;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,5 +47,24 @@ public class Utilities {
             return new ArrayList<String>(Arrays.asList(str.split(LIST_SEPARATOR))); //forse restituisce oggetto non modificabile
         else
             return new ArrayList<String>();
+    }
+    public static Bitmap resizeImage(Bitmap srcBitmap, float percentage) {
+        int srcWidth = srcBitmap.getWidth();
+        int srcHeight = srcBitmap.getHeight();
+        int dstWidth = (int)(srcWidth*percentage);
+        int dstHeight = (int)(srcHeight*percentage);
+        return Bitmap.createScaledBitmap(srcBitmap, dstWidth, dstHeight, true);
+    }
+    public static byte[] toByteArray(InputStream in) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int read = 0;
+        byte[] buffer = new byte[1024];
+        while (read != -1) {
+            read = in.read(buffer);
+            if (read != -1)
+                out.write(buffer,0,read);
+        }
+        out.close();
+        return out.toByteArray();
     }
 }
