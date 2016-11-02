@@ -79,7 +79,10 @@ public class NoteListAdapter extends ArrayAdapter {
             TextView subNoteText = (TextView) row.findViewById(R.id.rowSubText);
             switch (sortingRequested.getOrder()){
                 case DUEDATE:
-                    subNoteText.setText(note.printDueDate());
+                    if(note.getLength()!=0)
+                        subNoteText.setText(note.printDueDate()+"   ~ "+note.getLength()+" minutes");
+                    else
+                        subNoteText.setText(note.printDueDate());
                     break;
                 case IMPORTANCE:
                     subNoteText.setText(note.getImportance().toString());
@@ -92,7 +95,7 @@ public class NoteListAdapter extends ArrayAdapter {
                     if(note.getImgBytes()!=null)
                     {
                         ImageView imageView = (ImageView) row.findViewById(R.id.rowAttachmentImage);
-                        imageView.setImageResource(R.mipmap.photo);
+                        imageView.setImageResource(R.mipmap.attachment);
                     }
                     break;
             }

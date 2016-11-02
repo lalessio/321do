@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,9 +35,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+//TODO menu veloce
 //TODO salvataggio audio
 //TODO abbellimento layout
-//TODO temi?
 //TODO faq
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
@@ -81,7 +82,7 @@ public class NoteActivity extends AppCompatActivity {
                 fabAudio.hide();
                 AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
                 ListView modeListView = new ListView(NoteActivity.this);
-                String[] modes = new String[] { getString(R.string.noteOptionEdit), getString(R.string.noteOptionDelete), getString(R.string.noteOptionClone), getString(R.string.noteOptionTick) };
+                String[] modes = new String[] { getString(R.string.noteOptionEdit), getString(R.string.noteOptionDelete), getString(R.string.noteOptionClone), getString(R.string.noteOptionTick)};
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, modes);
                 modeListView.setAdapter(modeAdapter);
                 builder.setView(modeListView);
@@ -199,16 +200,17 @@ public class NoteActivity extends AppCompatActivity {
                                     getString(R.string.drawerOptionExpired),
                                     getString(R.string.drawerOptionCompleted),
                                     getString(R.string.drawerOptionAttachment),
+                                    getString(R.string.sortOptionTag),
                                     getString(R.string.drawerOptionAll) };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, drawerContent);
         drawerList.setAdapter(adapter);
-        //TODO order by tag
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
                         currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.TODAY,currentOrder.getSearchParameter());
+                        break;
                     case 1:
                         currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.TOMORROW,currentOrder.getSearchParameter());
                         break;
@@ -228,10 +230,31 @@ public class NoteActivity extends AppCompatActivity {
                         currentOrder = new SortingOrder(currentOrder.getOrder(), SortingOrder.Filter.WITH_ATTACHMENT,currentOrder.getSearchParameter());
                         break;
                     case 7:
-                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.NONE);
+                        updateListView(new SortingOrder());
+                        if(getExistingTags().length>0)
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
+                            ListView modeListView = new ListView(NoteActivity.this);
+                            String[] tags = getExistingTags();
+                            ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(NoteActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, tags);
+                            modeListView.setAdapter(modeAdapter);
+                            builder.setView(modeListView);
+                            final Dialog dialog = builder.create();
+                            dialog.show();
+                            modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    currentOrder = new SortingOrder(SortingOrder.Order.CATEGORY, SortingOrder.Filter.NONE,parent.getItemAtPosition(position).toString());
+                                    updateListView(currentOrder);
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                        else
+                            Toast.makeText(NoteActivity.this,"You haven't assigned any tag yet",Toast.LENGTH_SHORT).show();
                         break;
-                    default:
-                        Toast.makeText(NoteActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                    case 8:
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.NONE);
                         break;
                 }
 
@@ -486,6 +509,7 @@ public class NoteActivity extends AppCompatActivity {
             temp.setTitle(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_TITLE)));
             temp.setDescription(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DESCRIPTION)));
             temp.setTag(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_TAG)));
+            temp.setLength(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_LENGTH)));
             Calendar t = new GregorianCalendar();
             t.setTimeInMillis(Long.valueOf(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DUEDATE))));
             temp.setDueDate(t);

@@ -50,9 +50,7 @@
             android:id="@+id/editTextDescription"
             android:hint="@string/editDescriptionHint"
             android:imeOptions="actionNext|flagNoExtractUi"
-            android:maxLines="3"
-            />
-        <!-- TODO max lenght descrizione? -->
+            android:maxLines="3" />
     </LinearLayout>
 
     <LinearLayout
@@ -77,9 +75,36 @@
             android:id="@+id/autoCompleteTag"
             android:hint="@string/editTagHint"
             android:maxLength="16"
-            android:imeOptions="actionDone|flagNoExtractUi"
+            android:imeOptions="actionNext|flagNoExtractUi"
             android:singleLine="true"
             android:inputType="textCapWords"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp">
+
+        <TextView
+            android:text="Estimated Length (in minutes)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:background="@color/light_grey"
+            android:layout_margin="4dp"
+            android:inputType="number"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:maxLength="3"
+            android:gravity="center"
+            android:hint="Not set"
+            android:id="@+id/editTextLength" />
 
     </LinearLayout>
 

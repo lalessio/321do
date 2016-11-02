@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="noteOptionEdit">Edit Note</string>
     <string name="noteOptionDelete">Delete Note</string>
-    <string name="noteOptionTick">Tick</string>
+    <string name="noteOptionTick">Complete/Incomplete</string>
     <string name="sortOptionCreation">Creation (default)</string>
     <string name="sortOptionDueDate">Due Date</string>
     <string name="sortOptionImportance">Importance</string>

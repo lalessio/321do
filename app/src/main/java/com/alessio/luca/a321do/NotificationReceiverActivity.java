@@ -48,6 +48,7 @@ public class NotificationReceiverActivity extends Activity {
 
                 textViewNotificationTitle.setText(note.getTitle());
                 textViewNotificationDescription.setText(note.getDescription());
+                //TODO length
                 textViewNotificationTag.setText(note.getTag());
                 textViewNotificationImportance.setText(note.getImportance().toString());
 

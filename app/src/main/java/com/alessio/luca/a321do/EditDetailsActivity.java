@@ -16,7 +16,7 @@ import android.widget.Spinner;
 public class EditDetailsActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
-    private EditText editTextTitle, editTextDesc;
+    private EditText editTextTitle, editTextDesc, editTextLength;
     private AutoCompleteTextView autoCompleteTag;
     private int[] priority;
     private char[] urgency;
@@ -34,6 +34,9 @@ public class EditDetailsActivity extends Activity {
         editTextTitle.setText(note.getTitle());
         editTextDesc = (EditText) findViewById(R.id.editTextDescription);
         editTextDesc.setText(note.getDescription());
+        editTextLength = (EditText) findViewById(R.id.editTextLength);
+        if(note.getLength()!=0)
+            editTextLength.setText(String.valueOf(note.getLength()));
 
         autoCompleteTag = (AutoCompleteTextView) findViewById(R.id.autoCompleteTag);
         autoCompleteTag.setText(note.getTag());
@@ -75,6 +78,10 @@ public class EditDetailsActivity extends Activity {
         note.setTitle(editTextTitle.getText().toString());
         note.setImportance(priority[0], urgency[0]);
         note.setDescription(editTextDesc.getText().toString());
+        if(editTextLength.getText().toString().length()>0)
+            note.setLength(Integer.parseInt(editTextLength.getText().toString()));
+        else
+            note.setLength(0);
         note.setTag(autoCompleteTag.getText().toString());
         noteDBAdapter.updateNote(note);
         super.onPause();

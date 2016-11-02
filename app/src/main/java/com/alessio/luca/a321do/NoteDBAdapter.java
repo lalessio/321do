@@ -26,6 +26,8 @@ public class NoteDBAdapter {
     public static final String COL_DONE="done";
     public static final String COL_ALARM="alarm";
     public static final String COL_IMAGE="imgAttachment";
+    public static final String COL_AUDIO="audioAttachment";
+    public static final String COL_LENGTH="length";
 
     public static final String DEBUG_TAG = "321NoteDBAdapter";
     public static final String TABLE_NAME = "notes_table";
@@ -50,6 +52,7 @@ public class NoteDBAdapter {
         values.put(COL_IMPORTANCE,newNote.getImportance().toString());
         values.put(COL_DESCRIPTION, newNote.getDescription());
         values.put(COL_TAG, newNote.getTag());
+        values.put(COL_LENGTH, newNote.getLength());
         values.put(COL_CHECKLIST, Utilities.checkListToString(newNote.getCheckList()));
         values.put(COL_DONE,newNote.isDone()?1:0);
         values.put(COL_ALARM,newNote.isAlarmOn()?1:0);
@@ -70,6 +73,7 @@ public class NoteDBAdapter {
         //clone.setTitle(note.getTitle());
         clone.setDescription(note.getDescription());
         clone.setTag(note.getTag());
+        clone.setLength(note.getLength());
         clone.setImportance(note.getImportance());
         clone.setCheckList(note.getCheckList());
         //dueDate, done, alarm e tutto il contenuto non testuale non viene copiato da requisiti
@@ -89,6 +93,7 @@ public class NoteDBAdapter {
                         COL_CHECKLIST,
                         COL_IMPORTANCE,
                         COL_DUEDATE,
+                        COL_LENGTH,
                         COL_DONE,
                         COL_ALARM,
                         COL_IMAGE},
@@ -108,17 +113,16 @@ public class NoteDBAdapter {
             ArrayList<String> nCheckList = new ArrayList<>(Utilities.stringToCheckList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST))));
             Calendar nDueDate = new GregorianCalendar();
             nDueDate.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DUEDATE)));
+            int nLength = cursor.getInt(cursor.getColumnIndex(COL_LENGTH));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
             byte [] nImgBytes = cursor.getBlob(cursor.getColumnIndex(COL_IMAGE));
-            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance, nImgBytes);
+            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance, nImgBytes, nLength);
             note.setDone(cursor.getInt(cursor.getColumnIndex(COL_DONE)) != 0);
             note.setAlarm(cursor.getInt(cursor.getColumnIndex(COL_ALARM)) != 0);
             Log.d(DEBUG_TAG, "retrieved note: " + note.print());
         }
         else
-        {
             Log.d(DEBUG_TAG,"nessuna nota recuperata :(");
-        }
 
         cursor.close();
         db.close();
@@ -128,6 +132,7 @@ public class NoteDBAdapter {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Calendar calendar = Calendar.getInstance();
+        long now = calendar.getTimeInMillis();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -156,9 +161,7 @@ public class NoteDBAdapter {
                 whereClause = true;
                 break;
             case TODAY:
-                //TODO risolvere today tomorrow risultati scorretti
-                Calendar cal = Calendar.getInstance();
-                long now = cal.getTimeInMillis();
+                //in caso di risultati scorretti mettere un default in noteactivity
                 sorting = " where " + COL_DUEDATE + " between " + now + " and " + midnight;
                 whereClause = true;
                 break;
@@ -195,11 +198,14 @@ public class NoteDBAdapter {
         {
             if(whereClause)
             {
-                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' ";
+                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
                 c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
             }
             else
-                c = db.rawQuery("select * from " + TABLE_NAME + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + sorting, null);
+                c = db.rawQuery("select * from " + TABLE_NAME
+                                + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' "
+                                + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'"
+                                + sorting, null);
         }
         else
             c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
@@ -218,6 +224,7 @@ public class NoteDBAdapter {
         values.put(COL_CHECKLIST, Utilities.checkListToString(note.getCheckList()));
         values.put(COL_IMPORTANCE, note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
+        values.put(COL_LENGTH,note.getLength());
         values.put(COL_ALARM,note.isAlarmOn());
         values.put(COL_IMAGE,note.getImgBytes());
 //        if(note.getImg()!=null)

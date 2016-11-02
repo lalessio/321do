@@ -22,7 +22,8 @@ public class Note implements Serializable {
     private Calendar dueDate;
     private Importance importance;
     private byte[] imgBytes;
-    //TODO private Lenght lenght; come lo implemento? a cosa servirà?
+    //audio
+    private int length;
 
 //////////////////////////////////////////TODO/////////////////////////////////////////////////////
 
@@ -126,7 +127,14 @@ public class Note implements Serializable {
         this.imgBytes = imgBytes;
     }
 
-    ////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
+    public int getLength() {
+        return length;
+    }
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
 
     public boolean isDueOver(){
     Calendar now = Calendar.getInstance();
@@ -158,6 +166,7 @@ public class Note implements Serializable {
         this.done = false;
         setStandardTime();
         this.description = new String();
+        this.length = 0;
         this.tag= new String();
         this.importance = new Importance();
         this.checkList = new ArrayList<String>();
@@ -172,6 +181,7 @@ public class Note implements Serializable {
                 +getDescription()+" / "
                 +getTag()+" / "
                 +printDueDate()+" / "
+                +getLength()+" minutes / "
                 +getImportance().toString()+" / "
                 + Utilities.checkListToString(checkList)+" / "
                 +" / done = "+isDone()
@@ -205,7 +215,7 @@ public class Note implements Serializable {
         newNoteInitialization();
     }
     //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
-    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes){
+    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes, int nLength){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;
@@ -214,6 +224,7 @@ public class Note implements Serializable {
         this.dueDate=nDueDate;
         this.importance=nImportance;
         this.imgBytes=nImgBytes;
+        this.length=nLength;
     }
     public Note(Note note){
         //primo abbozzo costruttore copia
@@ -227,6 +238,7 @@ public class Note implements Serializable {
         this.done=note.isDone();
         this.alarm=note.isAlarmOn();
         this.imgBytes=note.getImgBytes();
+        this.length=note.getLength();
     }
     //TODO distruttore
 

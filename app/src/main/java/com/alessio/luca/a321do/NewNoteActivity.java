@@ -15,6 +15,8 @@ import android.widget.Toast;
  * Created by Luca on 31/10/2016.
  */
 
+//TODO discutere se implementare audio qui (e toglierlo dalla home) -> quindi sposto edit sotto come parola
+
 public class NewNoteActivity extends Activity {
     private NoteDBAdapter noteDBAdapter;
     private EditText editText;
