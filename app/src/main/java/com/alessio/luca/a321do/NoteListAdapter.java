@@ -79,10 +79,7 @@ public class NoteListAdapter extends ArrayAdapter {
             TextView subNoteText = (TextView) row.findViewById(R.id.rowSubText);
             switch (sortingRequested.getOrder()){
                 case DUEDATE:
-                    if(note.getLength()!=0)
-                        subNoteText.setText(note.printDueDate()+"   ~ "+note.getLength()+" minutes");
-                    else
-                        subNoteText.setText(note.printDueDate());
+                    subNoteText.setText(note.printTime());
                     break;
                 case IMPORTANCE:
                     subNoteText.setText(note.getImportance().toString());

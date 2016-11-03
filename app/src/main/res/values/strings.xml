@@ -63,7 +63,7 @@
     <string name="errorEmptyMediaImage">No Image Assigned</string>
     <string name="resetButtonText">Reset</string>
     <string name="notificationOptionDismiss">Dismiss</string>
-    <string name="notificationOptionTick">Tick</string>
+    <string name="notificationOptionTick">Done</string>
     <string name="notificationOptionSnooze">Snooze</string>
     <string name="notificationMessageHYDI">Have you done it?</string>
     <string name="notificationMessageTaggedAs">Tagged as :  </string>
@@ -85,7 +85,7 @@
     <string name="snoozeDialogMinutes">Minutes</string>
     <string name="checklistButtonText">Add</string>
     <string name="checklistHintText">Insert new item</string>
-    <string name="deleteOptionCheckListText">Delete</string>
+    <string name="deleteOptionCheckListText">Complete</string>
     <string name="snackbarDeleteMessage">Note successfully deleted!</string>
     <string name="snackbarUndo">UNDO</string>
     <string name="snackbarCloneMessage">Note successfully cloned!</string>
@@ -95,4 +95,9 @@
     <string name="recordButtonStart">Start recording</string>
     <string name="playButtonStop">Stop playing</string>
     <string name="playButtonStart">Start playing</string>
+    <string name="emptyCheckListMessage">No sub activities scheduled</string>
+    <string name="setLengthHint">Not set</string>
+    <string name="setLengthMessage">Estimated Length (in minutes)</string>
+    <string name="pdfImageAttachment">Image Attachment</string>
+    <string name="exportPDFMenuString">Export current view to PDF</string>
 </resources>

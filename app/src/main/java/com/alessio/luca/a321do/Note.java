@@ -22,8 +22,14 @@ public class Note implements Serializable {
     private Calendar dueDate;
     private Importance importance;
     private byte[] imgBytes;
-    private  byte[] audioBytes;
+    private String audioPath;
     private int length;
+    //TODO questione audio
+    //1 dove salvo
+    //2 come cancello il file
+    //3 come lo visualizzo sulla notifica
+    //4 come gestisco i pulsanti play/record
+    //TODO iconcine
 
 //////////////////////////////////////////TODO/////////////////////////////////////////////////////
 
@@ -127,11 +133,11 @@ public class Note implements Serializable {
         this.imgBytes = imgBytes;
     }
 
-    public byte[] getAudioBytes() {
-        return audioBytes;
+    public String getAudioPath() {
+        return audioPath;
     }
-    public void setAudioBytes(byte[] audioBytes) {
-        this.audioBytes = audioBytes;
+    public void setAudioPath(String audioPath) {
+        this.audioPath = audioPath;
     }
 
     public int getLength() {
@@ -179,22 +185,7 @@ public class Note implements Serializable {
         this.checkList = new ArrayList<String>();
         this.alarm = false;
     }
-
-///////////////////////////////////////METODI DEBUG////////////////////////////////////////////////
-
-    public String print() {
-        return getId()+" / "
-                +getTitle()+" / "
-                +getDescription()+" / "
-                +getTag()+" / "
-                +printDueDate()+" / "
-                +getLength()+" minutes / "
-                +getImportance().toString()+" / "
-                + Utilities.checkListToString(checkList)+" / "
-                +" / done = "+isDone()
-                +" / alarm = "+isAlarmOn();
-    }
-    public String printDueDate(){
+    public String printTime(){
         String dueDate = getDueDate().get(Calendar.DAY_OF_MONTH) + " "
                 + (getDueDate().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())) + " "
                 + getDueDate().get(Calendar.YEAR) + "   "
@@ -202,7 +193,24 @@ public class Note implements Serializable {
         if(getDueDate().get(Calendar.MINUTE)<10)
             dueDate = dueDate + "0";
         dueDate = dueDate + getDueDate().get(Calendar.MINUTE);
+        if(length!=0)
+            dueDate = dueDate+"   ~ "+length+" minutes";
         return dueDate;
+    }
+
+///////////////////////////////////////METODI DEBUG////////////////////////////////////////////////
+
+    public String print() {
+        return getId() + " / "
+                + getTitle() + " / "
+                + getDescription() + " / "
+                + getTag() + " / "
+                + printTime() + " / "
+                + getLength() + " minutes / "
+                + getImportance().toString() + " / "
+                + Utilities.checkListToString(checkList) + " / "
+                + " / done = " + isDone()
+                + " / alarm = " + isAlarmOn();
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +229,6 @@ public class Note implements Serializable {
         this.title = now.getTime().toString(); //titolo default momento creazione
         newNoteInitialization();
     }
-    //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
     public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes, int nLength){
         this.id=nId;
         this.title=nTitle;
@@ -247,13 +254,4 @@ public class Note implements Serializable {
         this.imgBytes=note.getImgBytes();
         this.length=note.getLength();
     }
-    //TODO distruttore
-
-//    private class Place {
-//        //TODO place
-//    }
-//
-//    private class MediaAttachment {
-//        //TODO mediaattachment
-//    }
 }

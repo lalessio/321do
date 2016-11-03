@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,11 +31,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
 //TODO menu veloce
 //TODO salvataggio audio
 //TODO abbellimento layout
@@ -322,7 +325,7 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_content, menu);
-
+//TODO testare ricerca
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -414,6 +417,10 @@ public class NoteActivity extends AppCompatActivity {
                 startActivity(intent1);
                 overridePendingTransition(0,0);
                 return true;
+            case R.id.action_pdf:
+                Utilities.notesToPDF(retrievedNotes.toArray(new Note[retrievedNotes.size()]),currentOrder);
+                viewPdf(Utilities.FILE_NAME, "Dir");
+                return true;
             case R.id.action_exit:
                 finish();
                 return true;
@@ -501,6 +508,7 @@ public class NoteActivity extends AppCompatActivity {
         Cursor cursor = noteDBAdapter.retrieveAllNotes(sortBy);
         cursor.moveToFirst();
         retrievedNotes.clear();
+        System.gc();
 
         while (!cursor.isAfterLast()) //forse il contenuto di questo for può diventare una funzione da qualche altra parte
         {
@@ -528,7 +536,7 @@ public class NoteActivity extends AppCompatActivity {
             retrievedNotes.add(temp);
             cursor.moveToNext();
         }
-//TODO deallocazione
+
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
         NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row,notes,sortBy);
         listView.setAdapter(noteListAdapter);
@@ -547,5 +555,19 @@ public class NoteActivity extends AppCompatActivity {
                 tags.add(currentTag);
         }
         return tags.toArray(new String[tags.size()]);
+    }
+    private void viewPdf(String file, String directory) {
+        File pdfFile = new File(Environment.getExternalStorageDirectory() + "/" + directory + "/" + file);
+        Uri path = Uri.fromFile(pdfFile);
+
+        Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+        pdfIntent.setDataAndType(path, "application/pdf");
+        pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        try {
+            startActivity(pdfIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(NoteActivity.this, "Error loading pdf file", Toast.LENGTH_SHORT).show();
+        }
     }
 }

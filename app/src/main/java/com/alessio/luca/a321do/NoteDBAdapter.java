@@ -140,7 +140,7 @@ public class NoteDBAdapter {
         calendar.set(Calendar.MILLISECOND, 0);
         long midnight = calendar.getTimeInMillis();
 
-        boolean whereClause = false;
+        boolean whereClause = false;//TODO testare ricerca
 
         String sorting;
         switch (sortBy.getFilter()) {

@@ -88,5 +88,10 @@ public class EditCheckListActivity extends Activity {
     private void updateCheckListView(){
         ArrayAdapter<String> checkListAdapter = new ArrayAdapter<String>(EditCheckListActivity.this,android.R.layout.simple_list_item_1,note.getCheckList());
         listViewCheckList.setAdapter(checkListAdapter);
+        TextView textView = (TextView) findViewById(R.id.emptyCheckList);
+        if(checkListAdapter.isEmpty())
+            textView.setText(R.string.emptyCheckListMessage);
+        else
+            textView.setText("");
     }
 }

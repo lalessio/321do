@@ -27,7 +27,7 @@ public class NewNoteActivity extends Activity {
 
         noteDBAdapter = new NoteDBAdapter(this);
         setTitle(R.string.newNoteTitle);
-        setContentView(R.layout.dialog_new_note);
+        setContentView(R.layout.new_note_layout);
 
         editText = (EditText) findViewById(R.id.editText_title);
         editText.requestFocus();

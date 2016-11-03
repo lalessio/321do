@@ -27,8 +27,12 @@
         android:title="@string/settingsMenuString"
         android:orderInCategory="500"
         app:showAsAction="never" />
+    <item android:id="@+id/action_pdf"
+        android:title="@string/exportPDFMenuString"
+        android:orderInCategory="600"
+        app:showAsAction="never" />
     <item android:id="@+id/action_exit"
         android:title="@string/exitMenuString"
-        android:orderInCategory="600"
+        android:orderInCategory="700"
         app:showAsAction="never" />
 </menu>

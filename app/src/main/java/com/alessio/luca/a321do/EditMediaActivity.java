@@ -239,6 +239,7 @@ public class EditMediaActivity extends Activity {
             mediaRecorder.stop();
             mediaRecorder.release();
             mediaRecorder = null;
+            note.setAudioPath(mFileName);
         }
     }
 
@@ -246,7 +247,7 @@ public class EditMediaActivity extends Activity {
         if (start) {
             mediaPlayer = new MediaPlayer();
             try {
-                mediaPlayer.setDataSource(mFileName);
+                mediaPlayer.setDataSource(mFileName);//TODO mediaPlayer.setDataSource(note.getAudioPath());
                 mediaPlayer.prepare();
                 mediaPlayer.start();
             } catch (IOException e) {

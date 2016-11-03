@@ -20,8 +20,6 @@
             android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/light_grey"
-            android:textColor="@color/black"
             android:layout_margin="4dp"
             android:hint="@string/editTitleHint"
             android:maxLength="140"
@@ -43,10 +41,8 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:background="@color/light_grey"
-            android:textColor="@color/black"
             android:id="@+id/editTextDescription"
             android:hint="@string/editDescriptionHint"
             android:imeOptions="actionNext|flagNoExtractUi"
@@ -70,8 +66,6 @@
             android:layout_margin="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:background="@color/light_grey"
             android:id="@+id/autoCompleteTag"
             android:hint="@string/editTagHint"
             android:maxLength="16"
@@ -88,7 +82,7 @@
         android:layout_margin="4dp">
 
         <TextView
-            android:text="Estimated Length (in minutes)"
+            android:text="@string/setLengthMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"/>
@@ -96,14 +90,12 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:background="@color/light_grey"
             android:layout_margin="4dp"
             android:inputType="number"
             android:imeOptions="actionDone|flagNoExtractUi"
             android:maxLength="3"
             android:gravity="center"
-            android:hint="Not set"
+            android:hint="@string/setLengthHint"
             android:id="@+id/editTextLength" />
 
     </LinearLayout>
