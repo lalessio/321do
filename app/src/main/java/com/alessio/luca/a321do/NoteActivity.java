@@ -1,5 +1,6 @@
 package com.alessio.luca.a321do;
 
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
@@ -38,8 +39,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-//TODO menu veloce
-//TODO salvataggio audio
 //TODO abbellimento layout
 //TODO faq
 public class NoteActivity extends AppCompatActivity {
@@ -101,14 +100,25 @@ public class NoteActivity extends AppCompatActivity {
                                 bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.retrieveNoteById(selectedNote.getId()));
                                 Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
                                 intent.putExtras(bundle);
-                                startActivity(intent);
-                                overridePendingTransition(0,0); //TODO decidere se tenere animazioni
+                                Bundle bundleAnimation = ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.top_to_visible,R.anim.visible_to_bottom).toBundle();
+                                startActivity(intent, bundleAnimation);
                                 break;
                             case 1:
                                 final Note deletedNote = noteDBAdapter.deleteNote(selectedNote);
                                 Snackbar snackbarDelete = Snackbar
                                         .make(findViewById(android.R.id.content), R.string.snackbarDeleteMessage, Snackbar.LENGTH_LONG)
                                         .setActionTextColor(Color.YELLOW)
+                                        .setCallback(new Snackbar.Callback() {
+                                            @Override
+                                            public void onDismissed(Snackbar snackbar, int event) {
+                                                super.onDismissed(snackbar, event);
+                                                if(event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT)
+                                                {
+                                                    File audioToDelete = new File(deletedNote.getAudioPath());
+                                                    audioToDelete.delete();
+                                                }
+                                            }
+                                        })
                                         .setAction(R.string.snackbarUndo, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -431,7 +441,7 @@ public class NoteActivity extends AppCompatActivity {
         }
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == RESULT_OK)
         {
@@ -523,6 +533,7 @@ public class NoteActivity extends AppCompatActivity {
             temp.setDueDate(t);
             temp.setImportance(new Importance(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_IMPORTANCE))));
             temp.setImgBytes(cursor.getBlob(cursor.getColumnIndex(NoteDBAdapter.COL_IMAGE)));
+            temp.setAudioPath(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_AUDIO)));
             ArrayList<String> nCheckList = new ArrayList<>(Utilities.stringToCheckList(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_CHECKLIST))));
             temp.setCheckList(nCheckList);
             if(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_DONE))==0)

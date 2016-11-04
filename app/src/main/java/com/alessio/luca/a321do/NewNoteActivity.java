@@ -1,11 +1,15 @@
 package com.alessio.luca.a321do;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,8 +18,6 @@ import android.widget.Toast;
 /**
  * Created by Luca on 31/10/2016.
  */
-
-//TODO discutere se implementare audio qui (e toglierlo dalla home) -> quindi sposto edit sotto come parola
 
 public class NewNoteActivity extends Activity {
     private NoteDBAdapter noteDBAdapter;
@@ -31,11 +33,12 @@ public class NewNoteActivity extends Activity {
 
         editText = (EditText) findViewById(R.id.editText_title);
         editText.requestFocus();
-        Utilities.openKeyboard(this);
+        //Utilities.openKeyboard(this);
 
         Button confirmButton = (Button) findViewById(R.id.button_confirm);
         Button cancelButton = (Button) findViewById(R.id.button_cancel);
         Button createWithDetailsButton = (Button) findViewById(R.id.button_create_with_details);
+        Button quickAttachmentButton = (Button) findViewById(R.id.quickButtonAttachment);
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -53,12 +56,11 @@ public class NewNoteActivity extends Activity {
                performCreation();
             }
         });
-
         createWithDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editText.getText().toString().length()!=0)
-                {
+//                if(editText.getText().toString().length()!=0)
+//                {
                     Utilities.closeKeyboard(NewNoteActivity.this, editText);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.createNote(editText.getText().toString()));
@@ -67,12 +69,24 @@ public class NewNoteActivity extends Activity {
                     startActivity(intent);
                     overridePendingTransition(0,0);
                     finish();
-                }
-                else
-                    Toast.makeText(NewNoteActivity.this, R.string.errorEmptyField, Toast.LENGTH_SHORT).show();
+//                }
+//                else
+//                    Toast.makeText(NewNoteActivity.this, R.string.errorEmptyField, Toast.LENGTH_SHORT).show();
             }
         });
-
+        quickAttachmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utilities.closeKeyboard(NewNoteActivity.this, editText);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.createNote(editText.getText().toString()));
+                Intent intent = new Intent(NewNoteActivity.this, EditMediaActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(0,0);
+                finish();
+            }
+        });
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +95,10 @@ public class NewNoteActivity extends Activity {
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
     private void performCreation() {
         if(editText.getText().toString().length()!=0)
         {
@@ -93,4 +110,25 @@ public class NewNoteActivity extends Activity {
         else
             Toast.makeText(NewNoteActivity.this, R.string.errorEmptyField, Toast.LENGTH_SHORT).show();
     }
+
+//    private class CustomEditText extends EditText {
+//
+//        Context context;
+//
+//        public CustomEditText(Context context, AttributeSet attrs) {
+//            super(context, attrs);
+//            this.context = context;
+//        }
+//
+//        @Override
+//        public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+//            if (keyCode == KeyEvent.KEYCODE_BACK) {
+//                // User has pressed Back key. So hide the keyboard
+//                InputMethodManager mgr = (InputMethodManager)
+//                        context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                mgr.hideSoftInputFromWindow(this.getWindowToken(), 0);
+//                finish();
+//            }
+//            return false;
+//        }}
 }

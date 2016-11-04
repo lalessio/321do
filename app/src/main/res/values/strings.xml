@@ -46,7 +46,7 @@
     <string name="messageAlarmOff">Alarm OFF</string>
     <string name="messageAlarmOn">Alarm ON</string>
     <string name="saveButtonText">Save</string>
-    <string name="editOptionsMedia">Media Attachment</string>
+    <string name="editOptionsMedia">Media Attachments</string>
     <string name="editOptionsChecklist">Sub Activities</string>
     <string name="editOptionsAlarm">Reminder</string>
     <string name="editOptionsDetails">Details</string>
@@ -100,4 +100,7 @@
     <string name="setLengthMessage">Estimated Length (in minutes)</string>
     <string name="pdfImageAttachment">Image Attachment</string>
     <string name="exportPDFMenuString">Export current view to PDF</string>
+    <string name="notificationMessageLength1">You should need ~</string>
+    <string name="notificationMessageLength2">minutes</string>
+    <string name="notificationAudioButtonTitle">Play Audio</string>
 </resources>

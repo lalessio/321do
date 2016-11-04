@@ -107,11 +107,17 @@ public class Utilities {
 
             for (Note note : notes)
             {
-                Paragraph pNote = new Paragraph(note.getTitle()
-                                            + "\n(" + note.printTime() + ")\n"
-                                            + note.getImportance().toString() + "  "
-                                            + note.getTag() + "\n"
-                                            + note.getDescription() + "\n");
+                String paragraphContent;
+                if(note.isDone())
+                    paragraphContent = "(DONE!)";
+                else
+                    paragraphContent = "(TO DO)";
+                paragraphContent += note.getTitle()
+                            + "\n(" + note.printTime() + ")\n"
+                            + note.getImportance().toString() + "  "
+                            + note.getTag() + "\n"
+                            + note.getDescription() + "\n";
+                Paragraph pNote = new Paragraph(paragraphContent);
                 if(!note.getCheckList().isEmpty())
                 {
                     Paragraph pcl = new Paragraph("Sub Activities");

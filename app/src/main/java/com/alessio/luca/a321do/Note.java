@@ -24,19 +24,10 @@ public class Note implements Serializable {
     private byte[] imgBytes;
     private String audioPath;
     private int length;
-    //TODO questione audio
-    //1 dove salvo
-    //2 come cancello il file
+
     //3 come lo visualizzo sulla notifica
-    //4 come gestisco i pulsanti play/record
+
     //TODO iconcine
-
-//////////////////////////////////////////TODO/////////////////////////////////////////////////////
-
-    //private ArrayList<Note> childs; //facciamo secondario per ora
-    //private Place place;
-    //private MediaAttachment mediaAttachment;
-    //private Length length; //durata appuntamento, requisito secondario
 
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
@@ -180,9 +171,10 @@ public class Note implements Serializable {
         setStandardTime();
         this.description = new String();
         this.length = 0;
-        this.tag= new String();
+        this.tag = new String();
         this.importance = new Importance();
         this.checkList = new ArrayList<String>();
+        this.audioPath = new String();
         this.alarm = false;
     }
     public String printTime(){
@@ -229,7 +221,7 @@ public class Note implements Serializable {
         this.title = now.getTime().toString(); //titolo default momento creazione
         newNoteInitialization();
     }
-    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes, int nLength){
+    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes, int nLength, String nAudioPath){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;
@@ -239,9 +231,10 @@ public class Note implements Serializable {
         this.importance=nImportance;
         this.imgBytes=nImgBytes;
         this.length=nLength;
+        this.audioPath=nAudioPath;
     }
     public Note(Note note){
-        //primo abbozzo costruttore copia
+        //abbozzo costruttore copia
         this.id = note.getId();
         this.title = note.getTitle();
         this.description = note.getDescription();
@@ -253,5 +246,6 @@ public class Note implements Serializable {
         this.alarm=note.isAlarmOn();
         this.imgBytes=note.getImgBytes();
         this.length=note.getLength();
+        this.audioPath=note.getAudioPath();
     }
 }

@@ -1,8 +1,7 @@
 package com.alessio.luca.a321do;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -59,15 +58,15 @@ public class EditNoteActivity extends Activity {
                         break;
                 }
                 intent.putExtras(bundle);
-                startActivity(intent);
-                overridePendingTransition(0,0);
+                Bundle bundleAnimation = ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.slide_in_left,R.anim.slide_out_left).toBundle();
+                startActivity(intent,bundleAnimation);
             }
         });
     }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(0,0);
+        overridePendingTransition(R.anim.top_to_visible, R.anim.visible_to_bottom);
     }
     @Override
     protected void onResume() {

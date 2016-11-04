@@ -27,13 +27,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by Luca on 25/10/2016.
  */
-// TODO migliorare gestione memoria
-// TODO AUDIO
+
+//TODO sistemare casino
+    //1 layout carino
+    //2 bottoni che escludono altri
+    //3 gestione caso impossibile riprodurre
+    //4 unire in unico menu con immagini?
 
 public class EditMediaActivity extends Activity {
     public static final int RESULT_LOAD_IMAGE = 1;
@@ -41,17 +44,11 @@ public class EditMediaActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
     private ImageView imageView;
-    private static boolean modified; //used to avoid heavy and useless rewriting operations in case the image is not modified
+    private static boolean modified = false; //used to avoid heavy and useless rewriting operations in case the image is not modified
     private TextView emptyMessage;
-
-    private static String mFileName = null;
-
-    private Button recordButton = null;
+    private String eventualAudioPath = null;
     private MediaRecorder mediaRecorder = null;
-
-    private Button playButton = null;
     private MediaPlayer mediaPlayer = null;
-
     boolean startRecording = true, startPlaying = true;
 
     @Override
@@ -62,8 +59,8 @@ public class EditMediaActivity extends Activity {
         noteDBAdapter = new NoteDBAdapter(this);
         modified = false;
 
-        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/321do" + note.getTitle() + note.getId() + ".3gp";
+        eventualAudioPath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + "/321do" + note.getTitle() + note.getId() + ".3gp";
 
         setTitle(R.string.editNoteMediaTitle);
         setContentView(R.layout.media_layout);
@@ -96,7 +93,7 @@ public class EditMediaActivity extends Activity {
                         switch (position) {
                             case 0: //scelgo immagine da galleria
                                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                startActivityForResult(i, RESULT_LOAD_IMAGE); //TODO impostare limite di grandezza file (1 mb? 500 kb ok)
+                                startActivityForResult(i, RESULT_LOAD_IMAGE);
                                 break;
                             case 1: //uso fotocamera
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -117,7 +114,7 @@ public class EditMediaActivity extends Activity {
             }
         });
 
-        recordButton = (Button) findViewById(R.id.buttonRecord);
+        final Button recordButton = (Button) findViewById(R.id.buttonRecord);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +128,7 @@ public class EditMediaActivity extends Activity {
             }
         });
 
-        playButton = (Button) findViewById(R.id.buttonPlay);
+        final Button playButton = (Button) findViewById(R.id.buttonPlay);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,8 +141,18 @@ public class EditMediaActivity extends Activity {
                 startPlaying = !startPlaying;
             }
         });
-    }
 
+        Button deleteAudioButton = (Button) findViewById(R.id.buttonDeleteAudio);
+        deleteAudioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modified = true;
+                File toDelete = new File(note.getAudioPath());
+                toDelete.delete();
+                note.setAudioPath("");
+            }
+        });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -195,7 +202,6 @@ public class EditMediaActivity extends Activity {
             }
         }
     }
-
     @Override
     protected void onPause() {
         if (modified) {
@@ -212,69 +218,63 @@ public class EditMediaActivity extends Activity {
             mediaPlayer = null;
         }
     }
-
     private void onRecord(boolean start) {
-        if (start) {
+        Button playButton = (Button) findViewById(R.id.buttonPlay);
+        modified = true;
+        if (start)
+        {
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mediaRecorder.setOutputFile(mFileName);
+            mediaRecorder.setOutputFile(eventualAudioPath);
             mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            try {
+            playButton.setEnabled(false);
+            try
+            {
                 mediaRecorder.prepare();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 Log.e("321error", "prepare() failed");
             }
             mediaRecorder.start();
-        } else {
-//            byte[] soundBytes;
-//            try {
-//                InputStream inputStream = getContentResolver().openInputStream(Uri.fromFile(new File(mFileName)));
-//                soundBytes = new byte[inputStream.available()];
-//                soundBytes = Utilities.toByteArray(inputStream);
-//                note.setAudioBytes(soundBytes);
-//            }catch(Exception e){
-//                e.printStackTrace();
-//            }
+        }
+        else
+        {
             mediaRecorder.stop();
             mediaRecorder.release();
+            playButton.setEnabled(true);
             mediaRecorder = null;
-            note.setAudioPath(mFileName);
+            note.setAudioPath(eventualAudioPath);
         }
     }
-
     private void onPlay(boolean start) {
-        if (start) {
+        Button recordButton = (Button) findViewById(R.id.buttonRecord);
+        if (start)
+        {
             mediaPlayer = new MediaPlayer();
-            try {
-                mediaPlayer.setDataSource(mFileName);//TODO mediaPlayer.setDataSource(note.getAudioPath());
+            try
+            {
+                recordButton.setEnabled(false);
+                mediaPlayer.setDataSource(note.getAudioPath());
                 mediaPlayer.prepare();
                 mediaPlayer.start();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 Log.e("321error", "prepare() failed");
             }
-//            File path = new File(mFileName);
-//            FileOutputStream fos = null;
-//            Log.d("321media","sono dentro onplay\naudio ne ho?"+(note.getAudioBytes().length!=0)+"\nil percorso è "+mFileName);
-//            try {
-//                fos = new FileOutputStream(path);
-//                fos.write(note.getAudioBytes());
-//                fos.close();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            MediaPlayer mediaPlayer = new MediaPlayer();
-//
-//            try {
-//                mediaPlayer.setDataSource(mFileName);
-//                mediaPlayer.prepare();
-//                mediaPlayer.start();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-        } else {
+        }
+        else
+        {
             mediaPlayer.release();
+            recordButton.setEnabled(true);
             mediaPlayer = null;
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 }

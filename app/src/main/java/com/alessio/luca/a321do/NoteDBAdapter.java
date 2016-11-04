@@ -43,7 +43,9 @@ public class NoteDBAdapter {
     //CREATE
     public Note createNote(String noteName) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Note newNote = new Note(noteName);
+        Note newNote = new Note();
+        if(noteName!=null && !noteName.isEmpty())
+            newNote.setTitle(noteName);
 
         //prima salvo tutti i valori
         ContentValues values = new ContentValues();
@@ -57,6 +59,7 @@ public class NoteDBAdapter {
         values.put(COL_DONE,newNote.isDone()?1:0);
         values.put(COL_ALARM,newNote.isAlarmOn()?1:0);
         values.put(COL_IMAGE,newNote.getImgBytes());
+        values.put(COL_AUDIO,newNote.getAudioPath());
 
         db.insert(TABLE_NAME, null, values);
 
@@ -96,6 +99,7 @@ public class NoteDBAdapter {
                         COL_LENGTH,
                         COL_DONE,
                         COL_ALARM,
+                        COL_AUDIO,
                         COL_IMAGE},
                 COL_ID + "=?",
                 new String[]{String.valueOf(id)},
@@ -116,7 +120,8 @@ public class NoteDBAdapter {
             int nLength = cursor.getInt(cursor.getColumnIndex(COL_LENGTH));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
             byte [] nImgBytes = cursor.getBlob(cursor.getColumnIndex(COL_IMAGE));
-            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance, nImgBytes, nLength);
+            String nAudioPath = cursor.getString(cursor.getColumnIndex(COL_AUDIO));
+            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance, nImgBytes, nLength, nAudioPath);
             note.setDone(cursor.getInt(cursor.getColumnIndex(COL_DONE)) != 0);
             note.setAlarm(cursor.getInt(cursor.getColumnIndex(COL_ALARM)) != 0);
             Log.d(DEBUG_TAG, "retrieved note: " + note.print());
@@ -145,15 +150,15 @@ public class NoteDBAdapter {
         String sorting;
         switch (sortBy.getFilter()) {
             case WITH_ATTACHMENT:
-                sorting = " where " + COL_IMAGE + " is not null";
+                sorting = " where " + COL_IMAGE + " is not null or " + COL_AUDIO + " is not null ";
                 whereClause = true;
                 break;
             case ONLY_PLANNED:
-                sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
+                sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0 ";
                 whereClause = true;
                 break;
             case ONLY_EXPIRED:
-                sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
+                sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0 ";
                 whereClause = true;
                 break;
             case ONLY_COMPLETED:
@@ -227,6 +232,7 @@ public class NoteDBAdapter {
         values.put(COL_LENGTH,note.getLength());
         values.put(COL_ALARM,note.isAlarmOn());
         values.put(COL_IMAGE,note.getImgBytes());
+        values.put(COL_AUDIO,note.getAudioPath());
 //        if(note.getImg()!=null)
 //        {
 //            ByteArrayOutputStream out = new ByteArrayOutputStream();

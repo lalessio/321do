@@ -45,8 +45,6 @@ public class EditDetailsActivity extends Activity {
         Spinner prioritySpinner = (Spinner) findViewById(R.id.spinner_priority);
         Spinner urgencySpinner = (Spinner) findViewById(R.id.spinner_urgency);
 
-        //TODO migliorare salvataggio importance
-
         priority = new int[]{Character.getNumericValue(note.getImportance().toString().charAt(0))};
         urgency = new char[]{note.getImportance().toString().charAt(1)};
 
@@ -85,5 +83,10 @@ public class EditDetailsActivity extends Activity {
         note.setTag(autoCompleteTag.getText().toString());
         noteDBAdapter.updateNote(note);
         super.onPause();
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 }

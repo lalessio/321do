@@ -80,8 +80,8 @@ public class EditDateTimeActivity extends Activity {
         note.setDueDate(c);
         if(note.isAlarmOn() && note.getNoteState()== Note.NoteState.PLANNED)
         {
-            long when = note.getDueDate().getTimeInMillis();
-            //long when = System.currentTimeMillis()+3000; //for debug
+            //long when = note.getDueDate().getTimeInMillis();
+            long when = System.currentTimeMillis()+3000; //for debug
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
@@ -99,5 +99,10 @@ public class EditDateTimeActivity extends Activity {
         }
         noteDBAdapter.updateNote(note);
         super.onPause();
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 }

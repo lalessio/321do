@@ -61,6 +61,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <activity android:name=".NewNoteActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:excludeFromRecents="true"
             android:noHistory="true"/>
         <activity android:name=".EditMediaActivity"

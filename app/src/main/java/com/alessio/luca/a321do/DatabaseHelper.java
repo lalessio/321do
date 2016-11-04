@@ -24,8 +24,8 @@ import static com.alessio.luca.a321do.NoteDBAdapter.TABLE_NAME;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     //in caso di nuove colonne: cambiare queste due stringhe, aggiungerla nel mezzo, controllare virgole
-    public static final String DATABASE_NAME = "db321do004";
-    public static final int DATABASE_VERSION = 7;
+    public static final String DATABASE_NAME = "db321do006";
+    public static final int DATABASE_VERSION = 8;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         COL_DUEDATE + " INTEGER, " + //converto a long al momento del salvataggio (INTEGER non ha problemi a memorizzare long quindi non perdo cifre)
                         COL_IMPORTANCE + " TEXT, " +
                         COL_IMAGE + " BLOB, " +
-                        //COL_AUDIO + " BLOB, " +
+                        COL_AUDIO + " TEXT, " +
                         COL_LENGTH + " INTEGER, " +
                         COL_DONE + " INTEGER, " + //booleano visto come 0 o 1
                         COL_ALARM + " INTEGER );";
