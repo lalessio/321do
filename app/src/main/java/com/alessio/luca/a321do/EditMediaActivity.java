@@ -2,6 +2,7 @@ package com.alessio.luca.a321do;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -34,9 +35,7 @@ import java.io.IOException;
 
 //TODO sistemare casino
     //1 layout carino
-    //2 bottoni che escludono altri
-    //3 gestione caso impossibile riprodurre
-    //4 unire in unico menu con immagini?
+
 
 public class EditMediaActivity extends Activity {
     public static final int RESULT_LOAD_IMAGE = 1;
@@ -100,12 +99,25 @@ public class EditMediaActivity extends Activity {
                                 startActivityForResult(intent, REQUEST_CAMERA);
                                 break;
                             case 2: //cancello allegato
-                                note.setImgBytes(new byte[0]);
-                                imageView.setImageResource(android.R.color.transparent);
-                                chooseImageButton.setGravity(Gravity.CENTER); //doesn't work
-                                emptyMessage.setText(R.string.errorEmptyMediaImage);
-                                modified = true;
-                                System.gc();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(EditMediaActivity.this);
+                                builder.setTitle(R.string.deleteImageMessage);
+                                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        note.setImgBytes(new byte[0]);
+                                        imageView.setImageResource(android.R.color.transparent);
+                                        emptyMessage.setText(R.string.errorEmptyMediaImage);
+                                        modified = true;
+                                        System.gc();
+                                    }
+                                });
+                                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+
                                 break;
                         }
                         dialog.dismiss();
@@ -142,16 +154,38 @@ public class EditMediaActivity extends Activity {
             }
         });
 
-        Button deleteAudioButton = (Button) findViewById(R.id.buttonDeleteAudio);
+        final Button deleteAudioButton = (Button) findViewById(R.id.buttonDeleteAudio);
         deleteAudioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modified = true;
-                File toDelete = new File(note.getAudioPath());
-                toDelete.delete();
-                note.setAudioPath("");
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditMediaActivity.this);
+                builder.setTitle(R.string.deleteAudioMessage);
+                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        modified = true;
+                        File toDelete = new File(note.getAudioPath());
+                        toDelete.delete();
+                        note.setAudioPath("");
+                        playButton.setVisibility(View.GONE);
+                        deleteAudioButton.setVisibility(View.GONE);
+                        System.gc();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
+
+        if(!note.getAudioPath().isEmpty() && note.getAudioPath()!=null)
+        {
+            playButton.setVisibility(View.VISIBLE);
+            deleteAudioButton.setVisibility(View.VISIBLE);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -219,7 +253,8 @@ public class EditMediaActivity extends Activity {
         }
     }
     private void onRecord(boolean start) {
-        Button playButton = (Button) findViewById(R.id.buttonPlay);
+        final Button playButton = (Button) findViewById(R.id.buttonPlay);
+        final Button deleteAudioButton = (Button) findViewById(R.id.buttonDeleteAudio);
         modified = true;
         if (start)
         {
@@ -246,13 +281,23 @@ public class EditMediaActivity extends Activity {
             playButton.setEnabled(true);
             mediaRecorder = null;
             note.setAudioPath(eventualAudioPath);
+            playButton.setVisibility(View.VISIBLE);
+            deleteAudioButton.setVisibility(View.VISIBLE);
         }
     }
     private void onPlay(boolean start) {
-        Button recordButton = (Button) findViewById(R.id.buttonRecord);
+        final Button recordButton = (Button) findViewById(R.id.buttonRecord);
+        final Button playButton = (Button) findViewById(R.id.buttonPlay);
         if (start)
         {
             mediaPlayer = new MediaPlayer();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+
+                    playButton.setText(R.string.playButtonStart);
+                }
+            });
             try
             {
                 recordButton.setEnabled(false);

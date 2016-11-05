@@ -145,45 +145,51 @@ public class NoteDBAdapter {
         calendar.set(Calendar.MILLISECOND, 0);
         long midnight = calendar.getTimeInMillis();
 
-        boolean whereClause = false;//TODO testare ricerca
+        boolean whereClause = true;
 
         String sorting;
         switch (sortBy.getFilter()) {
             case WITH_ATTACHMENT:
                 sorting = " where " + COL_IMAGE + " is not null or " + COL_AUDIO + " is not null ";
-                whereClause = true;
                 break;
             case ONLY_PLANNED:
                 sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0 ";
-                whereClause = true;
                 break;
             case ONLY_EXPIRED:
                 sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0 ";
-                whereClause = true;
                 break;
             case ONLY_COMPLETED:
                 sorting = " where " + COL_DONE + " = 1";
-                whereClause = true;
                 break;
             case TODAY:
                 //in caso di risultati scorretti mettere un default in noteactivity
                 sorting = " where " + COL_DUEDATE + " between " + now + " and " + midnight;
-                whereClause = true;
                 break;
             case TOMORROW:
                 sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+86400000);
-                whereClause = true;
                 break;
             case NEXT7DAYS:
                 sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+7*86400000);
-                whereClause = true;
                 break;
             default:
                 sorting = new String();
+                whereClause = false;
                 break;
         }
+
         Cursor c = null;
+
+        if(sortBy.isSearchParameterSet())
+        {
+            if(whereClause)
+                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
+            else
+                sorting = " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' "
+                        + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
+        }
+
         sorting = sorting + " order by "+COL_DONE;
+
         switch (sortBy.getOrder())
         {
             case DUEDATE:
@@ -199,21 +205,8 @@ public class NoteDBAdapter {
                 sorting = sorting + ", "+COL_ID;
                 break;
         }
-        if(sortBy.isSearchParameterSet())
-        {
-            if(whereClause)
-            {
-                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
-                c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
-            }
-            else
-                c = db.rawQuery("select * from " + TABLE_NAME
-                                + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' "
-                                + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'"
-                                + sorting, null);
-        }
-        else
-            c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
+
+        c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();
         return c;
     }

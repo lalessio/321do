@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class NewNoteActivity extends Activity {
         Button confirmButton = (Button) findViewById(R.id.button_confirm);
         Button cancelButton = (Button) findViewById(R.id.button_cancel);
         Button createWithDetailsButton = (Button) findViewById(R.id.button_create_with_details);
+        //ImageButton quickAttachmentButton = (ImageButton) findViewById(R.id.quickButtonAttachment);
         Button quickAttachmentButton = (Button) findViewById(R.id.quickButtonAttachment);
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -59,19 +61,14 @@ public class NewNoteActivity extends Activity {
         createWithDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(editText.getText().toString().length()!=0)
-//                {
-                    Utilities.closeKeyboard(NewNoteActivity.this, editText);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.createNote(editText.getText().toString()));
-                    Intent intent = new Intent(NewNoteActivity.this, EditNoteActivity.class);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    overridePendingTransition(0,0);
-                    finish();
-//                }
-//                else
-//                    Toast.makeText(NewNoteActivity.this, R.string.errorEmptyField, Toast.LENGTH_SHORT).show();
+                Utilities.closeKeyboard(NewNoteActivity.this, editText);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.createNote(editText.getText().toString()));
+                Intent intent = new Intent(NewNoteActivity.this, EditNoteActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(0,0);
+                finish();
             }
         });
         quickAttachmentButton.setOnClickListener(new View.OnClickListener() {

@@ -264,7 +264,7 @@ public class NoteActivity extends AppCompatActivity {
                             });
                         }
                         else
-                            Toast.makeText(NoteActivity.this,"You haven't assigned any tag yet",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NoteActivity.this, R.string.errorNoExistingTag,Toast.LENGTH_SHORT).show();
                         break;
                     case 8:
                         currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.NONE);
@@ -275,46 +275,6 @@ public class NoteActivity extends AppCompatActivity {
                 updateListView(currentOrder);
             }
         });
-
-        //TODO cancellazione multipla
-//        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-//        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-//            @Override
-//            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-//            }
-//
-//            @Override
-//            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.multipleDelete:
-//                        for (int nC = new NoteListAdapter(NoteActivity.this,R.layout.note_row,retrievedNotes.toArray(new Note[retrievedNotes.size()]),currentOrder).getCount() - 1; nC >= 0; nC--) {
-//                            if (listView.isItemChecked(nC)) {
-//                                noteDBAdapter.deleteNote(retrievedNotes.get(nC));
-//                            }
-//                        }
-//                        mode.finish();
-//                        updateListView(currentOrder);
-//                        return true;
-//                }
-//                return false;
-//            }
-//
-//            @Override
-//            public void onDestroyActionMode(ActionMode mode) {
-//
-//            }
-//        });
-
     }
     @Override
     protected void onResume() {
@@ -327,6 +287,8 @@ public class NoteActivity extends AppCompatActivity {
         {
             currentOrder = new SortingOrder(SortingOrder.Order.NONE, SortingOrder.Filter.NONE);
             updateListView(currentOrder);
+            fabText.show();
+            fabAudio.show();
         }
         else
             super.onBackPressed();
@@ -335,7 +297,7 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_content, menu);
-//TODO testare ricerca
+
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -345,24 +307,10 @@ public class NoteActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 currentOrder = new SortingOrder(currentOrder.getOrder(),currentOrder.getFilter(),query);
                 updateListView(currentOrder);
-                fabText.show();
-                fabAudio.show();
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                fabText.hide();
-                fabAudio.hide();
-                return false;
-            }
-        });
-
-        //buggato non funziona!
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                currentOrder = new SortingOrder(SortingOrder.Order.NONE, SortingOrder.Filter.NONE);
-                updateListView(currentOrder);
                 return false;
             }
         });
@@ -371,7 +319,7 @@ public class NoteActivity extends AppCompatActivity {
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                currentOrder = new SortingOrder(SortingOrder.Order.NONE,currentOrder.getFilter());
+                currentOrder = new SortingOrder(currentOrder.getOrder(),currentOrder.getFilter());
                 updateListView(currentOrder);
                 return true;
             }
@@ -422,12 +370,13 @@ public class NoteActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 return true;
-            case R.id.action_settings:
-                Intent intent1 = new Intent(NoteActivity.this,SettingsActivity.class);
+            case R.id.action_faq:
+                Intent intent1 = new Intent(NoteActivity.this,FaqActivity.class);
                 startActivity(intent1);
                 overridePendingTransition(0,0);
                 return true;
             case R.id.action_pdf:
+                Toast.makeText(NoteActivity.this, R.string.convertingPDFmessage,Toast.LENGTH_SHORT).show();
                 Utilities.notesToPDF(retrievedNotes.toArray(new Note[retrievedNotes.size()]),currentOrder);
                 viewPdf(Utilities.FILE_NAME, "Dir");
                 return true;
@@ -466,6 +415,8 @@ public class NoteActivity extends AppCompatActivity {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
             Toast.makeText(getApplicationContext(), getString(R.string.errorAudioRecord), Toast.LENGTH_LONG).show();
+            fabText.show();
+            fabAudio.show();
         }
     }
     private void showSortMenu() {
@@ -576,9 +527,10 @@ public class NoteActivity extends AppCompatActivity {
         pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         try {
+            Toast.makeText(NoteActivity.this,getString(R.string.showPDFmessage)+path,Toast.LENGTH_LONG).show();
             startActivity(pdfIntent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(NoteActivity.this, "Error loading pdf file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(NoteActivity.this, R.string.errorPDFmessage, Toast.LENGTH_SHORT).show();
         }
     }
 }

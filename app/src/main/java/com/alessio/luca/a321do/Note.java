@@ -25,10 +25,6 @@ public class Note implements Serializable {
     private String audioPath;
     private int length;
 
-    //3 come lo visualizzo sulla notifica
-
-    //TODO iconcine
-
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
     public enum NoteState {COMPLETED,PLANNED,EXPIRED}

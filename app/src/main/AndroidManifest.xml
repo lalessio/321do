@@ -69,7 +69,7 @@
         <activity android:name=".EditDetailsActivity" />
         <activity android:name=".EditCheckListActivity" />
         <activity android:name=".EditDateTimeActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".FaqActivity" />
         <activity android:name=".DailySummary" />
     </application>
 

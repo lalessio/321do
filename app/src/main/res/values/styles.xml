@@ -23,4 +23,20 @@
         <item name="android:layout_margin">4dp</item>
     </style>
 
+    <style name="faqSectionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_margin">12dp</item>
+    </style>
+
+    <style name="faqSectionContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

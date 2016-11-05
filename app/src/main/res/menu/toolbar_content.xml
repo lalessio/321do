@@ -22,9 +22,8 @@
         android:title="@string/clearCompletedMenuString"
         android:orderInCategory="400"
         app:showAsAction="never" />
-    <!-- TODO settings (ultima cosa quando tutto funziona e sarà carino) -->
-    <item android:id="@+id/action_settings"
-        android:title="@string/settingsMenuString"
+    <item android:id="@+id/action_faq"
+        android:title="@string/faqMenuString"
         android:orderInCategory="500"
         app:showAsAction="never" />
     <item android:id="@+id/action_pdf"
