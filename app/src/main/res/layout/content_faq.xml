@@ -1,0 +1,104 @@
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<!--this code is trash-->
+    <TextView
+        style="@style/faqSectionTitle"
+        android:text="@string/creditsTitle"
+        android:id="@+id/creditsTitle"/>
+    <TextView
+        style="@style/faqSectionContent"
+        android:text="@string/creditsContent"
+        android:id="@+id/creditsContent"
+        android:autoLink="web"
+        android:linksClickable="true"/>
+    <TextView
+        style="@style/faqSectionContent"
+        android:text="@string/donateMessage"
+        android:id="@+id/donateLink"
+        android:autoLink="email"
+        android:linksClickable="true"/>
+
+    <TextView
+        android:text="@string/question1Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q1T"/>
+    <TextView
+        android:text="@string/question1Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q1C"/>
+
+    <TextView
+        android:text="@string/question2Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q2T"/>
+    <TextView
+        android:text="@string/question2Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q2C"/>
+
+    <TextView
+        android:text="@string/question3Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q3T"/>
+    <TextView
+        android:text="@string/question3Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q3C"/>
+
+    <TextView
+        android:text="@string/question4Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q4T"/>
+    <TextView
+        android:text="@string/question4Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q4C"/>
+
+    <TextView
+        android:text="@string/question5Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q5T"/>
+    <TextView
+        android:text="@string/question5Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q5C"/>
+
+    <TextView
+        android:text="@string/question6Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q6T"/>
+    <TextView
+        android:text="@string/question6Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q6C"/>
+
+    <TextView
+        android:text="@string/question7Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q7T"/>
+    <TextView
+        android:text="@string/question7Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q7C"/>
+
+    <TextView
+        android:text="@string/question8Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q8T"/>
+    <TextView
+        android:text="@string/question8Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q8C"/>
+
+    <TextView
+        android:text="@string/question9Title"
+        style="@style/faqSectionTitle"
+        android:id="@+id/q9T"/>
+    <TextView
+        android:text="@string/question9Content"
+        style="@style/faqSectionContent"
+        android:id="@+id/q9C"/>
+
+</LinearLayout>

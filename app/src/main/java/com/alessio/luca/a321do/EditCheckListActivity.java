@@ -85,8 +85,18 @@ public class EditCheckListActivity extends Activity {
         noteDBAdapter.updateNote(note);
         super.onPause();
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+    }
     private void updateCheckListView(){
         ArrayAdapter<String> checkListAdapter = new ArrayAdapter<String>(EditCheckListActivity.this,android.R.layout.simple_list_item_1,note.getCheckList());
         listViewCheckList.setAdapter(checkListAdapter);
+        TextView textView = (TextView) findViewById(R.id.emptyCheckList);
+        if(checkListAdapter.isEmpty())
+            textView.setText(R.string.emptyCheckListMessage);
+        else
+            textView.setText("");
     }
 }

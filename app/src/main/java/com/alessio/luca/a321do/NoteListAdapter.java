@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 /**
  * Created by Luca on 11/10/2016.
  */
@@ -79,7 +81,7 @@ public class NoteListAdapter extends ArrayAdapter {
             TextView subNoteText = (TextView) row.findViewById(R.id.rowSubText);
             switch (sortingRequested.getOrder()){
                 case DUEDATE:
-                    subNoteText.setText(note.printDueDate());
+                    subNoteText.setText(note.printTime());
                     break;
                 case IMPORTANCE:
                     subNoteText.setText(note.getImportance().toString());
@@ -89,10 +91,10 @@ public class NoteListAdapter extends ArrayAdapter {
                     break;
                 default:
                     subNoteText.setText(note.getDescription().replaceAll("[\\t\\n\\r]"," ")); //tolgo caporiga e inserisco spaziature per riparmiare spazio nella visualizzazione
-                    if(note.getImgBytes()!=null)
+                    if(note.getImgBytes()!=null || (!note.getAudioPath().isEmpty() && note.getAudioPath()!=null))
                     {
                         ImageView imageView = (ImageView) row.findViewById(R.id.rowAttachmentImage);
-                        imageView.setImageResource(R.mipmap.photo);
+                        imageView.setImageResource(R.mipmap.attachment);
                     }
                     break;
             }

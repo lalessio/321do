@@ -30,6 +30,7 @@ public class NotificationRebooter extends BroadcastReceiver {
             temp.setTitle(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_TITLE)));
             temp.setDescription(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DESCRIPTION)));
             temp.setTag(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_TAG)));
+            temp.setLength(cursor.getInt(cursor.getColumnIndex(NoteDBAdapter.COL_LENGTH)));
             Calendar t = new GregorianCalendar();
             t.setTimeInMillis(Long.valueOf(cursor.getString(cursor.getColumnIndex(NoteDBAdapter.COL_DUEDATE))));
             temp.setDueDate(t);

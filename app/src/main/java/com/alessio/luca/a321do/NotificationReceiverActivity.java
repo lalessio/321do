@@ -6,17 +6,21 @@ import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Luca on 11/10/2016.
@@ -41,19 +45,65 @@ public class NotificationReceiverActivity extends Activity {
                 TextView textViewNotificationDescription = (TextView) findViewById(R.id.textViewNotificationDescription);
                 TextView textViewNotificationTag = (TextView) findViewById(R.id.textViewNotificationTag);
                 TextView textViewNotificationImportance = (TextView) findViewById(R.id.textViewNotificationImportance);
+                TextView textViewNotificationLength = (TextView) findViewById(R.id.alla);
                 ImageView imageViewNotification = (ImageView) findViewById(R.id.imageViewNotification);
+                final Button buttonAudioAttachment = (Button) findViewById(R.id.buttonAudioAttachment);
                 Button buttonNotificationDismiss = (Button) findViewById(R.id.buttonNotificationDismiss);
                 Button buttonNotificationSnooze = (Button) findViewById(R.id.buttonNotificationSnooze);
                 Button buttonNotificationTick = (Button) findViewById(R.id.buttonNotificationTick);
 
+                //there is always a title
                 textViewNotificationTitle.setText(note.getTitle());
-                textViewNotificationDescription.setText(note.getDescription());
-                textViewNotificationTag.setText(note.getTag());
+
+                //is description set?
+                if(note.getDescription().length()>0)
+                    textViewNotificationDescription.setText(note.getDescription());
+                else
+                    textViewNotificationDescription.setVisibility(View.GONE);
+
+                //importance is set by default
                 textViewNotificationImportance.setText(note.getImportance().toString());
 
-                if(note.getImgBytes()!=null)
-                    imageViewNotification.setImageBitmap(BitmapFactory.decodeByteArray(note.getImgBytes(),0,note.getImgBytes().length));
+                //is a tag assigned?
+                if(note.getTag().length()>0)
+                    textViewNotificationTag.setText(note.getTag());
+                else
+                {
+                    LinearLayout tagLayout = (LinearLayout) findViewById(R.id.tagLayout);
+                    tagLayout.setVisibility(View.GONE);
+                }
 
+                //do we have an audio attachment to play?
+                if(!new File(note.getAudioPath()).canRead())
+                    buttonAudioAttachment.setVisibility(View.GONE);
+
+                //is length set?
+                if(note.getLength()!=0)
+                    textViewNotificationLength.setText(" " + note.getLength() + " ");
+                else
+                {
+                    LinearLayout lengthLayout = (LinearLayout) findViewById(R.id.lengthLayout);
+                    lengthLayout.setVisibility(View.GONE);
+                }
+
+                //do we have an image too?
+                if(note.getImgBytes()!=null)
+                    imageViewNotification.setImageBitmap(Utilities.resizeImage(BitmapFactory.decodeByteArray(note.getImgBytes(),0,note.getImgBytes().length),0.4f));
+                else
+                    imageViewNotification.setVisibility(View.GONE);
+
+                buttonAudioAttachment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        playAudioAttachment(startPlaying,note);
+                        if (startPlaying) {
+                            buttonAudioAttachment.setText(R.string.playButtonStop);
+                        } else {
+                            buttonAudioAttachment.setText(R.string.playButtonStart);
+                        }
+                        startPlaying = !startPlaying;
+                    }
+                });
                 buttonNotificationDismiss.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -65,7 +115,6 @@ public class NotificationReceiverActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         showSnoozeDialog(note);
-                        Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteSnoozed,Toast.LENGTH_SHORT).show();
                     }
                 });
                 buttonNotificationTick.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +151,6 @@ public class NotificationReceiverActivity extends Activity {
         bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
         intentAlarm.putExtras(bundle);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        //per ora snooze DAL MOMENTO IN CUI PREMO SNOOZE
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+amount, PendingIntent.getBroadcast(this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
     private void tickAction(Note note) {
@@ -139,4 +187,18 @@ public class NotificationReceiverActivity extends Activity {
             }
         });
     }
+    private void playAudioAttachment(boolean start, Note note) {
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        if (start) {
+            try {
+                mediaPlayer.setDataSource(note.getAudioPath());
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                Log.e("321error", "prepare() failed");
+            }
+        } else
+            mediaPlayer.release();
+    }
+    private boolean startPlaying = true;
 }

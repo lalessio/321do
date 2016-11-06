@@ -22,14 +22,8 @@ public class Note implements Serializable {
     private Calendar dueDate;
     private Importance importance;
     private byte[] imgBytes;
-    //TODO private Lenght lenght; come lo implemento? a cosa servirà?
-
-//////////////////////////////////////////TODO/////////////////////////////////////////////////////
-
-    //private ArrayList<Note> childs; //facciamo secondario per ora
-    //private Place place;
-    //private MediaAttachment mediaAttachment;
-    //private Length length; //durata appuntamento, requisito secondario
+    private String audioPath;
+    private int length;
 
 //////////////////////////////////////////ALTRI VALORI UTILI///////////////////////////////////////
 
@@ -126,7 +120,21 @@ public class Note implements Serializable {
         this.imgBytes = imgBytes;
     }
 
-    ////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
+    public String getAudioPath() {
+        return audioPath;
+    }
+    public void setAudioPath(String audioPath) {
+        this.audioPath = audioPath;
+    }
+
+    public int getLength() {
+        return length;
+    }
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+////////////////////////////////////////ALTRI METODI///////////////////////////////////////////////
 
     public boolean isDueOver(){
     Calendar now = Calendar.getInstance();
@@ -158,26 +166,14 @@ public class Note implements Serializable {
         this.done = false;
         setStandardTime();
         this.description = new String();
-        this.tag= new String();
+        this.length = 0;
+        this.tag = new String();
         this.importance = new Importance();
         this.checkList = new ArrayList<String>();
+        this.audioPath = new String();
         this.alarm = false;
     }
-
-///////////////////////////////////////METODI DEBUG////////////////////////////////////////////////
-
-    public String print() {
-        return getId()+" / "
-                +getTitle()+" / "
-                +getDescription()+" / "
-                +getTag()+" / "
-                +printDueDate()+" / "
-                +getImportance().toString()+" / "
-                + Utilities.checkListToString(checkList)+" / "
-                +" / done = "+isDone()
-                +" / alarm = "+isAlarmOn();
-    }
-    public String printDueDate(){
+    public String printTime(){
         String dueDate = getDueDate().get(Calendar.DAY_OF_MONTH) + " "
                 + (getDueDate().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())) + " "
                 + getDueDate().get(Calendar.YEAR) + "   "
@@ -185,7 +181,24 @@ public class Note implements Serializable {
         if(getDueDate().get(Calendar.MINUTE)<10)
             dueDate = dueDate + "0";
         dueDate = dueDate + getDueDate().get(Calendar.MINUTE);
+        if(length!=0)
+            dueDate = dueDate+"   ~ "+length+" minutes";
         return dueDate;
+    }
+
+///////////////////////////////////////METODI DEBUG////////////////////////////////////////////////
+
+    public String print() {
+        return getId() + " / "
+                + getTitle() + " / "
+                + getDescription() + " / "
+                + getTag() + " / "
+                + printTime() + " / "
+                + getLength() + " minutes / "
+                + getImportance().toString() + " / "
+                + Utilities.checkListToString(checkList) + " / "
+                + " / done = " + isDone()
+                + " / alarm = " + isAlarmOn();
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,8 +217,7 @@ public class Note implements Serializable {
         this.title = now.getTime().toString(); //titolo default momento creazione
         newNoteInitialization();
     }
-    //TODO costruttore con tutti i parametri completi dopo che sono stati letti dal DB
-    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes){
+    public Note(int nId, String nTitle, String nDescription, String nTag, ArrayList<String> nCheckList, Calendar nDueDate, Importance nImportance, byte[] nImgBytes, int nLength, String nAudioPath){
         this.id=nId;
         this.title=nTitle;
         this.description=nDescription;
@@ -214,9 +226,11 @@ public class Note implements Serializable {
         this.dueDate=nDueDate;
         this.importance=nImportance;
         this.imgBytes=nImgBytes;
+        this.length=nLength;
+        this.audioPath=nAudioPath;
     }
     public Note(Note note){
-        //primo abbozzo costruttore copia
+        //abbozzo costruttore copia
         this.id = note.getId();
         this.title = note.getTitle();
         this.description = note.getDescription();
@@ -227,14 +241,7 @@ public class Note implements Serializable {
         this.done=note.isDone();
         this.alarm=note.isAlarmOn();
         this.imgBytes=note.getImgBytes();
+        this.length=note.getLength();
+        this.audioPath=note.getAudioPath();
     }
-    //TODO distruttore
-
-//    private class Place {
-//        //TODO place
-//    }
-//
-//    private class MediaAttachment {
-//        //TODO mediaattachment
-//    }
 }

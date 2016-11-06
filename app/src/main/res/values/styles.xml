@@ -11,19 +11,32 @@
     <style name="genericTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/light_grey</item>
         <item name="android:gravity">center</item>
-    </style>
-
-    <style name="noAnimTheme" parent="android:Theme">
-        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="genericButton">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="faqSectionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_margin">12dp</item>
+    </style>
+
+    <style name="faqSectionContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:visibility">gone</item>
     </style>
 
 </resources>

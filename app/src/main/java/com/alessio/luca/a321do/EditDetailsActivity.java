@@ -16,7 +16,7 @@ import android.widget.Spinner;
 public class EditDetailsActivity extends Activity {
     private Note note;
     private NoteDBAdapter noteDBAdapter;
-    private EditText editTextTitle, editTextDesc;
+    private EditText editTextTitle, editTextDesc, editTextLength;
     private AutoCompleteTextView autoCompleteTag;
     private int[] priority;
     private char[] urgency;
@@ -34,6 +34,9 @@ public class EditDetailsActivity extends Activity {
         editTextTitle.setText(note.getTitle());
         editTextDesc = (EditText) findViewById(R.id.editTextDescription);
         editTextDesc.setText(note.getDescription());
+        editTextLength = (EditText) findViewById(R.id.editTextLength);
+        if(note.getLength()!=0)
+            editTextLength.setText(String.valueOf(note.getLength()));
 
         autoCompleteTag = (AutoCompleteTextView) findViewById(R.id.autoCompleteTag);
         autoCompleteTag.setText(note.getTag());
@@ -41,8 +44,6 @@ public class EditDetailsActivity extends Activity {
 
         Spinner prioritySpinner = (Spinner) findViewById(R.id.spinner_priority);
         Spinner urgencySpinner = (Spinner) findViewById(R.id.spinner_urgency);
-
-        //TODO migliorare salvataggio importance
 
         priority = new int[]{Character.getNumericValue(note.getImportance().toString().charAt(0))};
         urgency = new char[]{note.getImportance().toString().charAt(1)};
@@ -75,8 +76,17 @@ public class EditDetailsActivity extends Activity {
         note.setTitle(editTextTitle.getText().toString());
         note.setImportance(priority[0], urgency[0]);
         note.setDescription(editTextDesc.getText().toString());
+        if(editTextLength.getText().toString().length()>0)
+            note.setLength(Integer.parseInt(editTextLength.getText().toString()));
+        else
+            note.setLength(0);
         note.setTag(autoCompleteTag.getText().toString());
         noteDBAdapter.updateNote(note);
         super.onPause();
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 }

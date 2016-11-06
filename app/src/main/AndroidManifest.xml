@@ -49,11 +49,28 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".NewNoteActivity" />
-        <activity android:name=".EditMediaActivity" />
+        <receiver
+            android:label="321DO! Widget"
+            android:name="WidgetProvider" >
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.alessio.luca.a321do.QUICK_NOTE_ACTION"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+        <activity android:name=".NewNoteActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:excludeFromRecents="true"
+            android:noHistory="true"/>
+        <activity android:name=".EditMediaActivity"
+            android:configChanges="orientation|screenSize"/>
         <activity android:name=".EditDetailsActivity" />
         <activity android:name=".EditCheckListActivity" />
         <activity android:name=".EditDateTimeActivity" />
+        <activity android:name=".FaqActivity" />
+        <activity android:name=".DailySummary" />
     </application>
 
 </manifest>

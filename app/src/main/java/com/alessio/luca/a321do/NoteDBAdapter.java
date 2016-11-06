@@ -26,6 +26,8 @@ public class NoteDBAdapter {
     public static final String COL_DONE="done";
     public static final String COL_ALARM="alarm";
     public static final String COL_IMAGE="imgAttachment";
+    public static final String COL_AUDIO="audioAttachment";
+    public static final String COL_LENGTH="length";
 
     public static final String DEBUG_TAG = "321NoteDBAdapter";
     public static final String TABLE_NAME = "notes_table";
@@ -41,7 +43,9 @@ public class NoteDBAdapter {
     //CREATE
     public Note createNote(String noteName) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Note newNote = new Note(noteName);
+        Note newNote = new Note();
+        if(noteName!=null && !noteName.isEmpty())
+            newNote.setTitle(noteName);
 
         //prima salvo tutti i valori
         ContentValues values = new ContentValues();
@@ -50,10 +54,12 @@ public class NoteDBAdapter {
         values.put(COL_IMPORTANCE,newNote.getImportance().toString());
         values.put(COL_DESCRIPTION, newNote.getDescription());
         values.put(COL_TAG, newNote.getTag());
+        values.put(COL_LENGTH, newNote.getLength());
         values.put(COL_CHECKLIST, Utilities.checkListToString(newNote.getCheckList()));
         values.put(COL_DONE,newNote.isDone()?1:0);
         values.put(COL_ALARM,newNote.isAlarmOn()?1:0);
         values.put(COL_IMAGE,newNote.getImgBytes());
+        values.put(COL_AUDIO,newNote.getAudioPath());
 
         db.insert(TABLE_NAME, null, values);
 
@@ -70,6 +76,7 @@ public class NoteDBAdapter {
         //clone.setTitle(note.getTitle());
         clone.setDescription(note.getDescription());
         clone.setTag(note.getTag());
+        clone.setLength(note.getLength());
         clone.setImportance(note.getImportance());
         clone.setCheckList(note.getCheckList());
         //dueDate, done, alarm e tutto il contenuto non testuale non viene copiato da requisiti
@@ -89,8 +96,10 @@ public class NoteDBAdapter {
                         COL_CHECKLIST,
                         COL_IMPORTANCE,
                         COL_DUEDATE,
+                        COL_LENGTH,
                         COL_DONE,
                         COL_ALARM,
+                        COL_AUDIO,
                         COL_IMAGE},
                 COL_ID + "=?",
                 new String[]{String.valueOf(id)},
@@ -108,17 +117,17 @@ public class NoteDBAdapter {
             ArrayList<String> nCheckList = new ArrayList<>(Utilities.stringToCheckList(cursor.getString(cursor.getColumnIndex(COL_CHECKLIST))));
             Calendar nDueDate = new GregorianCalendar();
             nDueDate.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DUEDATE)));
+            int nLength = cursor.getInt(cursor.getColumnIndex(COL_LENGTH));
             Importance nImportance = new Importance(cursor.getString(cursor.getColumnIndex(COL_IMPORTANCE)));
             byte [] nImgBytes = cursor.getBlob(cursor.getColumnIndex(COL_IMAGE));
-            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance, nImgBytes);
+            String nAudioPath = cursor.getString(cursor.getColumnIndex(COL_AUDIO));
+            note = new Note(nId, nTitle, nDescription, nTag, nCheckList, nDueDate, nImportance, nImgBytes, nLength, nAudioPath);
             note.setDone(cursor.getInt(cursor.getColumnIndex(COL_DONE)) != 0);
             note.setAlarm(cursor.getInt(cursor.getColumnIndex(COL_ALARM)) != 0);
             Log.d(DEBUG_TAG, "retrieved note: " + note.print());
         }
         else
-        {
             Log.d(DEBUG_TAG,"nessuna nota recuperata :(");
-        }
 
         cursor.close();
         db.close();
@@ -128,6 +137,7 @@ public class NoteDBAdapter {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Calendar calendar = Calendar.getInstance();
+        long now = calendar.getTimeInMillis();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -135,47 +145,51 @@ public class NoteDBAdapter {
         calendar.set(Calendar.MILLISECOND, 0);
         long midnight = calendar.getTimeInMillis();
 
-        boolean whereClause = false;
+        boolean whereClause = true;
 
         String sorting;
         switch (sortBy.getFilter()) {
             case WITH_ATTACHMENT:
-                sorting = " where " + COL_IMAGE + " is not null";
-                whereClause = true;
+                sorting = " where " + COL_IMAGE + " is not null or " + COL_AUDIO + " is not null ";
                 break;
             case ONLY_PLANNED:
-                sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
-                whereClause = true;
+                sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0 ";
                 break;
             case ONLY_EXPIRED:
-                sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0";
-                whereClause = true;
+                sorting = " where " + COL_DUEDATE + " < " + System.currentTimeMillis() + " and " + COL_DONE + " = 0 ";
                 break;
             case ONLY_COMPLETED:
                 sorting = " where " + COL_DONE + " = 1";
-                whereClause = true;
                 break;
             case TODAY:
-                //TODO risolvere today tomorrow risultati scorretti
-                Calendar cal = Calendar.getInstance();
-                long now = cal.getTimeInMillis();
+                //in caso di risultati scorretti mettere un default in noteactivity
                 sorting = " where " + COL_DUEDATE + " between " + now + " and " + midnight;
-                whereClause = true;
                 break;
             case TOMORROW:
                 sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+86400000);
-                whereClause = true;
                 break;
             case NEXT7DAYS:
                 sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+7*86400000);
-                whereClause = true;
                 break;
             default:
                 sorting = new String();
+                whereClause = false;
                 break;
         }
+
         Cursor c = null;
+
+        if(sortBy.isSearchParameterSet())
+        {
+            if(whereClause)
+                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
+            else
+                sorting = " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' "
+                        + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
+        }
+
         sorting = sorting + " order by "+COL_DONE;
+
         switch (sortBy.getOrder())
         {
             case DUEDATE:
@@ -191,18 +205,8 @@ public class NoteDBAdapter {
                 sorting = sorting + ", "+COL_ID;
                 break;
         }
-        if(sortBy.isSearchParameterSet())
-        {
-            if(whereClause)
-            {
-                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' ";
-                c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
-            }
-            else
-                c = db.rawQuery("select * from " + TABLE_NAME + " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + sorting, null);
-        }
-        else
-            c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
+
+        c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();
         return c;
     }
@@ -218,8 +222,10 @@ public class NoteDBAdapter {
         values.put(COL_CHECKLIST, Utilities.checkListToString(note.getCheckList()));
         values.put(COL_IMPORTANCE, note.getImportance().toString());
         values.put(COL_DUEDATE,note.getDueDate().getTimeInMillis());
+        values.put(COL_LENGTH,note.getLength());
         values.put(COL_ALARM,note.isAlarmOn());
         values.put(COL_IMAGE,note.getImgBytes());
+        values.put(COL_AUDIO,note.getAudioPath());
 //        if(note.getImg()!=null)
 //        {
 //            ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -52,20 +52,21 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (Build.VERSION.SDK_INT > 19)
         {
-            Notification.Action action1 = new Notification.Action.Builder(R.mipmap.nope,"Dismiss",pendingIntentDismiss).build();
-            Notification.Action action2 = new Notification.Action.Builder(R.mipmap.snooze,"Snooze",pendingIntentSnooze).build();
-            Notification.Action action3 = new Notification.Action.Builder(R.mipmap.yep,"Tick",pendingIntentComplete).build();
+            Notification.Action action1 = new Notification.Action.Builder(R.mipmap.nope,"",pendingIntentDismiss).build();
+            Notification.Action action2 = new Notification.Action.Builder(R.mipmap.snooze,"",pendingIntentSnooze).build();
+            Notification.Action action3 = new Notification.Action.Builder(R.mipmap.yep,"",pendingIntentComplete).build();
             notification = new Notification.Builder(context)
                     .setContentTitle(note.getTitle())
                     .setContentText(note.getDescription())
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setTicker(note.getTitle())
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
                     .addAction(action1)
                     .addAction(action2)
                     .addAction(action3)
+                    .setAutoCancel(true)
                     .setContentIntent(pIntent).build();
+
         }
         else
         {
@@ -76,15 +77,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setTicker(note.getTitle())
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setAutoCancel(true)
-                    .addAction(R.mipmap.nope,"Dismiss",pendingIntentDismiss)
-                    .addAction(R.mipmap.snooze,"Snooze",pendingIntentSnooze)
-                    .addAction(R.mipmap.yep,"Tick",pendingIntentComplete)
+                    .addAction(R.mipmap.nope,"",pendingIntentDismiss)
+                    .addAction(R.mipmap.snooze,"",pendingIntentSnooze)
+                    .addAction(R.mipmap.yep,"",pendingIntentComplete)
                     .setContentIntent(pIntent).build();
         }
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        Log.d("321AlarmReceiver","creando notifica titolo = "+note.getTitle()+" id= "+note.getId());
         notificationManager.notify(note.getId(), notification);
     }
 }

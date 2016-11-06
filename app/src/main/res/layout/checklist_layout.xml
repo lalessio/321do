@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textNoSuggestions"
         android:imeOptions="actionNext"
+        android:padding="8dp"
         android:hint="@string/checklistHintText"
         android:id="@+id/editTextCheckList"
         android:nextFocusForward="@id/editTextCheckList">
@@ -21,5 +22,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/checklist_list_view"/>
+
+    <TextView
+        android:id="@+id/emptyCheckList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        android:gravity="center"
+        android:textSize="20sp" />
 
 </LinearLayout>
