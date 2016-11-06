@@ -115,7 +115,6 @@ public class NotificationReceiverActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         showSnoozeDialog(note);
-                        Toast.makeText(NotificationReceiverActivity.this, R.string.toastNoteSnoozed,Toast.LENGTH_SHORT).show();
                     }
                 });
                 buttonNotificationTick.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +151,6 @@ public class NotificationReceiverActivity extends Activity {
         bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
         intentAlarm.putExtras(bundle);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        //per ora snooze DAL MOMENTO IN CUI PREMO SNOOZE
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+amount, PendingIntent.getBroadcast(this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
     private void tickAction(Note note) {

@@ -47,6 +47,7 @@ public class EditMediaActivity extends Activity {
     private MediaRecorder mediaRecorder = null;
     private MediaPlayer mediaPlayer = null;
     boolean startRecording = true, startPlaying = true;
+    private Uri picUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +190,17 @@ public class EditMediaActivity extends Activity {
         }
     }
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("picUri", picUri);
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        picUri= savedInstanceState.getParcelable("picUri");
+
+    }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
@@ -204,10 +216,19 @@ public class EditMediaActivity extends Activity {
                     fileOutputStream = new FileOutputStream(destination);
                     fileOutputStream.write(outputStream.toByteArray());
                     fileOutputStream.close();
-                    requestCode = RESULT_LOAD_IMAGE;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                newFile = Utilities.resizeImage(newFile, 3f);
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                newFile.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream); //sopporta 70 senza problemi (sul mio dispositivo)
+
+                note.setImgBytes(byteArrayOutputStream.toByteArray());
+                imageView.setImageBitmap(newFile);
+
+                emptyMessage.setText("");
+                modified = true;
             }
 
             if (requestCode == RESULT_LOAD_IMAGE) //prelievo immagine da data (è indifferente se è stata presa dalla galleria o dalla fotocamera)

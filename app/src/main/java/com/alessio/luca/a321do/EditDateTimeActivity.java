@@ -81,7 +81,8 @@ public class EditDateTimeActivity extends Activity {
         if(note.isAlarmOn() && note.getNoteState()== Note.NoteState.PLANNED)
         {
             long when = note.getDueDate().getTimeInMillis();
-            //long when = System.currentTimeMillis()+3000; //for debug //TODO rimettere a posto
+            Toast.makeText(EditDateTimeActivity.this,"Notifica impostata",Toast.LENGTH_SHORT).show();
+            //long when = System.currentTimeMillis()+5000; //for debug //TODO rimettere a posto
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,note);
