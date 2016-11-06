@@ -12,7 +12,6 @@
 
         <TextView
             android:text="@string/editTitleTitle"
-            android:id="@+id/textView1"
             style="@style/genericTextView"
             android:layout_width="match_parent" />
 
@@ -36,7 +35,6 @@
 
         <TextView
             android:text="@string/editDescriptionTitle"
-            android:id="@+id/textView2"
             style="@style/genericTextView"/>
 
         <EditText
@@ -57,7 +55,6 @@
 
         <TextView
             android:text="@string/editTagTitle"
-            android:id="@+id/textView5"
             android:layout_margin="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -114,7 +111,6 @@
 
             <TextView
                 android:text="@string/editPriorityTitle"
-                android:id="@+id/textView3"
                 style="@style/genericTextView" />
 
             <Spinner
@@ -132,7 +128,6 @@
 
             <TextView
                 android:text="@string/editUrgencyTitle"
-                android:id="@+id/textView4"
                 style="@style/genericTextView" />
 
             <Spinner

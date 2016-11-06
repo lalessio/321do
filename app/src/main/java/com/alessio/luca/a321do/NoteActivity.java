@@ -39,8 +39,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-//TODO abbellimento layout
-//TODO faq
 public class NoteActivity extends AppCompatActivity {
     private ListView listView;
     private NoteDBAdapter noteDBAdapter;
@@ -100,8 +98,7 @@ public class NoteActivity extends AppCompatActivity {
                                 bundle.putSerializable(Utilities.EDIT_NOTE_PAYLOAD_CODE,noteDBAdapter.retrieveNoteById(selectedNote.getId()));
                                 Intent intent = new Intent(NoteActivity.this, EditNoteActivity.class);
                                 intent.putExtras(bundle);
-                                Bundle bundleAnimation = ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.top_to_visible,R.anim.visible_to_bottom).toBundle();
-                                startActivity(intent, bundleAnimation);
+                                startActivity(intent);
                                 break;
                             case 1:
                                 final Note deletedNote = noteDBAdapter.deleteNote(selectedNote);

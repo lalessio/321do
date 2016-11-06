@@ -64,11 +64,6 @@ public class EditNoteActivity extends Activity {
         });
     }
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.top_to_visible, R.anim.visible_to_bottom);
-    }
-    @Override
     protected void onResume() {
         note = noteDBAdapter.retrieveNoteById(note.getId());
         textViewEditNoteTitle.setText(note.getTitle());

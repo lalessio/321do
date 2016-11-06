@@ -20,9 +20,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,10 +34,6 @@ import java.io.IOException;
 /**
  * Created by Luca on 25/10/2016.
  */
-
-//TODO sistemare casino
-    //1 layout carino
-
 
 public class EditMediaActivity extends Activity {
     public static final int RESULT_LOAD_IMAGE = 1;
@@ -107,6 +105,7 @@ public class EditMediaActivity extends Activity {
                                         imageView.setImageResource(android.R.color.transparent);
                                         emptyMessage.setText(R.string.errorEmptyMediaImage);
                                         modified = true;
+                                        Toast.makeText(EditMediaActivity.this, R.string.imageDeleteMessage,Toast.LENGTH_SHORT).show();
                                         System.gc();
                                     }
                                 });
@@ -140,21 +139,21 @@ public class EditMediaActivity extends Activity {
             }
         });
 
-        final Button playButton = (Button) findViewById(R.id.buttonPlay);
+        final ImageButton playButton = (ImageButton) findViewById(R.id.buttonPlay);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPlay(startPlaying);
                 if (startPlaying) {
-                    playButton.setText(R.string.playButtonStop);
+                    playButton.setImageResource(R.mipmap.stop);
                 } else {
-                    playButton.setText(R.string.playButtonStart);
+                    playButton.setImageResource(R.mipmap.play);
                 }
                 startPlaying = !startPlaying;
             }
         });
 
-        final Button deleteAudioButton = (Button) findViewById(R.id.buttonDeleteAudio);
+        final ImageButton deleteAudioButton = (ImageButton) findViewById(R.id.buttonDeleteAudio);
         deleteAudioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +167,8 @@ public class EditMediaActivity extends Activity {
                         note.setAudioPath("");
                         playButton.setVisibility(View.GONE);
                         deleteAudioButton.setVisibility(View.GONE);
+                        recordButton.setText(R.string.recordMessageNoAudio);
+                        Toast.makeText(EditMediaActivity.this, R.string.audioDeleteMessage,Toast.LENGTH_SHORT).show();
                         System.gc();
                     }
                 });
@@ -253,11 +254,12 @@ public class EditMediaActivity extends Activity {
         }
     }
     private void onRecord(boolean start) {
-        final Button playButton = (Button) findViewById(R.id.buttonPlay);
-        final Button deleteAudioButton = (Button) findViewById(R.id.buttonDeleteAudio);
+        final ImageButton playButton = (ImageButton) findViewById(R.id.buttonPlay);
+        final ImageButton deleteAudioButton = (ImageButton) findViewById(R.id.buttonDeleteAudio);
         modified = true;
         if (start)
         {
+            Toast.makeText(EditMediaActivity.this, R.string.recordingAudioStartMessage,Toast.LENGTH_SHORT).show();
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -283,19 +285,20 @@ public class EditMediaActivity extends Activity {
             note.setAudioPath(eventualAudioPath);
             playButton.setVisibility(View.VISIBLE);
             deleteAudioButton.setVisibility(View.VISIBLE);
+            Toast.makeText(EditMediaActivity.this,getString(R.string.recordingAudioStopMessage)+eventualAudioPath,Toast.LENGTH_SHORT).show();
         }
     }
     private void onPlay(boolean start) {
         final Button recordButton = (Button) findViewById(R.id.buttonRecord);
-        final Button playButton = (Button) findViewById(R.id.buttonPlay);
+        final ImageButton playButton = (ImageButton) findViewById(R.id.buttonPlay);
         if (start)
         {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-
-                    playButton.setText(R.string.playButtonStart);
+                    playButton.setImageResource(R.mipmap.play);
+                    recordButton.setEnabled(true);
                 }
             });
             try

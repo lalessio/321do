@@ -70,7 +70,6 @@ public class Utilities {
         return Bitmap.createScaledBitmap(srcBitmap, dstWidth, dstHeight, true);
     }
     public static void notesToPDF(Note[] notes, SortingOrder sortingOrder){
-        //TODO
         Document doc = new Document();
 
         try {
