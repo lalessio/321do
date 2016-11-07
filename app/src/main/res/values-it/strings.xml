@@ -121,4 +121,9 @@
     <string name="creditsTitle">Credits</string>
     <string name="creditsContent">321DO! è un app creata interamente da me, Luca Alessio: sono uno studente di Informatica presso l\'Università degli Studi di Padova e ho lavorato su questa applicazione durante il mio periodo di tirocinio presso l\'azienda Ceremit srl.\nPersonalmente ho avuto qualche difficoltà ad entrare nel mondo Androdi per cui ho intenzione di condividere quello che ho imparato con altri studenti e appassionati del settore: potete trovare il codice sorgente (in tutta la sua gloria e le sue numerose imperfezioni) qui:\nhttps://github.com/lalessio/321do</string>
     <string name="donateMessage"><![CDATA[Se avete domande particolari (o volete donare qualcosa via Paypal <3) potete contattarmi all\'indirizzo mail\nlucaalessio@gmail.com]]></string>
+    <string name="widgetContentDescription">321DO! Widget</string>
+    <string name="dailySummaryTitle">Riassunto della giornata</string>
+    <string name="dailySummaryMessage">Oggi hai i seguenti impegni:</string>
+    <string name="drawerOptionSubActivities">Con Sotto Attività</string>
+    <string name="quickAttachmentTitle">Allegato Rapido</string>
 </resources>

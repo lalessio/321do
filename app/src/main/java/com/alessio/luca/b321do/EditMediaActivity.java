@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -15,7 +15,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;

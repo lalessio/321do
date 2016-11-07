@@ -120,4 +120,9 @@
     <string name="creditsTitle">Credits</string>
     <string name="creditsContent">321DO! is an app created entirely by me, Luca Alessio: I\'m a bachelor student in Computer Science at University of Padua and I\'ve worked on this application during my stage period at Ceremit srl.\nI\'ve found a bit hard to enter in the world of Android Development so I intend to share what I\'ve learned with other students and enthusiasts: you can find the source code (in all it\'s glory and bad practices) here:\nhttps://github.com/lalessio/321do</string>
     <string name="donateMessage"><![CDATA[If you have any questions (or want to donate something via Paypal <3) you can contact me at\nlucaalessio@gmail.com]]></string>
+    <string name="widgetContentDescription">321DO! Widget</string>
+    <string name="dailySummaryTitle">Daily Summary</string>
+    <string name="dailySummaryMessage">You have the following tasks to do:</string>
+    <string name="drawerOptionSubActivities">With Sub Activities</string>
+    <string name="quickAttachmentTitle">Quick Attachment</string>
 </resources>

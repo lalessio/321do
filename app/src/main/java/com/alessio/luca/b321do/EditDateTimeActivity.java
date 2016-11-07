@@ -1,12 +1,10 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Switch;
@@ -81,7 +79,6 @@ public class EditDateTimeActivity extends Activity {
         if(note.isAlarmOn() && note.getNoteState()== Note.NoteState.PLANNED)
         {
             long when = note.getDueDate().getTimeInMillis();
-            Toast.makeText(EditDateTimeActivity.this,"Notifica impostata",Toast.LENGTH_SHORT).show();
             //long when = System.currentTimeMillis()+5000; //for debug //TODO rimettere a posto
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
             Bundle bundle = new Bundle();
@@ -95,8 +92,7 @@ public class EditDateTimeActivity extends Activity {
         {
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intentAlarm = new Intent(EditDateTimeActivity.this, AlarmReceiver.class);
-            alarmManager.cancel(PendingIntent.getBroadcast(EditDateTimeActivity.this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-
+            alarmManager.cancel(PendingIntent.getBroadcast(EditDateTimeActivity.this, note.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
         }
         noteDBAdapter.updateNote(note);
         super.onPause();

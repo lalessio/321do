@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.alessio.luca.a321do", appContext.getPackageName());
+        assertEquals("com.alessio.luca.b321do", appContext.getPackageName());
     }
 }

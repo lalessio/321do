@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class Note implements Serializable {
         return tag;
     }
     public void setTag(String tag) {
-        this.tag = tag;
+        this.tag = tag.toUpperCase();
     }
 
     public String getDescription() {

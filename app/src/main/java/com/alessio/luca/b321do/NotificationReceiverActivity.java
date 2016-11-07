@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.Activity;
 import android.app.AlarmManager;

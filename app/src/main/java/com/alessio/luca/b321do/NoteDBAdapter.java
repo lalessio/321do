@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -56,8 +56,8 @@ public class NoteDBAdapter {
         values.put(COL_TAG, newNote.getTag());
         values.put(COL_LENGTH, newNote.getLength());
         values.put(COL_CHECKLIST, Utilities.checkListToString(newNote.getCheckList()));
-        values.put(COL_DONE,newNote.isDone()?1:0);
-        values.put(COL_ALARM,newNote.isAlarmOn()?1:0);
+        values.put(COL_DONE,newNote.isDone());
+        values.put(COL_ALARM,newNote.isAlarmOn());
         values.put(COL_IMAGE,newNote.getImgBytes());
         values.put(COL_AUDIO,newNote.getAudioPath());
 
@@ -137,7 +137,6 @@ public class NoteDBAdapter {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Calendar calendar = Calendar.getInstance();
-        long now = calendar.getTimeInMillis();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -150,7 +149,7 @@ public class NoteDBAdapter {
         String sorting;
         switch (sortBy.getFilter()) {
             case WITH_ATTACHMENT:
-                sorting = " where " + COL_IMAGE + " is not null or " + COL_AUDIO + " is not null ";
+                sorting = " where " + COL_IMAGE + " is not null or " + COL_AUDIO + " like '%/%' ";
                 break;
             case ONLY_PLANNED:
                 sorting = " where " + COL_DUEDATE + " > " + System.currentTimeMillis() + " and " + COL_DONE + " = 0 ";
@@ -163,13 +162,16 @@ public class NoteDBAdapter {
                 break;
             case TODAY:
                 //in caso di risultati scorretti mettere un default in noteactivity
-                sorting = " where " + COL_DUEDATE + " between " + now + " and " + midnight;
+                sorting = " where " + COL_DUEDATE + " between " + (midnight-86400000) + " and " + midnight;
                 break;
             case TOMORROW:
                 sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+86400000);
                 break;
             case NEXT7DAYS:
                 sorting = " where " + COL_DUEDATE + " between " + midnight + " and " + (midnight+7*86400000);
+                break;
+            case WITH_SUB_ACTIVITIES:
+                sorting = " where "+ COL_CHECKLIST + " like '%" + Utilities.LIST_SEPARATOR + "%' ";
                 break;
             default:
                 sorting = new String();
@@ -182,10 +184,10 @@ public class NoteDBAdapter {
         if(sortBy.isSearchParameterSet())
         {
             if(whereClause)
-                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
+                sorting = sorting + " and " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' " + " or " + COL_TAG + " ='" + sortBy.getSearchParameter() + "'";
             else
                 sorting = " where " + COL_TITLE + " like '%" + sortBy.getSearchParameter() + "%' "
-                        + " or " + COL_TAG + " like '%" + sortBy.getSearchParameter() + "%'";
+                        + " or " + COL_TAG + " ='" + sortBy.getSearchParameter() + "'";
         }
 
         sorting = sorting + " order by "+COL_DONE;
@@ -199,12 +201,15 @@ public class NoteDBAdapter {
                 sorting = sorting+", "+COL_IMPORTANCE;
                 break;
             case CATEGORY:
-                sorting = sorting+", "+COL_TAG+", "+COL_ID;
+                sorting = sorting+", case when " + COL_TAG +" ='' then 2 else 1 end, "+COL_TAG+", "+COL_ID;
                 break;
             default: //che sarebbe il case NONE e quindi CREATIONDATE
-                sorting = sorting + ", "+COL_ID;
+                sorting = sorting + ", "+COL_ID + " desc";
                 break;
         }
+
+        if(sortBy.isTagCase()) //brutal example of code'n'fix but the deadline is today so take it or leave it
+            sorting = " where " + COL_TAG + " ='" + sortBy.getSearchParameter() + "' order by " + COL_DONE + ", "+COL_ID;
 
         c = db.rawQuery("select * from " + TABLE_NAME + sorting, null);
         c.moveToFirst();

@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -80,7 +80,7 @@ public class EditDetailsActivity extends Activity {
             note.setLength(Integer.parseInt(editTextLength.getText().toString()));
         else
             note.setLength(0);
-        note.setTag(autoCompleteTag.getText().toString());
+        note.setTag(autoCompleteTag.getText().toString().toUpperCase());
         noteDBAdapter.updateNote(note);
         super.onPause();
     }

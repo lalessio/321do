@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -6,18 +6,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.Settings;
-import android.util.Log;
 import android.widget.RemoteViews;
-
-import java.util.Random;
 
 /**
  * Created by Luca on 02/11/2016.
  */
 
 public class WidgetProvider extends AppWidgetProvider {
-    private static final String QUICK_NOTE_ACTION = "com.alessio.luca.a321do.QUICK_NOTE_ACTION";
+    private static final String QUICK_NOTE_ACTION = "com.alessio.luca.b321do.QUICK_NOTE_ACTION";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

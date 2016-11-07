@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -60,5 +60,20 @@ public class NotificationRebooter extends BroadcastReceiver {
 
             cursor.moveToNext();
         }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH,1);
+        calendar.set(Calendar.HOUR_OF_DAY,8);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        long tomorrowAt8 = calendar.getTimeInMillis();
+
+        Intent intentAlarm1 = new Intent(context, AlarmReceiver.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Utilities.NOTIFICATION_PAYLOAD_CODE,new Note("dailysummary"));
+        intentAlarm1.putExtras(bundle);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, tomorrowAt8, AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(context, 0, intentAlarm1, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 }
