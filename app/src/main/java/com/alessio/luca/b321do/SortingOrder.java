@@ -6,7 +6,7 @@ package com.alessio.luca.b321do;
 
 public class SortingOrder {
     public enum Order {NONE,DUEDATE,IMPORTANCE,CATEGORY};
-    public enum Filter {NONE,TODAY,WITH_ATTACHMENT,ONLY_PLANNED,ONLY_EXPIRED,ONLY_COMPLETED,TOMORROW,NEXT7DAYS,WITH_SUB_ACTIVITIES}
+    public enum Filter {NONE,TODAY,WITH_ATTACHMENT,ONLY_PLANNED,ONLY_EXPIRED,ONLY_COMPLETED,TOMORROW,NEXT7DAYS,WITH_SUB_ACTIVITIES,WITH_REMINDER}
 
     private final Order order;
     private final Filter filter;

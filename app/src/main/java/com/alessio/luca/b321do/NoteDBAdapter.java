@@ -173,6 +173,9 @@ public class NoteDBAdapter {
             case WITH_SUB_ACTIVITIES:
                 sorting = " where "+ COL_CHECKLIST + " like '%" + Utilities.LIST_SEPARATOR + "%' ";
                 break;
+            case WITH_REMINDER:
+                sorting = " where " + COL_ALARM + " = 1";
+                break;
             default:
                 sorting = new String();
                 whereClause = false;

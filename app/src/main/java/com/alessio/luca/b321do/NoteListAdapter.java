@@ -89,11 +89,16 @@ public class NoteListAdapter extends ArrayAdapter {
                 subNoteText.setText(note.getDescription().replaceAll("[\\t\\n\\r]"," ")); //tolgo caporiga e inserisco spaziature per riparmiare spazio nella visualizzazione
                 break;
         }
+        ImageView imageView = (ImageView) row.findViewById(R.id.rowAttachmentImage);
+        if(note.isAlarmOn())
+            imageView.setImageResource(R.mipmap.alarm);
         if(note.getImgBytes()!=null || (!note.getAudioPath().isEmpty() && note.getAudioPath()!=null))
         {
-            ImageView imageView = (ImageView) row.findViewById(R.id.rowAttachmentImage);
             imageView.setImageResource(R.mipmap.attachment);
+            if(note.isAlarmOn())
+                imageView.setImageResource(R.mipmap.both);
         }
+
         holder = new NoteViewHolder();
         holder.setTextView((TextView) row.findViewById(R.id.rowText));
         row.setTag(holder);

@@ -215,6 +215,7 @@ public class NoteActivity extends AppCompatActivity {
                                     getString(R.string.drawerOptionPlanned),
                                     getString(R.string.drawerOptionExpired),
                                     getString(R.string.drawerOptionCompleted),
+                                    getString(R.string.drawerOptionAlarm),
                                     getString(R.string.drawerOptionAttachment),
                                     getString(R.string.drawerOptionSubActivities),
                                     getString(R.string.sortOptionTag),
@@ -245,12 +246,15 @@ public class NoteActivity extends AppCompatActivity {
                         currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.ONLY_COMPLETED,currentOrder.getSearchParameter());
                         break;
                     case 6:
-                        currentOrder = new SortingOrder(currentOrder.getOrder(), SortingOrder.Filter.WITH_ATTACHMENT,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.WITH_REMINDER,currentOrder.getSearchParameter());
                         break;
                     case 7:
-                        currentOrder = new SortingOrder(currentOrder.getOrder(), SortingOrder.Filter.WITH_SUB_ACTIVITIES,currentOrder.getSearchParameter());
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.WITH_ATTACHMENT,currentOrder.getSearchParameter());
                         break;
                     case 8:
+                        currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.WITH_SUB_ACTIVITIES,currentOrder.getSearchParameter());
+                        break;
+                    case 9:
                         updateListView(new SortingOrder());
                         if(getExistingTags().length>0)
                         {
@@ -274,7 +278,7 @@ public class NoteActivity extends AppCompatActivity {
                         else
                             Toast.makeText(NoteActivity.this, R.string.errorNoExistingTag,Toast.LENGTH_SHORT).show();
                         break;
-                    case 9:
+                    case 10:
                         currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.NONE);
                         break;
                 }

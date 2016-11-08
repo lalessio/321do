@@ -127,4 +127,5 @@
     <string name="drawerOptionSubActivities">Con Sotto Attività</string>
     <string name="quickAttachmentTitle">Allegato Rapido</string>
     <string name="errorEmptyListView2">Serve aiuto? Leggi le FAQs!</string>
+    <string name="drawerOptionAlarm">Con Sveglia</string>
 </resources>

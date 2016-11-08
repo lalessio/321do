@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-24.2.1_90aa2e9cb7add7e52f45c148bc5c3dbd893b1b4e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="528b0cf82d7c8b66c3472dec63dbafa0427a6b48">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\instant-run_ec2a2c65325b33cd2357021482e89bd434239cd2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_070a3a9150b89e4e0d379708ed01abd1c84701df.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-24.2.1_ff232d1d78afedf470db6a6adc79a4f82b800427.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\design\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-design-24.2.1_b31b7a2e2bd3b335055496602fc07c5a2f041276.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-support-vector-drawable-24.2.1_5e6940aae1bd96aaae66e5a4e3c7acaea488278b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-utils-24.2.1_7d943f84702e39566322a9b7232b6b3dad6927a2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Luca\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\24.2.1\support-annotations-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\support-annotations-24.2.1_c4b073dd40214002f76fa5ad2ec876cebd4527bc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-24.2.1_5e6940aae1bd96aaae66e5a4e3c7acaea488278b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_816500781bce9acfb9bf7963593778d9b0acd0c0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-support-media-compat-24.2.1_90aa2e9cb7add7e52f45c148bc5c3dbd893b1b4e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-recyclerview-v7-24.2.1_ff232d1d78afedf470db6a6adc79a4f82b800427.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-animated-vector-drawable-24.2.1_67b85fafd4155302107aad52a849fb814169c2a6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-support-v4-24.2.1_f68e5a9ca36acac32c799e664377742fc9c2f845.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Luca\.gradle\caches\modules-2\files-2.1\com.itextpdf\itextg\5.5.9\3580383b2c7db8fa2fee1ffbe1993017a9ea296e\itextg-5.5.9.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="3580383b2c7db8fa2fee1ffbe1993017a9ea296e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\itextg-5.5.9_d3023067a4765bb01b27a1dccccad1bf6d1500a5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Luca\.gradle\caches\modules-2\files-2.1\com.itextpdf\itextg\5.5.9\3580383b2c7db8fa2fee1ffbe1993017a9ea296e\itextg-5.5.9.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="3580383b2c7db8fa2fee1ffbe1993017a9ea296e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\itextg-5.5.9_d3023067a4765bb01b27a1dccccad1bf6d1500a5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-24.2.1_f68e5a9ca36acac32c799e664377742fc9c2f845.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-appcompat-v7-24.2.1_8d2334342c5868ada487c16ae50f23b86ec22ca5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-animated-vector-drawable-24.2.1_67b85fafd4155302107aad52a849fb814169c2a6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\internal_impl-24.2.1_0ee8a4c770077b42e9da149bbad2d5b64b2b32c0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-24.2.1_8d2334342c5868ada487c16ae50f23b86ec22ca5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="47d38fc57b2718c0af2f6ba55f30c442e06ae389">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_a73b96f0b061c9504841cce90c76ed2479299854.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-support-compat-24.2.1_e27fd04d1e65a55a5dee299aec4641394579f7a6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\internal_impl-24.2.1_ee347572cb79f0e0cb1403e393e2ec78c7ac7622.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\internal_impl-24.2.1_816500781bce9acfb9bf7963593778d9b0acd0c0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-support-fragment-24.2.1_33bd02432517736f71508705faa03f9fc79ab2fa.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-support-compat-24.2.1_e27fd04d1e65a55a5dee299aec4641394579f7a6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Luca\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\24.2.1\support-annotations-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\support-annotations-24.2.1_c4b073dd40214002f76fa5ad2ec876cebd4527bc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-support-core-utils-24.2.1_7d943f84702e39566322a9b7232b6b3dad6927a2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-support-core-ui-24.2.1_b91d2e3792b457063f1444f2a14ae7804374bbf3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_0ee8a4c770077b42e9da149bbad2d5b64b2b32c0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-support-fragment-24.2.1_33bd02432517736f71508705faa03f9fc79ab2fa.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_ee347572cb79f0e0cb1403e393e2ec78c7ac7622.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_cc84a38ccac319441ce171a034358ea66aff271b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-24.2.1_b91d2e3792b457063f1444f2a14ae7804374bbf3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\design\24.2.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\com.android.support-design-24.2.1_b31b7a2e2bd3b335055496602fc07c5a2f041276.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\internal_impl-24.2.1_cc84a38ccac319441ce171a034358ea66aff271b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\androidBook\321do\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="C:\androidBook\321do\app\build\intermediates\pre-dexed\release\internal_impl-24.2.1_070a3a9150b89e4e0d379708ed01abd1c84701df.jar" />
+    </item>
+
+</items>
