@@ -67,8 +67,7 @@
             android:hint="@string/editTagHint"
             android:maxLength="16"
             android:imeOptions="actionNext|flagNoExtractUi"
-            android:singleLine="true"
-            android:inputType="textCapWords"/>
+            android:singleLine="true"/>
 
     </LinearLayout>
 

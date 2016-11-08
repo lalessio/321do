@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -92,16 +92,17 @@ public class NotificationReceiverActivity extends Activity {
                 else
                     imageViewNotification.setVisibility(View.GONE);
 
+                final boolean[] startPlaying = {true};
                 buttonAudioAttachment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        playAudioAttachment(startPlaying,note);
-                        if (startPlaying) {
+                        playAudioAttachment(startPlaying[0],note);
+                        if (startPlaying[0]) {
                             buttonAudioAttachment.setText(R.string.playButtonStop);
                         } else {
                             buttonAudioAttachment.setText(R.string.playButtonStart);
                         }
-                        startPlaying = !startPlaying;
+                        startPlaying[0] = !startPlaying[0];
                     }
                 });
                 buttonNotificationDismiss.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +163,7 @@ public class NotificationReceiverActivity extends Activity {
         notificationManager.cancel(id);
     }
     private void showSnoozeDialog(final Note note) {
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(NotificationReceiverActivity.this);
         dialog.setContentView(R.layout.dialog_snooze);
         dialog.show();
 
@@ -200,5 +201,4 @@ public class NotificationReceiverActivity extends Activity {
         } else
             mediaPlayer.release();
     }
-    private boolean startPlaying = true;
 }

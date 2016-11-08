@@ -1,4 +1,4 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,14 +8,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Luca on 03/11/2016.
  */
+
+//unused file
 
 public class DailySummary extends Activity{
     private NoteDBAdapter noteDBAdapter;
@@ -39,6 +40,7 @@ public class DailySummary extends Activity{
         if(!todayNotes.isEmpty())
         {
             ListView listView = (ListView) findViewById(R.id.summaryListView);
+            listView.setVisibility(View.VISIBLE);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,android.R.id.text1,todayNotes);
             listView.setAdapter(adapter);
 
@@ -61,6 +63,11 @@ public class DailySummary extends Activity{
             });
 
             //TODO launch intent
+        }
+        else
+        {
+            TextView textView = (TextView) findViewById(R.id.noNotesTextView);
+            textView.setVisibility(View.VISIBLE);
         }
     }
 }

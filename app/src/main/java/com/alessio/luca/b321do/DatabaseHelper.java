@@ -1,23 +1,23 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_ALARM;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_AUDIO;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_CHECKLIST;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_DESCRIPTION;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_DONE;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_DUEDATE;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_ID;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_IMAGE;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_IMPORTANCE;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_LENGTH;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_TAG;
-import static com.alessio.luca.a321do.NoteDBAdapter.COL_TITLE;
-import static com.alessio.luca.a321do.NoteDBAdapter.TABLE_NAME;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_ALARM;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_AUDIO;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_CHECKLIST;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_DESCRIPTION;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_DONE;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_DUEDATE;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_ID;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_IMAGE;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_IMPORTANCE;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_LENGTH;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_TAG;
+import static com.alessio.luca.b321do.NoteDBAdapter.COL_TITLE;
+import static com.alessio.luca.b321do.NoteDBAdapter.TABLE_NAME;
 
 /**
  * Created by Luca on 17/10/2016.

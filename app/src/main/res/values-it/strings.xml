@@ -29,11 +29,11 @@
     <string name="exitMenuString">Esci</string>
     <string name="switchAlarmTitle">Sveglia</string>
     <string name="errorEmptyField">Campo vuoto!</string>
-    <string name="errorDateTimePassed">Data/Ora già passate</string>
-    <string name="errorNoNeedForAlarm">Nota già completata, non hai bisogno di un promemoria</string>
+    <string name="errorDateTimePassed">Sveglia NON impostata: Data/Ora già Passate</string>
+    <string name="errorNoNeedForAlarm">Sveglia NON impostata: Nota già Completata</string>
     <string name="checkListTitle">Sotto Attività</string>
     <string name="searchNoteMenuString">Cerca</string>
-    <string name="errorEmptyListView">Nessuna nota, rilassati!</string>
+    <string name="errorEmptyListView1">Nessuna nota, rilassati!</string>
     <string name="messageAlarmOff">Sveglia OFF</string>
     <string name="messageAlarmOn">Sveglia ON</string>
     <string name="editOptionsMedia">Gestione Allegati</string>
@@ -121,4 +121,10 @@
     <string name="creditsTitle">Credits</string>
     <string name="creditsContent">321DO! è un app creata interamente da me, Luca Alessio: sono uno studente di Informatica presso l\'Università degli Studi di Padova e ho lavorato su questa applicazione durante il mio periodo di tirocinio presso l\'azienda Ceremit srl.\nPersonalmente ho avuto qualche difficoltà ad entrare nel mondo Androdi per cui ho intenzione di condividere quello che ho imparato con altri studenti e appassionati del settore: potete trovare il codice sorgente (in tutta la sua gloria e le sue numerose imperfezioni) qui:\nhttps://github.com/lalessio/321do</string>
     <string name="donateMessage"><![CDATA[Se avete domande particolari (o volete donare qualcosa via Paypal <3) potete contattarmi all\'indirizzo mail\nlucaalessio@gmail.com]]></string>
+    <string name="widgetContentDescription">321DO! Widget</string>
+    <string name="dailySummaryTitle">Riassunto della giornata</string>
+    <string name="dailySummaryMessage">Oggi hai i seguenti impegni:</string>
+    <string name="drawerOptionSubActivities">Con Sotto Attività</string>
+    <string name="quickAttachmentTitle">Allegato Rapido</string>
+    <string name="errorEmptyListView2">Serve aiuto? Leggi le FAQs!</string>
 </resources>

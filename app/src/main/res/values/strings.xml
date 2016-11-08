@@ -28,11 +28,11 @@
     <string name="exitMenuString">Exit</string>
     <string name="switchAlarmTitle">Alarm</string>
     <string name="errorEmptyField">Empty field!</string>
-    <string name="errorDateTimePassed">Date/Time already passed</string>
-    <string name="errorNoNeedForAlarm">Note completed, no need for reminder</string>
+    <string name="errorDateTimePassed">Alarm NOT set: Date/Time already Passed</string>
+    <string name="errorNoNeedForAlarm">Alarm NOT set: Note already Completed</string>
     <string name="checkListTitle">Sub activities</string>
     <string name="searchNoteMenuString">Search</string>
-    <string name="errorEmptyListView">No notes to show, relax!</string>
+    <string name="errorEmptyListView1">No notes to show, relax!</string>
     <string name="messageAlarmOff">Alarm OFF</string>
     <string name="messageAlarmOn">Alarm ON</string>
     <string name="editOptionsMedia">Media Attachments</string>
@@ -120,4 +120,10 @@
     <string name="creditsTitle">Credits</string>
     <string name="creditsContent">321DO! is an app created entirely by me, Luca Alessio: I\'m a bachelor student in Computer Science at University of Padua and I\'ve worked on this application during my stage period at Ceremit srl.\nI\'ve found a bit hard to enter in the world of Android Development so I intend to share what I\'ve learned with other students and enthusiasts: you can find the source code (in all it\'s glory and bad practices) here:\nhttps://github.com/lalessio/321do</string>
     <string name="donateMessage"><![CDATA[If you have any questions (or want to donate something via Paypal <3) you can contact me at\nlucaalessio@gmail.com]]></string>
+    <string name="widgetContentDescription">321DO! Widget</string>
+    <string name="dailySummaryTitle">Daily Summary</string>
+    <string name="dailySummaryMessage">You have the following tasks to do:</string>
+    <string name="drawerOptionSubActivities">With Sub Activities</string>
+    <string name="quickAttachmentTitle">Quick Attachment</string>
+    <string name="errorEmptyListView2">Need help? Check the FAQs!</string>
 </resources>

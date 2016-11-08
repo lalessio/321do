@@ -6,12 +6,12 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center">
-
+<!-- unused file -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
-            android:text="Daily Summary"
+            android:text="@string/dailySummaryTitle"
             android:gravity="center"
             android:textSize="25sp" />
 
@@ -20,13 +20,23 @@
             android:layout_height="match_parent"
             android:layout_margin="4dp"
             android:gravity="center"
-            android:text="You have the following tasks to do:"
+            android:text="@string/dailySummaryMessage"
             android:textSize="20sp" />
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/summaryListView" />
+            android:id="@+id/summaryListView"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/errorEmptyListView1"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:visibility="gone"
+            android:id="@+id/noNotesTextView"/>
 
         <Button
             style="@style/genericButton"

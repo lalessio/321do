@@ -1,6 +1,5 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,9 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.health.SystemHealthManager;
-import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 
 /**
  * Created by Luca on 14/10/2016.

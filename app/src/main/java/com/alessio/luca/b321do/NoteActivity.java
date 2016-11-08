@@ -1,7 +1,8 @@
-package com.alessio.luca.a321do;
+package com.alessio.luca.b321do;
 
-import android.app.ActivityOptions;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +49,6 @@ public class NoteActivity extends AppCompatActivity {
     private SortingOrder currentOrder;
     private DrawerLayout drawerLayout;
     private FloatingActionButton fabText, fabAudio;
-    public static final int REQ_CODE_SPEECH_INPUT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +61,13 @@ public class NoteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        //here i had to use an actionbardrawertoggle just to have the hamburger animated icon...
+        //here i had to use an actionbardrawertoggle just to have the working icon...
         //i'm sure there is a smarter way to achieve that
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name);
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.addDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.setDrawerIndicatorEnabled(false);
+        drawerToggle.setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_launcher, this.getTheme()));
+        drawerToggle.syncState();
 
         noteDBAdapter = new NoteDBAdapter(this);
         listView = (ListView)findViewById(R.id.note_list_view);
@@ -113,6 +116,9 @@ public class NoteActivity extends AppCompatActivity {
                                                 {
                                                     File audioToDelete = new File(deletedNote.getAudioPath());
                                                     audioToDelete.delete();
+                                                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                                                    Intent intentAlarm = new Intent(NoteActivity.this, AlarmReceiver.class);
+                                                    alarmManager.cancel(PendingIntent.getBroadcast(NoteActivity.this, deletedNote.getId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
                                                 }
                                             }
                                         })
@@ -201,7 +207,7 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
-        ListView drawerList = (ListView) findViewById(R.id.navList);
+        final ListView drawerList = (ListView) findViewById(R.id.navList);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         String[] drawerContent = { getString(R.string.drawerOptionToday),
                                     getString(R.string.drawerOptionTomorrow),
@@ -210,6 +216,7 @@ public class NoteActivity extends AppCompatActivity {
                                     getString(R.string.drawerOptionExpired),
                                     getString(R.string.drawerOptionCompleted),
                                     getString(R.string.drawerOptionAttachment),
+                                    getString(R.string.drawerOptionSubActivities),
                                     getString(R.string.sortOptionTag),
                                     getString(R.string.drawerOptionAll) };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, drawerContent);
@@ -217,6 +224,7 @@ public class NoteActivity extends AppCompatActivity {
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                drawerList.setItemChecked(position,true);
                 switch (position){
                     case 0:
                         currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.TODAY,currentOrder.getSearchParameter());
@@ -240,6 +248,9 @@ public class NoteActivity extends AppCompatActivity {
                         currentOrder = new SortingOrder(currentOrder.getOrder(), SortingOrder.Filter.WITH_ATTACHMENT,currentOrder.getSearchParameter());
                         break;
                     case 7:
+                        currentOrder = new SortingOrder(currentOrder.getOrder(), SortingOrder.Filter.WITH_SUB_ACTIVITIES,currentOrder.getSearchParameter());
+                        break;
+                    case 8:
                         updateListView(new SortingOrder());
                         if(getExistingTags().length>0)
                         {
@@ -254,7 +265,7 @@ public class NoteActivity extends AppCompatActivity {
                             modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    currentOrder = new SortingOrder(SortingOrder.Order.CATEGORY, SortingOrder.Filter.NONE,parent.getItemAtPosition(position).toString());
+                                    currentOrder = new SortingOrder(parent.getItemAtPosition(position).toString(),true);
                                     updateListView(currentOrder);
                                     dialog.dismiss();
                                 }
@@ -263,11 +274,10 @@ public class NoteActivity extends AppCompatActivity {
                         else
                             Toast.makeText(NoteActivity.this, R.string.errorNoExistingTag,Toast.LENGTH_SHORT).show();
                         break;
-                    case 8:
+                    case 9:
                         currentOrder = new SortingOrder(currentOrder.getOrder(),SortingOrder.Filter.NONE);
                         break;
                 }
-
                 drawerLayout.closeDrawers();
                 updateListView(currentOrder);
             }
@@ -391,7 +401,7 @@ public class NoteActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == RESULT_OK)
         {
-            if (requestCode == REQ_CODE_SPEECH_INPUT)
+            if (requestCode == Utilities.REQ_CODE_SPEECH_INPUT)
             {
                 noteDBAdapter.createNote(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
                 updateListView(currentOrder);
@@ -409,7 +419,7 @@ public class NoteActivity extends AppCompatActivity {
         try {
             fabText.hide();
             fabAudio.hide();
-            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+            startActivityForResult(intent, Utilities.REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
             Toast.makeText(getApplicationContext(), getString(R.string.errorAudioRecord), Toast.LENGTH_LONG).show();
             fabText.show();
@@ -499,11 +509,12 @@ public class NoteActivity extends AppCompatActivity {
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
         NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row,notes,sortBy);
         listView.setAdapter(noteListAdapter);
-        TextView emptyText = (TextView)  findViewById(R.id.emptyList);
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.emptyCheckListMessagesLayout);
         if(!noteListAdapter.isEmpty())
-            emptyText.setText("");
+            linearLayout.setVisibility(View.GONE);
         else
-            emptyText.setText(R.string.errorEmptyListView);
+            linearLayout.setVisibility(View.VISIBLE);
     }
     public static String[] getExistingTags(){
         List<String> tags = new ArrayList<>();
