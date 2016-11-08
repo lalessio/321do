@@ -24,7 +24,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +31,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -126,7 +126,6 @@ public class NoteActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(View view) {
                                                 Note restoredNote =  noteDBAdapter.createNote(deletedNote.getTitle());
-                                                Log.d("321error","sto recuperando nota con id "+restoredNote.getId());
                                                 deletedNote.setId(restoredNote.getId());
                                                 noteDBAdapter.updateNote(deletedNote);
                                                 updateListView(currentOrder);
@@ -152,7 +151,6 @@ public class NoteActivity extends AppCompatActivity {
                                 noteDBAdapter.tickNote(selectedNote);
                                 break;
                         }
-                        Toast.makeText(NoteActivity.this,"questa nota e "+selectedNote.getNoteState().name(),Toast.LENGTH_SHORT).show();
                         updateListView(currentOrder);
                         dialog.dismiss();
                         fabText.show();
@@ -511,11 +509,12 @@ public class NoteActivity extends AppCompatActivity {
         Note[] notes = retrievedNotes.toArray(new Note[retrievedNotes.size()]);
         NoteListAdapter noteListAdapter = new NoteListAdapter(this,R.layout.note_row,notes,sortBy);
         listView.setAdapter(noteListAdapter);
-        TextView emptyText = (TextView)  findViewById(R.id.emptyList);
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.emptyCheckListMessagesLayout);
         if(!noteListAdapter.isEmpty())
-            emptyText.setText("");
+            linearLayout.setVisibility(View.GONE);
         else
-            emptyText.setText(R.string.errorEmptyListView);
+            linearLayout.setVisibility(View.VISIBLE);
     }
     public static String[] getExistingTags(){
         List<String> tags = new ArrayList<>();

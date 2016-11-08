@@ -79,7 +79,7 @@ public class Note implements Serializable {
         this.importance = importance;
     }
     public void setImportance(int priority, char urgency) {
-        this.importance = new Importance(this.importance.mapToPriority(priority), this.importance.mapToUrgency(urgency));
+        this.importance = new Importance(Importance.mapToPriority(priority), Importance.mapToUrgency(urgency));
     }
 
     public List<String> getCheckList() {
@@ -139,7 +139,7 @@ public class Note implements Serializable {
     public boolean isDueOver(){
     Calendar now = Calendar.getInstance();
         return getDueDate().getTimeInMillis() <= now.getTimeInMillis();
-}
+    }
     public NoteState getNoteState(){
         NoteState noteState;
         if(isDone())
@@ -163,6 +163,7 @@ public class Note implements Serializable {
         this.dueDate.set(Calendar.MILLISECOND,0);
     }
     private void newNoteInitialization(){
+        //some initialization are probably useless in java but hey i come from c++
         this.done = false;
         setStandardTime();
         this.description = new String();

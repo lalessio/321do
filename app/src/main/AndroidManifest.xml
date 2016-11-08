@@ -65,7 +65,8 @@
             <intent-filter >
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER"/>
-                <action android:name="com.alessio.luca.a321do.QUICK_NOTE_ACTION"/>
+                <action android:name="com.alessio.luca.b321do.QUICK_NOTE_ACTION"/>
+                <action android:name="com.alessio.luca.b321do.QUICK_NOTE_ACTION"/>
             </intent-filter>
 
             <meta-data

@@ -51,59 +51,53 @@ public class NoteListAdapter extends ArrayAdapter {
         SpannableString content = new SpannableString(note.getTitle());
         int listViewItemType = getItemViewType(position);
 
-        if(row == null)
-        {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
-            row = inflater.inflate(R.layout.note_row,null);
-            TextView noteText = (TextView) row.findViewById(R.id.rowText);
+        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        row = inflater.inflate(layoutResourceId, parent, false);
+        row = inflater.inflate(R.layout.note_row,null);
+        TextView noteText = (TextView) row.findViewById(R.id.rowText);
 
-            //coloro la nota in base al suo stato
-            switch (listViewItemType){
-                case 1:
-                    content.setSpan(new StrikethroughSpan(), 0, content.length(), 0);
-                    noteText.setTextColor(ContextCompat.getColor(context,R.color.green));
-                    break;
-                case 2:
-                    noteText.setTextColor(ContextCompat.getColor(context,R.color.blue));
-                    break;
-                case 3:
-                    noteText.setTextColor(ContextCompat.getColor(context,R.color.red));
-                    break;
-                default:
-                    noteText.setTextColor(ContextCompat.getColor(context,R.color.blue));
-                    break;
-            }
+        //coloro la nota in base al suo stato
+        switch (listViewItemType){
+            case 1:
+                content.setSpan(new StrikethroughSpan(), 0, content.length(), 0);
+                noteText.setTextColor(ContextCompat.getColor(context,R.color.green));
+                break;
+            case 2:
+                noteText.setTextColor(ContextCompat.getColor(context,R.color.blue));
+                break;
+            case 3:
+                noteText.setTextColor(ContextCompat.getColor(context,R.color.red));
+                break;
+            default:
+                noteText.setTextColor(ContextCompat.getColor(context,R.color.black));
+                break;
+        }
 
-            //mi occupo di popolare la sottovoce della nota se necessario
-            TextView subNoteText = (TextView) row.findViewById(R.id.rowSubText);
-            switch (sortingRequested.getOrder()){
-                case DUEDATE:
-                    subNoteText.setText(note.printTime());
-                    break;
-                case IMPORTANCE:
-                    subNoteText.setText(note.getImportance().toString());
-                    break;
-                case CATEGORY:
-                    subNoteText.setText(note.getTag());
-                    break;
-                default:
-                    subNoteText.setText(note.getDescription().replaceAll("[\\t\\n\\r]"," ")); //tolgo caporiga e inserisco spaziature per riparmiare spazio nella visualizzazione
-                    if(note.getImgBytes()!=null || (!note.getAudioPath().isEmpty() && note.getAudioPath()!=null))
-                    {
-                        ImageView imageView = (ImageView) row.findViewById(R.id.rowAttachmentImage);
-                        imageView.setImageResource(R.mipmap.attachment);
-                    }
-                    break;
-            }
-            holder = new NoteViewHolder();
-            holder.setTextView((TextView) row.findViewById(R.id.rowText));
-            row.setTag(holder);
+        //mi occupo di popolare la sottovoce della nota se necessario
+        TextView subNoteText = (TextView) row.findViewById(R.id.rowSubText);
+        switch (sortingRequested.getOrder()){
+            case DUEDATE:
+                subNoteText.setText(note.printTime());
+                break;
+            case IMPORTANCE:
+                subNoteText.setText(note.getImportance().toString());
+                break;
+            case CATEGORY:
+                subNoteText.setText(note.getTag());
+                break;
+            default:
+                subNoteText.setText(note.getDescription().replaceAll("[\\t\\n\\r]"," ")); //tolgo caporiga e inserisco spaziature per riparmiare spazio nella visualizzazione
+                break;
         }
-        else
+        if(note.getImgBytes()!=null || (!note.getAudioPath().isEmpty() && note.getAudioPath()!=null))
         {
-            holder = (NoteViewHolder)row.getTag();
+            ImageView imageView = (ImageView) row.findViewById(R.id.rowAttachmentImage);
+            imageView.setImageResource(R.mipmap.attachment);
         }
+        holder = new NoteViewHolder();
+        holder.setTextView((TextView) row.findViewById(R.id.rowText));
+        row.setTag(holder);
+
         holder.getTextView().setText(content);
         return row;
     }

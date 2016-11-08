@@ -29,11 +29,11 @@
     <string name="exitMenuString">Esci</string>
     <string name="switchAlarmTitle">Sveglia</string>
     <string name="errorEmptyField">Campo vuoto!</string>
-    <string name="errorDateTimePassed">Data/Ora già passate</string>
-    <string name="errorNoNeedForAlarm">Nota già completata, non hai bisogno di un promemoria</string>
+    <string name="errorDateTimePassed">Sveglia NON impostata: Data/Ora già Passate</string>
+    <string name="errorNoNeedForAlarm">Sveglia NON impostata: Nota già Completata</string>
     <string name="checkListTitle">Sotto Attività</string>
     <string name="searchNoteMenuString">Cerca</string>
-    <string name="errorEmptyListView">Nessuna nota, rilassati!</string>
+    <string name="errorEmptyListView1">Nessuna nota, rilassati!</string>
     <string name="messageAlarmOff">Sveglia OFF</string>
     <string name="messageAlarmOn">Sveglia ON</string>
     <string name="editOptionsMedia">Gestione Allegati</string>
@@ -126,4 +126,5 @@
     <string name="dailySummaryMessage">Oggi hai i seguenti impegni:</string>
     <string name="drawerOptionSubActivities">Con Sotto Attività</string>
     <string name="quickAttachmentTitle">Allegato Rapido</string>
+    <string name="errorEmptyListView2">Serve aiuto? Leggi le FAQs!</string>
 </resources>

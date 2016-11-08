@@ -36,8 +36,8 @@ public class Importance implements Serializable{
     public Importance(String pu){
         if(pu.length()==2)
         {
-            this.priority=mapToPriority(java.lang.Character.getNumericValue(pu.charAt(0)));
-            this.urgency=mapToUrgency(pu.charAt(1));
+            this.priority = mapToPriority(java.lang.Character.getNumericValue(pu.charAt(0)));
+            this.urgency = mapToUrgency(pu.charAt(1));
         }
         else
         {
@@ -116,21 +116,17 @@ public class Importance implements Serializable{
     public static String[] getAllPriorities(){
         Priority[] priorities = Priority.values();
         String[] names = new String[priorities.length];
-
         for (int i = 0; i < priorities.length; i++) {
             names[i] = (i+1)+" - "+priorities[i].name();
         }
-
         return names;
     }
     public static String[] getAllUrgencies(){
         Urgency[] urgencies = Urgency.values();
         String[] names = new String[urgencies.length];
-
         for (int i = 0; i < urgencies.length; i++) {
             names[i] = ((char)(i+65))+" - "+urgencies[i].name();
         }
-
         return names;
     }
 }

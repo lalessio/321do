@@ -73,7 +73,6 @@ public class NoteDBAdapter {
     }
     public Note cloneNote(Note note) {
         Note clone = createNote(note.getTitle());
-        //clone.setTitle(note.getTitle());
         clone.setDescription(note.getDescription());
         clone.setTag(note.getTag());
         clone.setLength(note.getLength());
@@ -145,6 +144,7 @@ public class NoteDBAdapter {
         long midnight = calendar.getTimeInMillis();
 
         boolean whereClause = true;
+        Log.d(DEBUG_TAG,"retrieving notes sorted by order = "+sortBy.getOrder().name()+" filter = "+sortBy.getFilter().name()+" searchparameter = "+sortBy.getSearchParameter());
 
         String sorting;
         switch (sortBy.getFilter()) {
@@ -231,17 +231,6 @@ public class NoteDBAdapter {
         values.put(COL_ALARM,note.isAlarmOn());
         values.put(COL_IMAGE,note.getImgBytes());
         values.put(COL_AUDIO,note.getAudioPath());
-//        if(note.getImg()!=null)
-//        {
-//            ByteArrayOutputStream out = new ByteArrayOutputStream();
-//            note.getImg().compress(Bitmap.CompressFormat.PNG,0,out);
-//            values.put(COL_IMAGE,out.toByteArray());
-//        }
-//        else
-//        {
-//            byte[] emptyBlob = new byte[0];
-//            values.put(COL_IMAGE,emptyBlob);
-//        }
         // l'aggiornamento del campo done è gestito da tickNote()
         db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
         Log.d(DEBUG_TAG,"updated note to values: "+note.print());
@@ -256,6 +245,7 @@ public class NoteDBAdapter {
         db.update(TABLE_NAME, values, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
         note.setDone(!note.isDone()); //forse questa istruzione non ha side effect ma per ora non importa
         db.close();
+        Log.d(DEBUG_TAG,"ticked note "+note.getId()+" "+note.getTitle()+" now done = "+note.isDone());
 
         return note.isDone();
     }
@@ -265,11 +255,13 @@ public class NoteDBAdapter {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(TABLE_NAME, COL_ID + "=?", new String[]{String.valueOf(note.getId())});
         db.close();
+        Log.d(DEBUG_TAG,"deleted note "+note.print());
         return note;
     }
     public void deleteAllNotes() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(TABLE_NAME, null, null);
         db.close();
+        Log.d(DEBUG_TAG,"ALL NOTES DELETED FROM DB");
     }
 }

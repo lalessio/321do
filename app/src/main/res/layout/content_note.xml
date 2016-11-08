@@ -11,12 +11,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.alessio.luca.b321do.NoteActivity">
 
-    <TextView
-        android:id="@+id/emptyList"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center"
-        android:textSize="25sp" />
+        android:layout_centerInParent="true"
+        android:id="@+id/emptyCheckListMessagesLayout"
+        android:visibility="gone">
+
+            <TextView
+                android:id="@+id/emptyListMessage1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:text="@string/errorEmptyListView1"
+                android:layout_margin="8dp" />
+
+            <TextView
+                android:id="@+id/emptyListMessage2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/errorEmptyListView2"
+                android:gravity="center"
+                android:layout_margin="4dp"
+                android:textSize="15sp" />
+
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
