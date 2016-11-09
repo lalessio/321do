@@ -98,7 +98,6 @@
 
         <activity android:name="com.alessio.luca.b321do.FaqActivity"
             android:parentActivityName="com.alessio.luca.b321do.NoteActivity"/>
-        <!--<activity android:name=".DailySummary" />-->
     </application>
 
 </manifest>
